@@ -1,0 +1,12 @@
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\bin\Debug\OxTail.exe
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\bin\Debug\OxTail.pdb
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\ResolveAssemblyReference.cache
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\App.g.cs
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\OxTail_MarkupCompile.cache
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\OxTail.g.resources
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\OxTail.Properties.Resources.resources
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\OxTail.csproj.GenerateResource.Cache
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\OxTail.exe
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\OxTail.pdb
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\MainWindow.baml
+C:\Documents and Settings\d_beavon\My Documents\Visual Studio 2008\Projects\OxTail\OxTail\obj\Debug\MainWindow.g.cs
