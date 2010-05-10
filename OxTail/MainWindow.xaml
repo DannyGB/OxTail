@@ -5,12 +5,17 @@
     <DockPanel Name="dockPanelMain" LastChildFill="True">
         <Menu Name="menu1" DockPanel.Dock="Top" >
             <MenuItem  Header="File">
+                <MenuItem Name="MenuOpen" Header="Open" Click="MenuOpen_Click" />
                 <MenuItem Name="MenuExit" Header="Exit" Click="MenuExitClick" />
             </MenuItem>
             <MenuItem  Header="Help">
                       <MenuItem Name="MenuAbout"  Header="About" Click="MenuAboutClick" />
             </MenuItem>            
         </Menu>
-        <RichTextBox Name="richTextBoxLogDetail" IsDocumentEnabled="False" />
+        <TabControl Name="tabControlMain">
+            <TabItem Name="tabItemMain" Header="Main">
+                <RichTextBox Name="richTextBoxLogDetail" IsReadOnly="True" />
+            </TabItem>
+        </TabControl>        
     </DockPanel>
 </Window>
