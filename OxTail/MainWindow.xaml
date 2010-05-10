@@ -1,0 +1,16 @@
+﻿<Window x:Class="OxTail.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="OxTail" Height="808" Width="1022">
+    <DockPanel Name="dockPanelMain" LastChildFill="True">
+        <Menu Name="menu1" DockPanel.Dock="Top" >
+            <MenuItem  Header="File">
+                <MenuItem Name="MenuExit" Header="Exit" Click="MenuExitClick" />
+            </MenuItem>
+            <MenuItem  Header="Help">
+                      <MenuItem Name="MenuAbout"  Header="About" Click="MenuAboutClick" />
+            </MenuItem>            
+        </Menu>
+        <RichTextBox Name="richTextBoxLogDetail" IsDocumentEnabled="False" />
+    </DockPanel>
+</Window>
