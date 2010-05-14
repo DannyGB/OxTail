@@ -1,12 +1,12 @@
 ﻿/*****************************************************************
-* This file is part of OXTail.
+* This file is part of OxTail.
 *
-* OXTail is free software: you can redistribute it and/or modify
+* OxTail is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
-* OXTail is distributed in the hope that it will be useful,
+* OxTail is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -28,41 +28,21 @@ namespace OxTail
     using System.Windows.Input;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
-    using System.Windows.Navigation;
     using System.Windows.Shapes;
-    using OxTailLogic.Helpers;
-    using System.IO;
 
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for About.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class About : Window
     {
-        public MainWindow()
+        public About()
         {
             InitializeComponent();
         }
 
-        private void MenuAboutClick(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            About ab = new About();
-            ab.ShowDialog();
-        }
-
-        private void MenuExitClick(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
-        }
-
-        private void MenuOpen_Click(object sender, RoutedEventArgs e)
-        {
-            string filename = FileHelper.ShowOpenFileDialog();
-
-            if (filename != string.Empty)
-            {
-                Stream content = FileHelper.OpenFile(filename);
-                this.richTextBoxLogDetail.Document = FileHelper.CreateFlowDocument(content);
-            }
+            this.textBoxCredits.Text = string.Format("Dan Beavon{0}Dave Wedgbury", System.Environment.NewLine);
         }
     }
 }
