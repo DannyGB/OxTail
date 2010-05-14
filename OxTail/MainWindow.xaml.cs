@@ -39,8 +39,12 @@
         private void MenuOpen_Click(object sender, RoutedEventArgs e)
         {
             string filename = FileHelper.ShowOpenFileDialog();
-            Stream content = FileHelper.OpenFile(filename);
-            this.richTextBoxLogDetail.Document = FileHelper.CreateFlowDocument(content);
+
+            if (filename != string.Empty)
+            {
+                Stream content = FileHelper.OpenFile(filename);
+                this.richTextBoxLogDetail.Document = FileHelper.CreateFlowDocument(content);
+            }
         }
     }
 }
