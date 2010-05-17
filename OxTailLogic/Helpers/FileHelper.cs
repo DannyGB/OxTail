@@ -45,7 +45,7 @@ namespace OxTailLogic.Helpers
         {
             try
             {
-                FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read);
+                FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 stream.Position = 0;
                 return stream;
             }

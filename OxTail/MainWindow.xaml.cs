@@ -32,6 +32,7 @@ namespace OxTail
     using System.Windows.Shapes;
     using OxTailLogic.Helpers;
     using System.IO;
+    using OxTail.Controls;
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -58,11 +59,59 @@ namespace OxTail
         {
             string filename = FileHelper.ShowOpenFileDialog();
 
+            OpenFile(filename);
+        }
+
+        private void OpenFile(string filename)
+        {
             if (filename != string.Empty)
             {
-                Stream content = FileHelper.OpenFile(filename);
-                this.richTextBoxLogDetail.Document = FileHelper.CreateFlowDocument(content);
+                if (File.Exists(filename))
+                {
+                    OxTail.Controls.OxtailFileViewer newTab = FindTabByFilename(filename);
+                    if (newTab == null)
+                    {
+                        newTab = new OxTail.Controls.OxtailFileViewer(filename);
+                        newTab.CloseTab += new RoutedEventHandler(newTab_CloseTab);
+                        tabControlMain.Items.Add(newTab);
+                    }
+                    tabControlMain.SelectedItem = newTab;
+                    RecentFileList.InsertFile(filename);
+                }
+                else if (MessageBox.Show("Remove from recent file list?", "File not found!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                {
+                    RecentFileList.RemoveFile(filename);
+                }
             }
+        }
+
+        private OxTail.Controls.OxtailFileViewer FindTabByFilename(string filename)
+        {
+            OxTail.Controls.OxtailFileViewer foundTab = null;
+            foreach (OxTail.Controls.OxtailFileViewer tab in tabControlMain.Items.OfType<OxTail.Controls.OxtailFileViewer>())
+            {
+                if (tab.Uid == filename)
+                {
+                    foundTab = tab;
+                    break;
+                }
+            }
+            return foundTab;
+        }
+
+        void newTab_CloseTab(object sender, RoutedEventArgs e)
+        {
+            if (e.Source is OxTail.Controls.OxtailFileViewer)
+            {
+                OxTail.Controls.OxtailFileViewer closeTab = e.Source as OxTail.Controls.OxtailFileViewer;
+                tabControlMain.Items.Remove(closeTab);
+                closeTab.Dispose();
+            }
+        }
+
+        private void RecentFileList_MenuClick(object sender, RecentFileList.MenuClickEventArgs e)
+        {
+            this.OpenFile(e.Filepath);
         }
     }
 }
