@@ -1,0 +1,9 @@
+﻿<Window x:Class="OxTail.Highlight"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:custom="clr-namespace:OxTail.Controls"
+        Title="Highlighting" Height="346" Width="321" WindowStyle="ToolWindow">
+    <Grid>
+        <custom:Highlighting x:Name="hightlighting"></custom:Highlighting>
+    </Grid>
+</Window>

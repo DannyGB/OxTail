@@ -62,6 +62,12 @@ namespace OxTail
             OpenFile(filename);
         }
 
+        private void MenuHighlightingClick(object sender, RoutedEventArgs e)
+        {
+            Highlight hl = new Highlight();
+            hl.ShowDialog();
+        }
+
         private void OpenFile(string filename)
         {
             if (filename != string.Empty)

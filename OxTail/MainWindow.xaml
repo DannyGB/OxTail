@@ -2,13 +2,17 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:OxTail.Controls"
-    Title="OxTail" Height="808" Width="1022" WindowStartupLocation="CenterScreen">
+    Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen">
     <DockPanel Name="dockPanelMain" LastChildFill="True">
         <Menu Name="menu1" DockPanel.Dock="Top" >
             <MenuItem  Header="File">
                 <MenuItem Name="MenuOpen" Header="Open" Click="MenuOpen_Click" />
                 <local:RecentFileList x:Name="RecentFileList" MenuClick="RecentFileList_MenuClick"/>
                 <MenuItem Name="MenuExit" Header="Exit" Click="MenuExitClick" />
+            </MenuItem>
+            <MenuItem Name="MenuSettings" Header="Settings">
+                <MenuItem Name="MenuHighlighting" Header="Highlighting" Click="MenuHighlightingClick">                    
+                </MenuItem>
             </MenuItem>
             <MenuItem  Header="Help">
                       <MenuItem Name="MenuAbout"  Header="About" Click="MenuAboutClick" />
