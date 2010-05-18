@@ -29,11 +29,12 @@ namespace OxTail.Controls
     using System.Threading;
     using System.Windows.Threading;
     using System.Windows;
+    using OxTailLogic.PatternMatching;
 
     public class OxtailFileViewer : CloseableTabItem, IDisposable
     {
         private StreamReader _streamReader = null;
-        private System.Windows.Controls.TextBox _viewer = null;
+        private System.Windows.Controls.RichTextBox _viewer = null;
         private BackgroundWorker _bw = null;
         private Grid _grid = null;
 
@@ -50,7 +51,7 @@ namespace OxTail.Controls
             this._grid = new Grid();
             this.Visibility = System.Windows.Visibility.Visible;
             this.AddChild(this._grid);
-            this._viewer = new System.Windows.Controls.TextBox();
+            this._viewer = new System.Windows.Controls.RichTextBox();
             this._viewer.Visibility = System.Windows.Visibility.Visible;
             this._viewer.IsReadOnly  = true;
             this._viewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -82,7 +83,9 @@ namespace OxTail.Controls
 
         private void ReadNewTextFromFile()
         {
-            this._viewer.Text += this._streamReader.ReadToEnd();
+            IStringPatternMatching patternMatch = new StringPatternMatching();
+
+            this._viewer.Document = patternMatch.MatchPattern(this._streamReader.ReadToEnd());
             this.RaiseFileChangedEvent();
         }
 
