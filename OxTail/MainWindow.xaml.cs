@@ -74,10 +74,10 @@ namespace OxTail
             {
                 if (File.Exists(filename))
                 {
-                    OxTail.Controls.OxtailFileViewer newTab = FindTabByFilename(filename);
+                    OxTail.Controls.OxTailFileViewer newTab = FindTabByFilename(filename);
                     if (newTab == null)
                     {
-                        newTab = new OxTail.Controls.OxtailFileViewer(filename);
+                        newTab = new OxTail.Controls.OxTailFileViewer(filename);
                         newTab.CloseTab += new RoutedEventHandler(newTab_CloseTab);
                         tabControlMain.Items.Add(newTab);
                     }
@@ -91,10 +91,10 @@ namespace OxTail
             }
         }
 
-        private OxTail.Controls.OxtailFileViewer FindTabByFilename(string filename)
+        private OxTail.Controls.OxTailFileViewer FindTabByFilename(string filename)
         {
-            OxTail.Controls.OxtailFileViewer foundTab = null;
-            foreach (OxTail.Controls.OxtailFileViewer tab in tabControlMain.Items.OfType<OxTail.Controls.OxtailFileViewer>())
+            OxTail.Controls.OxTailFileViewer foundTab = null;
+            foreach (OxTail.Controls.OxTailFileViewer tab in tabControlMain.Items.OfType<OxTail.Controls.OxTailFileViewer>())
             {
                 if (tab.Uid == filename)
                 {
@@ -107,9 +107,9 @@ namespace OxTail
 
         void newTab_CloseTab(object sender, RoutedEventArgs e)
         {
-            if (e.Source is OxTail.Controls.OxtailFileViewer)
+            if (e.Source is OxTail.Controls.OxTailFileViewer)
             {
-                OxTail.Controls.OxtailFileViewer closeTab = e.Source as OxTail.Controls.OxtailFileViewer;
+                OxTail.Controls.OxTailFileViewer closeTab = e.Source as OxTail.Controls.OxTailFileViewer;
                 tabControlMain.Items.Remove(closeTab);
                 closeTab.Dispose();
             }
