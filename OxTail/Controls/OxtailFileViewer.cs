@@ -17,112 +17,124 @@
 
 namespace OxTail.Controls
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.IO;
-    using System.Windows.Forms;
-    using OxTailLogic.Helpers;
-    using System.Windows.Controls;
-    using System.ComponentModel;
-    using System.Threading;
-    using System.Windows.Threading;
-    using System.Windows;
-    using OxTailLogic.PatternMatching;
+  using System;
+  using System.Collections.Generic;
+  using System.Linq;
+  using System.Text;
+  using System.IO;
+  using System.Windows.Forms;
+  using OxTailLogic.Helpers;
+  using System.Windows.Controls;
+  using System.ComponentModel;
+  using System.Threading;
+  using System.Windows.Threading;
+  using System.Windows;
+  using OxTailLogic.PatternMatching;
+  using System.Windows.Media.Imaging;
 
-    public class OxtailFileViewer : CloseableTabItem, IDisposable
+  public class OxTailFileViewer : CloseableTabItem, IDisposable
+  {
+    private StreamReader _streamReader = null;
+    private System.Windows.Controls.RichTextBox _viewer = null;
+    private BackgroundWorker _bw = null;
+    private Grid _grid = null;
+
+    public int Interval { get; set; }
+
+    public OxTailFileViewer()
+      : base()
     {
-        private StreamReader _streamReader = null;
-        private System.Windows.Controls.RichTextBox _viewer = null;
-        private BackgroundWorker _bw = null;
-        private Grid _grid = null;
-
-        public int Interval { get; set; }
-
-        public OxtailFileViewer(string filename)
-        {
-            this.Header = Path.GetFileName(filename);
-            this.Uid = filename;
-            this.Interval = 1000;
-            //this._fileStream = FileHelper.OpenFile(filename);
-            this._streamReader = new StreamReader(FileHelper.OpenFile(filename));
-            //this._lastLength = _fileStream.Length;
-            this._grid = new Grid();
-            this.Visibility = System.Windows.Visibility.Visible;
-            this.AddChild(this._grid);
-            this._viewer = new System.Windows.Controls.RichTextBox();
-            this._viewer.Visibility = System.Windows.Visibility.Visible;
-            this._viewer.IsReadOnly  = true;
-            this._viewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            this._viewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
-            this._grid.Children.Add(this._viewer);
-            this._bw = new BackgroundWorker();
-            this._bw.WorkerSupportsCancellation = true;
-            this._bw.DoWork += new DoWorkEventHandler(_bw_DoWork);
-            this._bw.RunWorkerAsync();
-        }
-
-        void _bw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            while (!this._bw.CancellationPending)
-            {
-                if (!_streamReader.EndOfStream)
-                {
-                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => { this.ReadNewTextFromFile(); }));
-                }
-                Thread.Sleep(this.Interval);
-            }
-        }
-
-        public override void closeButton_Click(object sender, RoutedEventArgs e)
-        {
-            this._bw.CancelAsync();
-            base.closeButton_Click(sender, e);
-        }
-
-        private void ReadNewTextFromFile()
-        {
-            IStringPatternMatching patternMatch = new StringPatternMatching();
-
-            this._viewer.Document = patternMatch.MatchPattern(this._streamReader.ReadToEnd());
-            this.RaiseFileChangedEvent();
-        }
-
-        // Create a custom routed event by first registering a RoutedEventID
-        // This event uses the bubbling routing strategy
-        public static readonly RoutedEvent FileChangedEvent = EventManager.RegisterRoutedEvent("FileChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(OxtailFileViewer));
-
-        // Provide CLR accessors for the event
-        public event RoutedEventHandler FileChanged
-        {
-            add { AddHandler(FileChangedEvent, value); }
-            remove { RemoveHandler(FileChangedEvent, value); }
-        }
-
-        // This method raises the FileChanged event
-        void RaiseFileChangedEvent()
-        {
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(OxtailFileViewer.FileChangedEvent);
-            this.RaiseEvent(new RoutedEventArgs(OxtailFileViewer.FileChangedEvent, this));
-        }
-
-        #region IDisposable Members
-
-        public void Dispose()
-        {
-            if (this._streamReader != null)
-            {
-                this._streamReader.Close();
-                this._streamReader.Dispose();
-            }
-            //if (this._fileStream != null)
-            //{
-            //    _fileStream.Close();
-            //    _fileStream.Dispose();
-            //}
-        }
-
-        #endregion
     }
+
+    public OxTailFileViewer(string filename)
+    {
+      this.Header = Path.GetFileName(filename);
+      this.ToolTip = filename;
+      this.Uid = filename;
+      this.Interval = 1000;
+      //this._fileStream = FileHelper.OpenFile(filename);
+      this._streamReader = new StreamReader(FileHelper.OpenFile(filename));
+      //this._lastLength = _fileStream.Length;
+      this._grid = new Grid();
+      this.Visibility = System.Windows.Visibility.Visible;
+      this.AddChild(this._grid);
+      this._viewer = new System.Windows.Controls.RichTextBox();
+      this._viewer.Visibility = System.Windows.Visibility.Visible;
+      this._viewer.IsReadOnly = true;
+      this._viewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
+      this._viewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+      this._grid.Children.Add(this._viewer);
+      this._bw = new BackgroundWorker();
+      this._bw.WorkerSupportsCancellation = true;
+      this._bw.DoWork += new DoWorkEventHandler(_bw_DoWork);
+      this._bw.RunWorkerAsync();
+    }
+
+    void _bw_DoWork(object sender, DoWorkEventArgs e)
+    {
+      while (!this._bw.CancellationPending)
+      {
+        if (!_streamReader.EndOfStream)
+        {
+          Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() => { this.ReadNewTextFromFile(); }));
+        }
+        Thread.Sleep(this.Interval);
+      }
+    }
+
+    public override void closeButton_Click(object sender, RoutedEventArgs e)
+    {
+      this._bw.CancelAsync();
+      base.closeButton_Click(sender, e);
+    }
+
+    private void ReadNewTextFromFile()
+    {
+      IStringPatternMatching patternMatch = new StringPatternMatching();
+
+      this._viewer.Document = patternMatch.MatchPattern(this._streamReader.ReadToEnd());
+      this.RaiseFileChangedEvent();
+    }
+
+    // Create a custom routed event by first registering a RoutedEventID
+    // This event uses the bubbling routing strategy
+    public static readonly RoutedEvent FileChangedEvent = EventManager.RegisterRoutedEvent("FileChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(OxTailFileViewer));
+
+    // Provide CLR accessors for the event
+    public event RoutedEventHandler FileChanged
+    {
+      add { AddHandler(FileChangedEvent, value); }
+      remove { RemoveHandler(FileChangedEvent, value); }
+    }
+
+    // This method raises the FileChanged event
+    void RaiseFileChangedEvent()
+    {
+      Image img = base.GetTemplateChild("PART_Icon") as Image;
+      if (img != null)
+      {
+        img.Source = new BitmapImage(new Uri("/Controls/Images/bell.png", UriKind.Relative));
+      }
+      RoutedEventArgs newEventArgs = new RoutedEventArgs(OxTailFileViewer.FileChangedEvent);
+      this.RaiseEvent(new RoutedEventArgs(OxTailFileViewer.FileChangedEvent, this));
+    }
+
+    #region IDisposable Members
+
+    public void Dispose()
+    {
+      if (this._streamReader != null)
+      {
+        this._streamReader.Close();
+        this._streamReader.Dispose();
+      }
+      //if (this._fileStream != null)
+      //{
+      //    _fileStream.Close();
+      //    _fileStream.Dispose();
+      //}
+    }
+
+    #endregion
+  }
 }

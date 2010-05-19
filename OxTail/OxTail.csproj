@@ -144,7 +144,7 @@
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CloseableTabItem.cs" />
-    <Compile Include="Controls\OxtailFileViewer.cs" />
+    <Compile Include="Controls\OxTailFileViewer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -207,6 +207,12 @@
     <Resource Include="Controls\Images\ColorSwatchCircle.png" />
     <Resource Include="Controls\Images\ColorSwatchSquare.png" />
     <Resource Include="Controls\Images\ColorSwatchSquare2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Controls\Images\bullet_arrow_down.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Controls\Images\bell.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
