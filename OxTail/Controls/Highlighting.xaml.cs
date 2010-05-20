@@ -30,38 +30,100 @@ namespace OxTail.Controls
     using System.Windows.Media.Imaging;
     using System.Windows.Navigation;
     using System.Windows.Shapes;
-using OxTailLogic.PatternMatching;
+    using OxTailLogic.PatternMatching;
     using System.Collections.ObjectModel;
+    using System.Xml.Serialization;
+    using System.IO;
+    using System.Xml;
 
     /// <summary>
     /// Interaction logic for Highlighting.xaml
     /// </summary>
     public partial class Highlighting : UserControl
-    {
-        public ObservableCollection<Pattern> patterns { get; set; }
-        public Color color;
+    {        
+        public ObservableCollection<Pattern> Patterns { get; set; }
 
         public Highlighting()
         {
             InitializeComponent();
-
-            patterns = new ObservableCollection<Pattern>();            
-            this.listBoxPatterns.DataContext = patterns;
+            
+            this.buttonColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
+            this.buttonBackColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;
         }
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e)
         {
-            patterns.Add(new Pattern(this.textBoxPattern.Text, color, this.checkBoxIgnoreCase.IsChecked));
+            Patterns.Add(new Pattern(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.checkBoxIgnoreCase.IsChecked, this.buttonBackColour.SelectedColour));            
         }
 
         private void buttonColour_Click(object sender, RoutedEventArgs e)
         {
-            ColorDialog colorDialog = new ColorDialog();
-            if ((bool)colorDialog.ShowDialog())
+            if ((bool)this.buttonColour.ShowColourSelectDialog())
             {
-                color = colorDialog.SelectedColor;
-                this.textBoxPattern.Foreground = new SolidColorBrush(color);                
+                this.textBoxPattern.Foreground = buttonColour.ColorBrush;                
             }
+        }        
+
+        private void buttonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.listViewPatterns.DataContext == null || this.listViewPatterns.DataContext.GetType() != typeof(ObservableCollection<Pattern>))
+            {
+                return;
+            }
+
+            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(Pattern))
+            {
+                return;
+            }
+
+            ((ObservableCollection<Pattern>)this.listViewPatterns.DataContext).Remove((Pattern)this.listViewPatterns.SelectedItem);
+        }
+
+        private void buttonEdit_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(Pattern))
+            {
+                return;
+            }
+
+            Pattern selectedPattern = (Pattern)this.listViewPatterns.SelectedItem;
+            this.textBoxPattern.Text = selectedPattern.StringPattern;
+            this.textBoxPattern.Foreground = new SolidColorBrush(selectedPattern.Colour);
+            this.textBoxPattern.Background = new SolidColorBrush(selectedPattern.BackColour);
+            this.checkBoxIgnoreCase.IsChecked = selectedPattern.IgnoreCase;
+        }
+
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(Pattern))
+            {
+                return;
+            }
+
+            ((Pattern)this.listViewPatterns.SelectedItem).StringPattern = this.textBoxPattern.Text;
+            ((Pattern)this.listViewPatterns.SelectedItem).Colour =  ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
+        }
+
+        private void buttonBackColour_Click(object sender, RoutedEventArgs e)
+        {
+            if ((bool)this.buttonBackColour.ShowColourSelectDialog())
+            {
+                this.textBoxPattern.Background = buttonBackColour.ColorBrush;                
+            }
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {            
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Pattern>));
+            using (XmlTextWriter writer = new XmlTextWriter(@"c:\temp\highlights.xml", Encoding.UTF8))
+            {
+                serializer.Serialize(writer, this.listViewPatterns.DataContext);
+            }
+        }
+
+        public void Bind()
+        {
+            this.listViewPatterns.DataContext = Patterns;
         }
     }
 }

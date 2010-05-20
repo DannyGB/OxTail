@@ -124,6 +124,8 @@
     <Compile Include="Controls\ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ColourButton.cs" />
+    <Compile Include="Controls\ColourfulListView.cs" />
     <Compile Include="Controls\Highlighting.xaml.cs">
       <DependentUpon>Highlighting.xaml</DependentUpon>
     </Compile>
@@ -162,6 +164,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -207,9 +210,6 @@
     <Resource Include="Controls\Images\ColorSwatchCircle.png" />
     <Resource Include="Controls\Images\ColorSwatchSquare.png" />
     <Resource Include="Controls\Images\ColorSwatchSquare2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Images\bullet_arrow_down.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Controls\Images\bell.png" />

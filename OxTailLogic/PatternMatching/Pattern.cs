@@ -23,23 +23,87 @@ namespace OxTailLogic.PatternMatching
     using System.Text;
     using System.Windows.Media;
     using System.ComponentModel;
+    using System.Xml.Serialization;
+    using System.Collections.ObjectModel;
+    using System.Xml;
+    using System.IO;
 
+    [Serializable]
     public class Pattern : INotifyPropertyChanged
     {
-        public string StringPattern { get; set; }
-        public Color Colour { get; set; }
-        public bool? IgnoreCase { get; set; }
+        private string _stringPattern;
+        private Color _colour;
+        private bool? _ignoreCase;
+        private Color _backColour;
 
         public Pattern()
         {
         }
 
-        public Pattern(string pattern, Color colour, bool? ignoreCase)
+        public Pattern(string pattern, Color colour, bool? ignoreCase, Color backColour)
         {
             StringPattern = pattern;
             Colour = colour;
             IgnoreCase = ignoreCase;
+            BackColour = backColour;
         }
+
+        public string StringPattern
+        {
+            get
+            {
+                return this._stringPattern;
+            }
+
+            set
+            {
+                this._stringPattern = value;
+                OnPropertyChanged("StringPattern");
+
+            }
+        }
+
+        public Color Colour
+        {
+            get
+            {
+                return this._colour;
+            }
+
+            set
+            {
+                this._colour = value;
+                OnPropertyChanged("Colour");
+            }
+        }
+
+        public bool? IgnoreCase
+        {
+            get
+            {
+                return this._ignoreCase;
+            }
+
+            set
+            {
+                this._ignoreCase = value;
+                OnPropertyChanged("IgnoreCase");
+            }
+        }
+
+        public Color BackColour
+        {
+            get
+            {
+                return this._backColour;
+            }
+
+            set
+            {
+                this._backColour = value;
+                OnPropertyChanged("Colour");
+            }
+        }        
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -55,9 +119,34 @@ namespace OxTailLogic.PatternMatching
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} {1} {2}", this.StringPattern, this.Colour.ToString(), this.IgnoreCase.Value.ToString());
+            sb.AppendFormat("{0} {1}", this.StringPattern, this.IgnoreCase.Value.ToString());
 
             return sb.ToString();
+        }
+
+        public static void SaveHighlights(ObservableCollection<Pattern> patterns, string filename)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Pattern>));
+            using (XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8))
+            {
+                serializer.Serialize(writer, patterns);
+            }
+        }
+
+        public static ObservableCollection<Pattern> LoadHighlights(string filename)
+        {
+            if (!File.Exists(filename))
+            {
+                return new ObservableCollection<Pattern>();
+            }
+         
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Pattern>));
+
+            FileStream s = new System.IO.FileStream(filename, FileMode.Open);
+            using (XmlTextReader reader = new XmlTextReader(s))
+            {
+                return (ObservableCollection<Pattern>)serializer.Deserialize(reader);
+            }
         }
     }
 }
