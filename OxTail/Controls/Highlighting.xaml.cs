@@ -113,12 +113,7 @@ namespace OxTail.Controls
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {            
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Pattern>));
-            using (XmlTextWriter writer = new XmlTextWriter(@"c:\temp\highlights.xml", Encoding.UTF8))
-            {
-                serializer.Serialize(writer, this.listViewPatterns.DataContext);
-            }
+        {                       
         }
 
         public void Bind()
