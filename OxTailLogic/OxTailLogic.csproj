@@ -63,6 +63,10 @@
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />
     <Compile Include="PatternMatching\Pattern.cs" />
     <Compile Include="PatternMatching\StringPatternMatching.cs" />
+    <Compile Include="Persistance\ApplicationAttributes.cs" />
+    <Compile Include="Persistance\IPersist.cs" />
+    <Compile Include="Persistance\RegistryPersister.cs" />
+    <Compile Include="Persistance\XmlPersister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using OxTailLogic.PatternMatching;
+using OxTail.Properties;
 
 namespace OxTail
 {
@@ -21,6 +23,17 @@ namespace OxTail
         public Highlight()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.hightlighting.Patterns = MainWindow.Patterns;
+            this.hightlighting.Bind();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Pattern.SaveHighlights(this.hightlighting.Patterns, Settings.Default.HighlightFileLocations);
         }
     }
 }

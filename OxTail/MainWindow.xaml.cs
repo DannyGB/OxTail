@@ -33,6 +33,9 @@ namespace OxTail
     using OxTailLogic.Helpers;
     using System.IO;
     using OxTail.Controls;
+using System.Collections.ObjectModel;
+using OxTailLogic.PatternMatching;
+    using OxTail.Properties;
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -43,6 +46,8 @@ namespace OxTail
         {
             InitializeComponent();
         }
+
+        public static ObservableCollection<Pattern> Patterns { get; set; }
 
         private void MenuAboutClick(object sender, RoutedEventArgs e)
         {
@@ -118,6 +123,11 @@ namespace OxTail
         private void RecentFileList_MenuClick(object sender, RecentFileList.MenuClickEventArgs e)
         {
             this.OpenFile(e.Filepath);
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Patterns = Pattern.LoadHighlights(Settings.Default.HighlightFileLocations);
         }
     }
 }
