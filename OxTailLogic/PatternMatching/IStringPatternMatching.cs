@@ -25,6 +25,6 @@ namespace OxTailLogic.PatternMatching
 
     public interface IStringPatternMatching
     {
-        FlowDocument MatchPattern(string text);
+      Inline MatchPattern(string text);
     }
 }

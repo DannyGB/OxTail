@@ -64,6 +64,7 @@ namespace OxTail.Controls
     ///     <MyNamespace:CloseableTabItem/>
     ///
     /// </summary>
+    [TemplatePart(Name = "PART_Close", Type = typeof(ButtonBase))]
     public class CloseableTabItem : TabItem
     {
         static CloseableTabItem()

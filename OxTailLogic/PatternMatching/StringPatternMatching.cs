@@ -26,14 +26,10 @@ namespace OxTailLogic.PatternMatching
 
     public class StringPatternMatching : IStringPatternMatching
     {
-        public FlowDocument MatchPattern(string text)
+        public Inline MatchPattern(string text)
         {
-            Paragraph tb = new Paragraph();
-            tb.Inlines.Add(text);
-            FlowDocument fd = new FlowDocument();
-            fd.Blocks.Add(tb);
-
-            return fd;
+          string highlighted = text;
+          return new Run(highlighted);
         }
     }
 }
