@@ -33,7 +33,7 @@ namespace OxTail.Controls
     using System.IO;
     using System.Reflection;
     using System.Diagnostics;
-    using OxTailLogic.Helpers;
+    using OxTail.Helpers;
 
     /// <summary>
     /// Interaction logic for About.xaml

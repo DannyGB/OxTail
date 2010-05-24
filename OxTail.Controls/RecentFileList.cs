@@ -26,14 +26,9 @@ namespace OxTail.Controls
     using System.IO;
     using System.Windows;
     using System.Windows.Controls;
-    using Microsoft.Win32;
-    using System.Xml;
-    using System.Diagnostics;
-    using System.Text;
-    using System.Reflection;
     using OxTailLogic.Persistance;
 
-	public class RecentFileList : Separator
+    public class RecentFileList : Separator
 	{
 		public IPersist Persister { get; set; }
 

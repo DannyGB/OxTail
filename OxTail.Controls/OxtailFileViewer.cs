@@ -18,20 +18,17 @@
 namespace OxTail.Controls
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.IO;
-    using System.Windows.Forms;
-    using OxTailLogic.Helpers;
+    using OxTail.Helpers;
     using System.Windows.Controls;
     using System.ComponentModel;
     using System.Threading;
     using System.Windows.Threading;
     using System.Windows;
-    using OxTailLogic.PatternMatching;
     using System.Windows.Media.Imaging;
     using System.Windows.Documents;
+    using OxTailLogic.PatternMatching;
 
     /// <summary>
     /// An extension of the CloseableTabItem control that views a file.

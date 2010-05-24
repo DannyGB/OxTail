@@ -30,11 +30,11 @@ namespace OxTail
     using System.Windows.Media.Imaging;
     using System.Windows.Navigation;
     using System.Windows.Shapes;
-    using OxTailLogic.Helpers;
+    using OxTail.Helpers;
     using System.IO;
     using OxTail.Controls;
-using System.Collections.ObjectModel;
-using OxTailLogic.PatternMatching;
+    using System.Collections.ObjectModel;
+    using OxTailLogic.PatternMatching;
     using OxTail.Properties;
 
     /// <summary>
