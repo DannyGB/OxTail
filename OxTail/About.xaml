@@ -1,7 +1,7 @@
 ﻿<Window x:Class="OxTail.About"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
-        xmlns:custom="clr-namespace:OxTail.Controls"
+        xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
     Title="About" Height="400" Width="400" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Grid>
         <TabControl>

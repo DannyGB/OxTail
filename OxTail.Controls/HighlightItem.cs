@@ -15,7 +15,7 @@
 * along with OxTail.  If not, see <http://www.gnu.org/licenses/>.
 * ********************************************************************/
 
-namespace OxTailLogic.PatternMatching
+namespace OxTail.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -27,28 +27,29 @@ namespace OxTailLogic.PatternMatching
     using System.Collections.ObjectModel;
     using System.Xml;
     using System.IO;
+    using OxTail.Controls;
 
     [Serializable]
-    public class Pattern : INotifyPropertyChanged
+    public class HighlightItem : INotifyPropertyChanged, IColourfulItem
     {
         private string _stringPattern;
         private Color _colour;
         private bool? _ignoreCase;
         private Color _backColour;
 
-        public Pattern()
+        public HighlightItem()
         {
         }
 
-        public Pattern(string pattern, Color colour, bool? ignoreCase, Color backColour)
+        public HighlightItem(string pattern, Color colour, bool? ignoreCase, Color backColour)
         {
-            StringPattern = pattern;
-            Colour = colour;
+            Pattern = pattern;
+            ForeColour = colour;
             IgnoreCase = ignoreCase;
             BackColour = backColour;
         }
 
-        public string StringPattern
+        public string Pattern
         {
             get
             {
@@ -63,7 +64,7 @@ namespace OxTailLogic.PatternMatching
             }
         }
 
-        public Color Colour
+        public Color ForeColour
         {
             get
             {
@@ -119,34 +120,34 @@ namespace OxTailLogic.PatternMatching
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} {1}", this.StringPattern, this.IgnoreCase.Value.ToString());
+            sb.AppendFormat("{0} {1}", this.Pattern, this.IgnoreCase.Value.ToString());
 
             return sb.ToString();
         }
 
-        public static void SaveHighlights(ObservableCollection<Pattern> patterns, string filename)
+        public static void SaveHighlights(ObservableCollection<HighlightItem> patterns, string filename)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Pattern>));
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<HighlightItem>));
             using (XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8))
             {
                 serializer.Serialize(writer, patterns);
             }
         }
 
-        public static ObservableCollection<Pattern> LoadHighlights(string filename)
+        public static ObservableCollection<HighlightItem> LoadHighlights(string filename)
         {
-            if (!File.Exists(filename))
-            {
-                return new ObservableCollection<Pattern>();
-            }
+            //if (!File.Exists(filename))
+            //{
+                return new ObservableCollection<HighlightItem>();
+            //}
          
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Pattern>));
+            //XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<HighlightItem>));
 
-            FileStream s = new System.IO.FileStream(filename, FileMode.Open);
-            using (XmlTextReader reader = new XmlTextReader(s))
-            {
-                return (ObservableCollection<Pattern>)serializer.Deserialize(reader);
-            }
+            //FileStream s = new System.IO.FileStream(filename, FileMode.Open);
+            //using (XmlTextReader reader = new XmlTextReader(s))
+            //{
+            //    return (ObservableCollection<HighlightItem>)serializer.Deserialize(reader);
+            //}
         }
     }
 }

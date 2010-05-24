@@ -23,19 +23,22 @@ namespace OxTail.Controls
     using System.Text;
     using System.Windows.Controls;
     using System.Windows.Media;
-    using OxTailLogic.PatternMatching;
 
     public class ColourfulListView : ListView
     {
         protected override void PrepareContainerForItemOverride(System.Windows.DependencyObject element, object item)
-        {
+        {            
             base.PrepareContainerForItemOverride(element, item);
             
             int index = ItemContainerGenerator.IndexFromContainer(element);
             ListViewItem lvi = element as ListViewItem;
-            
-            lvi.Background = new SolidColorBrush(((Pattern)lvi.Content).BackColour);
-            lvi.Foreground = new SolidColorBrush(((Pattern)lvi.Content).Colour);
+
+            IColourfulItem p = lvi.Content as IColourfulItem;
+            if (p != null)
+            {
+                lvi.Background = new SolidColorBrush(((IColourfulItem)lvi.Content).BackColour);
+                lvi.Foreground = new SolidColorBrush(((IColourfulItem)lvi.Content).ForeColour);
+            }
         }
     }
 }

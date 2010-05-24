@@ -32,8 +32,8 @@ namespace OxTail.Controls
     using System.Windows.Shapes;
     using System.IO;
     using System.Reflection;
-    using OxTailLogic.Helpers;
     using System.Diagnostics;
+    using OxTailLogic.Helpers;
 
     /// <summary>
     /// Interaction logic for About.xaml
@@ -54,7 +54,7 @@ namespace OxTail.Controls
             {
                 FlowDocument gpl = FileHelper.CreateFlowDocument(s);
                 this.richTextBoxGplLicense.Document = gpl;
-            }            
+            } 
         }
     }
 }

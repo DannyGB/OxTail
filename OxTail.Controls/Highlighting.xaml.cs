@@ -30,18 +30,18 @@ namespace OxTail.Controls
     using System.Windows.Media.Imaging;
     using System.Windows.Navigation;
     using System.Windows.Shapes;
-    using OxTailLogic.PatternMatching;
     using System.Collections.ObjectModel;
     using System.Xml.Serialization;
     using System.IO;
     using System.Xml;
+    using OxTailLogic.PatternMatching;
 
     /// <summary>
     /// Interaction logic for Highlighting.xaml
     /// </summary>
     public partial class Highlighting : UserControl
     {        
-        public ObservableCollection<Pattern> Patterns { get; set; }
+        public ObservableCollection<HighlightItem> Patterns { get; set; }
 
         public Highlighting()
         {
@@ -53,7 +53,7 @@ namespace OxTail.Controls
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e)
         {
-            Patterns.Add(new Pattern(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.checkBoxIgnoreCase.IsChecked, this.buttonBackColour.SelectedColour));            
+            Patterns.Add(new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.checkBoxIgnoreCase.IsChecked, this.buttonBackColour.SelectedColour));            
         }
 
         private void buttonColour_Click(object sender, RoutedEventArgs e)
@@ -66,42 +66,42 @@ namespace OxTail.Controls
 
         private void buttonDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (this.listViewPatterns.DataContext == null || this.listViewPatterns.DataContext.GetType() != typeof(ObservableCollection<Pattern>))
+            if (this.listViewPatterns.DataContext == null || this.listViewPatterns.DataContext.GetType() != typeof(ObservableCollection<HighlightItem>))
             {
                 return;
             }
 
-            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(Pattern))
+            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(HighlightItem))
             {
                 return;
             }
 
-            ((ObservableCollection<Pattern>)this.listViewPatterns.DataContext).Remove((Pattern)this.listViewPatterns.SelectedItem);
+            ((ObservableCollection<HighlightItem>)this.listViewPatterns.DataContext).Remove((HighlightItem)this.listViewPatterns.SelectedItem);
         }
 
         private void buttonEdit_Click(object sender, RoutedEventArgs e)
         {
-            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(Pattern))
+            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(HighlightItem))
             {
                 return;
             }
 
-            Pattern selectedPattern = (Pattern)this.listViewPatterns.SelectedItem;
-            this.textBoxPattern.Text = selectedPattern.StringPattern;
-            this.textBoxPattern.Foreground = new SolidColorBrush(selectedPattern.Colour);
+            HighlightItem selectedPattern = (HighlightItem)this.listViewPatterns.SelectedItem;
+            this.textBoxPattern.Text = selectedPattern.Pattern;
+            this.textBoxPattern.Foreground = new SolidColorBrush(selectedPattern.ForeColour);
             this.textBoxPattern.Background = new SolidColorBrush(selectedPattern.BackColour);
             this.checkBoxIgnoreCase.IsChecked = selectedPattern.IgnoreCase;
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
-            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(Pattern))
+            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(HighlightItem))
             {
                 return;
             }
 
-            ((Pattern)this.listViewPatterns.SelectedItem).StringPattern = this.textBoxPattern.Text;
-            ((Pattern)this.listViewPatterns.SelectedItem).Colour =  ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
+            ((HighlightItem)this.listViewPatterns.SelectedItem).Pattern = this.textBoxPattern.Text;
+            ((HighlightItem)this.listViewPatterns.SelectedItem).ForeColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
         }
 
         private void buttonBackColour_Click(object sender, RoutedEventArgs e)

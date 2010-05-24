@@ -123,7 +123,9 @@ namespace OxTail.Controls
             do
             {
                 // read the next block 
-                this._streamReader.ReadBlock(block, index, blockSize);
+                //this._streamReader.ReadBlock(block, index, blockSize);
+                // second parameter is the place in the buffer to start reading into.
+                this._streamReader.ReadBlock(block, 0, blockSize);
                 string stringBlock = new String(block);
                 stringBuilderBlock.Append(stringBlock);
                 linesEncountered += CountLines(stringBlock);
@@ -132,7 +134,7 @@ namespace OxTail.Controls
 
             //todo: calculate offset from index to linesToRead-th newline
 
-            return offset;
+            return 0; //offset;
         }
 
         private long CountLines(string stringBlock)
