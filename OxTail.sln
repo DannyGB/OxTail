@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxTailLogic", "OxTailLogic\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxTail.Controls", "OxTail.Controls\OxTail.Controls.csproj", "{B7D152D2-9208-4489-9E8D-2195BE2F6121}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxTail.Helpers", "OxTailHelpers\OxTail.Helpers.csproj", "{58383B31-C051-4C54-82A3-0D0DF514AFC7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,12 @@ Global
 		{B7D152D2-9208-4489-9E8D-2195BE2F6121}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7D152D2-9208-4489-9E8D-2195BE2F6121}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B7D152D2-9208-4489-9E8D-2195BE2F6121}.Release|x86.ActiveCfg = Release|Any CPU
+		{58383B31-C051-4C54-82A3-0D0DF514AFC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58383B31-C051-4C54-82A3-0D0DF514AFC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58383B31-C051-4C54-82A3-0D0DF514AFC7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{58383B31-C051-4C54-82A3-0D0DF514AFC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58383B31-C051-4C54-82A3-0D0DF514AFC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58383B31-C051-4C54-82A3-0D0DF514AFC7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

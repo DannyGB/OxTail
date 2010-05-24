@@ -59,8 +59,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\FileHelper.cs" />
-    <Compile Include="IColourfulItem.cs" />
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />
     <Compile Include="PatternMatching\StringPatternMatching.cs" />
     <Compile Include="Persistance\ApplicationAttributes.cs" />
