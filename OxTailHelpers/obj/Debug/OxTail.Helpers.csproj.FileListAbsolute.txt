@@ -1,5 +1,0 @@
-C:\Documents and Settings\d_beavon\My Documents\My Dropbox\oxtail\OxTailHelpers\obj\Debug\ResolveAssemblyReference.cache
-C:\Documents and Settings\d_beavon\My Documents\My Dropbox\oxtail\OxTailHelpers\bin\Debug\OxTailHelpers.dll
-C:\Documents and Settings\d_beavon\My Documents\My Dropbox\oxtail\OxTailHelpers\bin\Debug\OxTailHelpers.pdb
-C:\Documents and Settings\d_beavon\My Documents\My Dropbox\oxtail\OxTailHelpers\obj\Debug\OxTailHelpers.dll
-C:\Documents and Settings\d_beavon\My Documents\My Dropbox\oxtail\OxTailHelpers\obj\Debug\OxTailHelpers.pdb
