@@ -1,7 +1,7 @@
 ﻿<Window x:Class="OxTail.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:OxTail.Controls"
+    xmlns:local="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
     Icon="/OxTail.ico"
     Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
   <DockPanel Name="dockPanelMain" LastChildFill="True">

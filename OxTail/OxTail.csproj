@@ -82,24 +82,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\About.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ColorDialog.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ColorPicker.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\Highlighting.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Highlight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -118,18 +100,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\ColorDialog.xaml.cs">
-      <DependentUpon>ColorDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColorPicker.xaml.cs">
-      <DependentUpon>ColorPicker.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ColourButton.cs" />
-    <Compile Include="Controls\ColourfulListView.cs" />
-    <Compile Include="Controls\Highlighting.xaml.cs">
-      <DependentUpon>Highlighting.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\RecentFileList.cs" />
     <Compile Include="Highlight.xaml.cs">
       <DependentUpon>Highlight.xaml</DependentUpon>
     </Compile>
@@ -142,11 +112,6 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\About.xaml.cs">
-      <DependentUpon>About.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\CloseableTabItem.cs" />
-    <Compile Include="Controls\OxTailFileViewer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -172,13 +137,14 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OxTail.Controls\OxTail.Controls.csproj">
+      <Project>{B7D152D2-9208-4489-9E8D-2195BE2F6121}</Project>
+      <Name>OxTail.Controls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OxTailLogic\OxTailLogic.csproj">
       <Project>{7E79864D-8225-4C99-A1B6-1331EA90AEBB}</Project>
       <Name>OxTailLogic</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Controls\AboutPageGplText.rtf" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="COPYING.txt" />
@@ -205,14 +171,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Images\ColorSwatchCircle.png" />
-    <Resource Include="Controls\Images\ColorSwatchSquare.png" />
-    <Resource Include="Controls\Images\ColorSwatchSquare2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Controls\Images\bell.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="OxTail.ico" />

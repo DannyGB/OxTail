@@ -47,7 +47,7 @@ using OxTailLogic.PatternMatching;
             InitializeComponent();
         }
 
-        public static ObservableCollection<Pattern> Patterns { get; set; }
+        public static ObservableCollection<HighlightItem> HighlightItems { get; set; }
 
         private void MenuAboutClick(object sender, RoutedEventArgs e)
         {
@@ -127,7 +127,7 @@ using OxTailLogic.PatternMatching;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Patterns = Pattern.LoadHighlights(Settings.Default.HighlightFileLocations);
+            HighlightItems = HighlightItem.LoadHighlights(Settings.Default.HighlightFileLocations);
         }
     }
 }
