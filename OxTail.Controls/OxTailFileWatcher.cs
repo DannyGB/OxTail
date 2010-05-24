@@ -18,12 +18,8 @@
 namespace OxTail.Controls
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.IO;
-    using System.Windows.Forms;
-    using OxTailLogic.Helpers;
     using System.Windows.Controls;
     using System.ComponentModel;
     using System.Threading;
@@ -32,6 +28,7 @@ namespace OxTail.Controls
     using OxTailLogic.PatternMatching;
     using System.Windows.Media.Imaging;
     using System.Windows.Documents;
+    using OxTail.Helpers;
 
     /// <summary>
     /// An extension of the CloseableTabItem control that views a file.
@@ -357,7 +354,7 @@ namespace OxTail.Controls
             Image img = base.GetTemplateChild("PART_Icon") as Image;
             if (img != null)
             {
-                img.Source = new BitmapImage(new Uri("/Controls/Images/bell.png", UriKind.Relative));
+                img.Source = new BitmapImage(new Uri("Images/bell.png", UriKind.Relative));
             }
             RoutedEventArgs newEventArgs = new RoutedEventArgs(OxTailFileWatcher.FileChangedEvent);
             this.RaiseEvent(new RoutedEventArgs(OxTailFileWatcher.FileChangedEvent, this));
