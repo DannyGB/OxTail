@@ -36,8 +36,8 @@ namespace OxTail.Controls
             IColourfulItem p = lvi.Content as IColourfulItem;
             if (p != null)
             {
-                lvi.Background = new SolidColorBrush(((IColourfulItem)lvi.Content).BackColour);
-                lvi.Foreground = new SolidColorBrush(((IColourfulItem)lvi.Content).ForeColour);
+                lvi.Background = new SolidColorBrush(p.BackColour);
+                lvi.Foreground = new SolidColorBrush(p.ForeColour);
             }
         }
     }
