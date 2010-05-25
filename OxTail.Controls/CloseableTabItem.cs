@@ -40,16 +40,19 @@ namespace OxTail.Controls
     /// Step 1a) Using this custom control in a XAML file that exists in the current project.
     /// Add this XmlNamespace attribute to the root element of the markup file where it is 
     /// to be used:
-    ///
+    /// 
+    /// <example>
     ///     xmlns:MyNamespace="clr-namespace:CloseableTabItemDemo"
-    ///
+    /// </example>
     ///
     /// Step 1b) Using this custom control in a XAML file that exists in a different project.
     /// Add this XmlNamespace attribute to the root element of the markup file where it is 
     /// to be used:
     ///
+    /// <example>
     ///     xmlns:MyNamespace="clr-namespace:CloseableTabItemDemo;assembly=CloseableTabItemDemo"
-    ///
+    /// </example>
+    /// 
     /// You will also need to add a project reference from the project where the XAML file lives
     /// to this project and Rebuild to avoid compilation errors:
     ///
@@ -61,8 +64,9 @@ namespace OxTail.Controls
     /// Go ahead and use your control in the XAML file. Note that Intellisense in the
     /// XML editor does not currently work on custom controls and its child elements.
     ///
+    /// <example>
     ///     <MyNamespace:CloseableTabItem/>
-    ///
+    ///</example>
     /// </summary>
     [TemplatePart(Name = "PART_Close", Type = typeof(ButtonBase))]
     public class CloseableTabItem : TabItem
