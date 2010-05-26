@@ -31,6 +31,6 @@
         <ProgressBar Name="progressBarStatus" Width="80" Height="18"/>
       </StatusBarItem>
     </StatusBar>
-    <my:ColourfulListView x:Name="colourfulListView" Grid.Row="0" x:FieldModifier="private"/>
+    <my:ColourfulListView x:Name="colourfulListView" Grid.Row="0" x:FieldModifier="private" FontFamily="Consolas"/>
   </Grid>
 </UserControl>
