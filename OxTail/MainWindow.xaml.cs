@@ -116,6 +116,7 @@ namespace OxTail
             {
                 OxTail.Controls.FileWatcherTabItem closeTab = e.Source as OxTail.Controls.FileWatcherTabItem;
                 tabControlMain.Items.Remove(closeTab);
+                
                 closeTab.Dispose();
             }
         }
