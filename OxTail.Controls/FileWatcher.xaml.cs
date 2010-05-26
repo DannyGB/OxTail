@@ -23,7 +23,7 @@ namespace OxTail.Controls
     /// <summary>
     /// Interaction logic for FileWatcher.xaml
     /// </summary>
-    public partial class FileWatcher : UserControl, IDisposable
+    public partial class FileWatcher : UserControl, IDisposable, INotifyPropertyChanged
     {
         private StreamReader _streamReader = null;
         private FileStream _fileStream = null;
@@ -34,15 +34,85 @@ namespace OxTail.Controls
         private int _visibleLines = 20;
         private Encoding _encoding = Encoding.UTF8;
         private DateTime _dateLastTime = DateTime.MinValue;
-        int _chunkSize = 32768;
+        int _chunkSize = 16384;
         private bool _followTail = true;
         private FileInfo _fileInfo;
         private DoWorkEventArgs _doWorkEventArgs;
-        private string _newline = "\n";
+        private string _newlineCharacters = null;
         private long _currentLength = 0;
         private long _offset = 0;
         private List<string> _readLines = new List<string>();
+        private NewlineDetectionMode _newlineDetectionMode;
 
+        public string NewlineCharacters
+        {
+            get
+            {
+                return this._newlineCharacters;
+            }
+            set
+            {
+                this._newlineCharacters = value;
+            }
+        }
+
+        public NewlineDetectionMode NewlineDetectionMode 
+        {
+            get 
+            { 
+                return this._newlineDetectionMode; 
+            }
+            set 
+            { 
+                this._newlineDetectionMode = value;
+                this.SetNewlineCharacters();
+                //this.OnPropertyChanged("NewlineDetectionMode");
+            }
+        }
+
+        private void SetNewlineCharacters()
+        {
+            switch (this.NewlineDetectionMode)
+            {
+                case NewlineDetectionMode.Auto:
+                    this.AutoDetectNewLineCharacters();
+                    break;
+                case NewlineDetectionMode.Windows:
+                    this.NewlineCharacters = "\r\n";
+                    break;
+                case NewlineDetectionMode.Unix:
+                    this.NewlineCharacters = "\n";
+                    break;
+                case NewlineDetectionMode.Mac:
+                    this.NewlineCharacters = "\r";
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Detects the new line by scanning for first new line in the file 
+        /// </summary>
+        private void AutoDetectNewLineCharacters()
+        {
+            char[] chars = new char[2];
+            this.NewlineCharacters = null;
+            // read first line of file
+            this.PositionFilePointerToOffset(0);
+            string line = this._streamReader.ReadLine();
+            if (!string.IsNullOrEmpty(line))
+            {
+                this.PositionFilePointerToOffset(line.Length);
+                this._streamReader.Read(chars, 0, 2);
+                this.NewlineCharacters = new string(chars);
+                // if the second character is not line feed ("\n") then it must have been a single character newline - either unix ("\n") or mac ("\r")
+                if (this.NewlineCharacters.Substring(1, 1) != "\n")
+                {
+                    this.NewlineCharacters.Remove(1, 1);
+                }
+            }
+        }
 
         public Encoding Encoding
         {
@@ -140,7 +210,7 @@ namespace OxTail.Controls
 
         private void PositionFilePointerToOffset(long target)
         {
-            //this._streamReader.DiscardBufferedData();
+            this._streamReader.DiscardBufferedData();
             //long smallestOffset;
             //SeekOrigin seekOrigin = this.CalculateClosestSeekOrigin(target, out smallestOffset);
             //this._fileStream.Seek(smallestOffset, seekOrigin);
@@ -185,7 +255,7 @@ namespace OxTail.Controls
                 chunkAsString.Append(chunk);
                 chunkAsString.Append(firstLineOfPreviousChunk);
 
-                string[] lineArray = chunkAsString.ToString().Split(new string[] { this._newline }, StringSplitOptions.None);
+                string[] lineArray = chunkAsString.ToString().Split(new string[] { this._newlineCharacters }, StringSplitOptions.None);
                 if (lineArray.Length > 0)
                 {
                     if (this._readLines.Count == 0)
@@ -269,6 +339,10 @@ namespace OxTail.Controls
         public FileWatcher()
         {
             InitializeComponent();
+            this.comboBoxNewlineDetection.ItemsSource = Enum.GetNames(typeof(NewlineDetectionMode));
+            Binding binding = new Binding("NewlineDetectionMode");
+            binding.Source = this;
+            this.comboBoxNewlineDetection.SetBinding(ComboBox.TextProperty, binding);
             this._bw = new BackgroundWorker();
             this._bw.WorkerSupportsCancellation = true;
             this._bw.DoWork += new DoWorkEventHandler(_bw_DoWork);
@@ -285,6 +359,7 @@ namespace OxTail.Controls
             this._fileInfo = new FileInfo(filename);
             this._fileStream = new FileStream(filename,FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize);
             this._streamReader = new StreamReader(this._fileStream, this._encoding, true, this._chunkSize);
+            this.SetNewlineCharacters();    
             if (!this._bw.IsBusy)
             {
                 this._bw.RunWorkerAsync();
@@ -318,7 +393,7 @@ namespace OxTail.Controls
                     if (this.FollowTail && (this._currentLength != this._fileStream.Length || this._dateLastTime.Ticks != Math.Max(this._fileInfo.LastWriteTime.Ticks, this._fileInfo.CreationTime.Ticks)))
                     {
                         //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(this.ReadNewTextFromFile));
-                        this.ReadNewTextFromFile(this._fileStream.Length);
+                        this.Tail(this._fileStream.Length);
                     }
                 }
                 if (!this.CancellationPending())
@@ -333,11 +408,13 @@ namespace OxTail.Controls
         /// <summary>
         /// Reads only the latest additional text that has been appended to the file
         /// </summary>
-        private void ReadNewTextFromFile(long length)
+        private void Tail(long length)
         {
+            this._loading = true;
             this._currentLength = length;
             this._dateLastTime = new DateTime(Math.Max(this._fileInfo.CreationTime.Ticks, this._fileInfo.LastWriteTime.Ticks));
             this.StartLine = this.CalculateStartLine();
+            this._loading = false;
         }
 
         // Create a custom routed event by first registering a RoutedEventID
@@ -361,17 +438,27 @@ namespace OxTail.Controls
         {
             long pos = this._fileStream.Position; // save position
             this._numberOfLinesInFile = 0;
-            //this._fileStream.Position = 0; // go to beginning of file
-            this._fileStream.Seek(0, SeekOrigin.Begin);
-            while (this._fileStream.Position < this._currentLength)
+            if (string.IsNullOrEmpty(this.NewlineCharacters))
+            {
+                this.SetNewlineCharacters();    
+            }
+            this.PositionFilePointerToOffset(0);
+            long offset = this._fileStream.Position;
+            while (offset < this._currentLength)
             {
                 // honour cancellation request
                 if (this.CancellationPending())
                 {
                     return -1;
                 }
-                this._streamReader.DiscardBufferedData();
-                this._streamReader.ReadLine();
+                // skip lines and keep track of the position of the end of the line by measuring the length of the line and adding on the length of our line ending
+                // n.b. StreamReader.Readline reads a block of data from the underlying filestream so does not reflect the position of the end of each line
+                string line = this._streamReader.ReadLine();
+                if (line == null)
+                {
+                    break;
+                }
+                offset += line.Length + this._newlineCharacters.Length;
                 this._numberOfLinesInFile++;
                 if (this._numberOfLinesInFile % 1000 == 0)
                 {
@@ -449,5 +536,15 @@ namespace OxTail.Controls
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnPropertyChanged(string info)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(info));
+            }
+        }
     }
 }
