@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="IColourfulItem.cs" />
     <Compile Include="HighlightItem.cs" />
+    <Compile Include="NewlineDetectionMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecentFileList.cs" />
     <Compile Include="FileWatcher.xaml.cs">
