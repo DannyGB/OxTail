@@ -1,29 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.IO;
-using OxTail.Helpers;
-using System.ComponentModel;
-using System.Threading;
-using OxTailLogic.PatternMatching;
-using System.Windows.Threading;
+﻿/*****************************************************************
+* This file is part of OXTail.
+*
+* OXTail is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* OXTail is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with OxTail.  If not, see <http://www.gnu.org/licenses/>.
+* ********************************************************************/
 
 namespace OxTail.Controls
 {
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.IO;
+    using System.Text;
+    using System.Threading;
+    using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Data;
+    using System.Windows.Documents;
+    using System.Windows.Threading;
+    using OxTailLogic.PatternMatching;
+    using System.Collections.ObjectModel;
+    using System.Windows.Media;
+    
     /// <summary>
     /// Interaction logic for FileWatcher.xaml
     /// </summary>
-    public partial class FileWatcher : UserControl, IDisposable, INotifyPropertyChanged
+    public partial class FileWatcher : UserControl, IDisposable
     {
         private StreamReader _streamReader = null;
         private FileStream _fileStream = null;
@@ -32,14 +44,15 @@ namespace OxTail.Controls
         private long _startLine = 0;
         private long _numberOfLinesInFile = 0;
         private int _visibleLines = 20;
-        private Encoding _encoding = Encoding.UTF8;
+        private Encoding _tailEncoding = Encoding.Default;
         private DateTime _dateLastTime = DateTime.MinValue;
-        int _chunkSize = 16384;
+        private int _chunkSize = 16384;
         private bool _followTail = true;
         private FileInfo _fileInfo;
         private DoWorkEventArgs _doWorkEventArgs;
         private string _newlineCharacters = null;
         private long _currentLength = 0;
+        private long _previousLength = 0;
         private long _offset = 0;
         private List<string> _readLines = new List<string>();
         private NewlineDetectionMode _newlineDetectionMode;
@@ -66,8 +79,19 @@ namespace OxTail.Controls
             { 
                 this._newlineDetectionMode = value;
                 this.SetNewlineCharacters();
-                //this.OnPropertyChanged("NewlineDetectionMode");
+                this.Refresh();
             }
+        }
+
+        private void Refresh()
+        {
+            this.StartLine = this.CalculateStartLine();
+        }
+
+        public Encoding TailEncoding
+        {
+            get { return this._tailEncoding; }
+            set { this._tailEncoding = value; }
         }
 
         private void SetNewlineCharacters()
@@ -101,7 +125,7 @@ namespace OxTail.Controls
             // read first line of file
             this.PositionFilePointerToOffset(0);
             string line = this._streamReader.ReadLine();
-            if (!string.IsNullOrEmpty(line))
+            if (line != null)
             {
                 this.PositionFilePointerToOffset(line.Length);
                 this._streamReader.Read(chars, 0, 2);
@@ -112,12 +136,6 @@ namespace OxTail.Controls
                     this.NewlineCharacters.Remove(1, 1);
                 }
             }
-        }
-
-        public Encoding Encoding
-        {
-            get { return this._encoding; }
-            set { this._encoding = value; }
         }
 
         public int VisibleLines
@@ -140,29 +158,60 @@ namespace OxTail.Controls
                 this._startLine = value;
                 if (this._startLine > -1)
                 {
+                    this._loading = true;
                     ReadLines();
-                    Dispatcher.Invoke(DispatcherPriority.Render, new Action(this.ShowLines));
+                    Dispatcher.Invoke(DispatcherPriority.Render, new Action(this.Update));
+                    this._loading = false;
                 }
             }
         }
 
-        private void ShowLines()
+        private void Update()
         {
-            //this.Lines.Clear();
+            IStringPatternMatching highlighting = new StringPatternMatching();
             for (int i = 0; i < this._readLines.Count; i++)
             {
-                TextBlock textBlock = new TextBlock(new Run(this._readLines[i]));
+                //TextBlock textBlock = new TextBlock(new Run(this._readLines[i]));
+                HighlightedItem item = this.Highlight(this._readLines[i]);
                 if (this.Lines.Count <= i)
                 {
-                    this.Lines.Add(textBlock);
+                    this.Lines.Add(item);
                 }
                 else
                 {
-                    this.Lines[i] = textBlock;
+                    this.Lines[i] = item;
                 }
-                //this.ReportProgress((int)(i * 100 / this.VisibleLines), "added line: " + this._readLines[i], false, System.Windows.Visibility.Visible);
             }
+            // todo: add separate status bar item for start line, number of visible lines and total file lines. Probably file size too.
             this.ReportProgress(0, string.Format("Showing lines {0}-{1} of {2}", this._startLine, this._startLine + this._visibleLines, this._numberOfLinesInFile), false, System.Windows.Visibility.Hidden);
+        }
+
+        public static IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
+        {
+            foreach (HighlightItem item in coll)
+            {
+                if (item.Pattern == text) // todo: match pattern
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        private HighlightedItem Highlight(string text)
+        {
+            HighlightedItem highlighted = new HighlightedItem();
+            highlighted.Text = text;
+
+            highlighted.ForeColour = Colors.Black;
+            highlighted.BackColour = Colors.AliceBlue;
+
+            foreach (HighlightItem highlight in FindFirstHighlightByText(this.Patterns, text))
+            {
+                highlighted.ForeColour = highlight.ForeColour;
+                highlighted.BackColour = highlight.BackColour;
+            }
+
+            return highlighted;
         }
 
         private SeekOrigin CalculateClosestSeekOrigin(long target, out long smallestOffset)
@@ -224,7 +273,7 @@ namespace OxTail.Controls
             char[] chunk = new char[this._chunkSize];
             long linesToRead;
             int linesEncountered = 1;
-            StringBuilder firstLineOfPreviousChunk = new StringBuilder();
+            //StringBuilder firstLineOfPreviousChunk = new StringBuilder();
             StringBuilder chunkAsString = new StringBuilder();
 
             linesToRead = this._numberOfLinesInFile - this._startLine;
@@ -253,9 +302,9 @@ namespace OxTail.Controls
                 chunksRead++;
                 chunkAsString.Clear();
                 chunkAsString.Append(chunk);
-                chunkAsString.Append(firstLineOfPreviousChunk);
+                //chunkAsString.Append(firstLineOfPreviousChunk);
 
-                string[] lineArray = chunkAsString.ToString().Split(new string[] { this._newlineCharacters }, StringSplitOptions.None);
+                string[] lineArray = chunkAsString.ToString().Substring(0, Math.Abs(indexIncrement)).Split(new string[] { this._newlineCharacters }, StringSplitOptions.None);
                 if (lineArray.Length > 0)
                 {
                     if (this._readLines.Count == 0)
@@ -339,14 +388,30 @@ namespace OxTail.Controls
         public FileWatcher()
         {
             InitializeComponent();
+            
+            // setup the line ending detection combo box
             this.comboBoxNewlineDetection.ItemsSource = Enum.GetNames(typeof(NewlineDetectionMode));
-            Binding binding = new Binding("NewlineDetectionMode");
-            binding.Source = this;
-            this.comboBoxNewlineDetection.SetBinding(ComboBox.TextProperty, binding);
+            Binding bindingNewlineDetection = new Binding("NewlineDetectionMode");
+            bindingNewlineDetection.Source = this;
+            this.comboBoxNewlineDetection.SetBinding(ComboBox.TextProperty, bindingNewlineDetection);
+
+            // setup the encoding combo box
+            this.comboBoxEncoding.ItemsSource = Encoding.GetEncodings();
+            Binding bindingEncoding = new Binding("TailEncoding");
+            bindingEncoding.Source = this;
+            this.comboBoxEncoding.SetBinding(ComboBox.SelectedItemProperty, bindingEncoding);
+            comboBoxEncoding.DisplayMemberPath = "DisplayName";
+            comboBoxEncoding.SelectedValuePath = "DisplayName";
+
             this._bw = new BackgroundWorker();
             this._bw.WorkerSupportsCancellation = true;
             this._bw.DoWork += new DoWorkEventHandler(_bw_DoWork);
             this._bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_bw_RunWorkerCompleted);
+        }
+
+        void Patterns_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            this.Update();
         }
 
         void _bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -358,7 +423,7 @@ namespace OxTail.Controls
         {
             this._fileInfo = new FileInfo(filename);
             this._fileStream = new FileStream(filename,FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize);
-            this._streamReader = new StreamReader(this._fileStream, this._encoding, true, this._chunkSize);
+            this._streamReader = new StreamReader(this._fileStream, this.TailEncoding, true, this._chunkSize);
             this.SetNewlineCharacters();    
             if (!this._bw.IsBusy)
             {
@@ -388,13 +453,7 @@ namespace OxTail.Controls
             {
                 if (!this._loading)
                 {
-                    //this._streamReader.DiscardBufferedData();
-                    this._fileInfo.Refresh();
-                    if (this.FollowTail && (this._currentLength != this._fileStream.Length || this._dateLastTime.Ticks != Math.Max(this._fileInfo.LastWriteTime.Ticks, this._fileInfo.CreationTime.Ticks)))
-                    {
-                        //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(this.ReadNewTextFromFile));
-                        this.Tail(this._fileStream.Length);
-                    }
+                    this.Tail(this._fileStream.Length);
                 }
                 if (!this.CancellationPending())
                 {
@@ -410,11 +469,14 @@ namespace OxTail.Controls
         /// </summary>
         private void Tail(long length)
         {
-            this._loading = true;
-            this._currentLength = length;
-            this._dateLastTime = new DateTime(Math.Max(this._fileInfo.CreationTime.Ticks, this._fileInfo.LastWriteTime.Ticks));
-            this.StartLine = this.CalculateStartLine();
-            this._loading = false;
+            this._fileInfo.Refresh(); // see if file has changed
+            if (this.FollowTail && (this._currentLength != this._fileStream.Length || this._dateLastTime.Ticks != Math.Max(this._fileInfo.LastWriteTime.Ticks, this._fileInfo.CreationTime.Ticks)))
+            {
+                this._previousLength = this._currentLength;
+                this._currentLength = length;
+                this._dateLastTime = new DateTime(Math.Max(this._fileInfo.CreationTime.Ticks, this._fileInfo.LastWriteTime.Ticks));
+                this.Refresh();
+            }
         }
 
         // Create a custom routed event by first registering a RoutedEventID
@@ -436,13 +498,16 @@ namespace OxTail.Controls
 
         private long CountLinesInFile()
         {
-            long pos = this._fileStream.Position; // save position
-            this._numberOfLinesInFile = 0;
+            long pos = this._fileStream.Position; // save current position
+            if (this._previousLength == 0)
+            {
+                this._numberOfLinesInFile = 0;
+            }
             if (string.IsNullOrEmpty(this.NewlineCharacters))
             {
                 this.SetNewlineCharacters();    
             }
-            this.PositionFilePointerToOffset(0);
+            this.PositionFilePointerToOffset(this._previousLength); // only count from previous length to save time
             long offset = this._fileStream.Position;
             while (offset < this._currentLength)
             {
@@ -459,7 +524,10 @@ namespace OxTail.Controls
                     break;
                 }
                 offset += line.Length + this._newlineCharacters.Length;
-                this._numberOfLinesInFile++;
+                if (this._previousLength == 0 ||  offset < this._currentLength)
+                {
+                    this._numberOfLinesInFile++;
+                }
                 if (this._numberOfLinesInFile % 1000 == 0)
                 {
                     ReportProgress((int)(this._fileStream.Position * 100 / this._currentLength), string.Format("counting lines in file: {0}", this._numberOfLinesInFile), false, System.Windows.Visibility.Visible);
@@ -536,14 +604,22 @@ namespace OxTail.Controls
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged(string info)
+        private void buttonRefresh_Click(object sender, RoutedEventArgs e)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
+            this.Refresh();
+        }
+
+        private ObservableCollection<HighlightItem> _patterns;
+        public ObservableCollection<HighlightItem> Patterns
+        {
+            get
             {
-                handler(this, new PropertyChangedEventArgs(info));
+                return this._patterns;
+            }
+            set
+            {
+                this._patterns = value;
+                this.Patterns.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Patterns_CollectionChanged);
             }
         }
     }

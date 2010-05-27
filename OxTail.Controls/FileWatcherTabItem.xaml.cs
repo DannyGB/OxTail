@@ -18,17 +18,11 @@
 namespace OxTail.Controls
 {
     using System;
-    using System.Text;
     using System.IO;
     using System.Windows.Controls;
-    using System.ComponentModel;
-    using System.Threading;
-    using System.Windows.Threading;
     using System.Windows;
-    using OxTailLogic.PatternMatching;
     using System.Windows.Media.Imaging;
-    using System.Windows.Documents;
-    using OxTail.Helpers;
+    using System.Collections.ObjectModel;
 
     /// <summary>
     /// An extension of the CloseableTabItem control that views a file.
@@ -45,16 +39,13 @@ namespace OxTail.Controls
         /// Creates an OxTailFileViewer instance and starts viewing the specified filename.
         /// </summary>
         /// <param name="filename">The full file path of the file to view.</param>
-        public FileWatcherTabItem(string filename): this()
+        public FileWatcherTabItem(string filename, ObservableCollection<HighlightItem> patterns): this()
         {
             this.Header = Path.GetFileName(filename);
             this.ToolTip = filename;
             this.Uid = filename;
             this.Visibility = System.Windows.Visibility.Visible;
-            //this.fileWatcher = new FileWatcher(filename);
-            //this.fileWatcher.Visibility = System.Windows.Visibility.Visible;
-            //this.fileWatcher.FileChanged += new RoutedEventHandler(_fileWatcher_FileChanged);
-            //this.gridContent.Children.Add(this.fileWatcher);
+            this.fileWatcher.Patterns = patterns;
             this.GotFocus += new RoutedEventHandler(OxTailFileViewer_GotFocus);
         }
 
