@@ -82,7 +82,7 @@ namespace OxTail
                     OxTail.Controls.FileWatcherTabItem newTab = FindTabByFilename(filename);
                     if (newTab == null)
                     {
-                        newTab = new OxTail.Controls.FileWatcherTabItem(filename);
+                        newTab = new OxTail.Controls.FileWatcherTabItem(filename, MainWindow.HighlightItems);
                         newTab.CloseTab += new RoutedEventHandler(newTab_CloseTab);
                         tabControlMain.Items.Add(newTab);
                     }

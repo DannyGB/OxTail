@@ -21,6 +21,8 @@
               <ColumnDefinition Width="4*"/>
               <ColumnDefinition Width="Auto"/>
               <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
           </Grid>
         </ItemsPanelTemplate>
@@ -29,10 +31,18 @@
         <TextBlock Name="textBlockMainStatus">Ready</TextBlock>
       </StatusBarItem>
       <StatusBarItem Grid.Column="1">
-        <ComboBox Name="comboBoxNewlineDetection" SelectedItem="{Binding Path=NewlineDetectionMode}"/>
+        <ComboBox Name="comboBoxNewlineDetection" Width="70"/>
       </StatusBarItem>
       <StatusBarItem Grid.Column="2">
-        <ProgressBar Name="progressBarStatus" Width="80" Height="18"/>
+        <ComboBox Name="comboBoxEncoding" Width="100"/>
+      </StatusBarItem>
+      <StatusBarItem Grid.Column="3">
+        <Button x:Name="buttonRefresh" Click="buttonRefresh_Click">
+          <Image Source="/OxTail.Controls;component/Images/refresh.png"></Image>
+        </Button>
+      </StatusBarItem>
+      <StatusBarItem Grid.Column="4">
+        <ProgressBar Name="progressBarStatus" Width="50" Height="18"/>
       </StatusBarItem>
     </StatusBar>
     <my:ColourfulListView x:Name="colourfulListView" Grid.Row="0" x:FieldModifier="private" FontFamily="Consolas"/>
