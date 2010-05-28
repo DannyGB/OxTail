@@ -34,6 +34,15 @@ namespace OxTailLogic.PatternMatching
 
         public bool MatchPattern(string text, string pattern)
         {
+            // blank pattern means match everything
+            if (string.IsNullOrEmpty(pattern) || (string.IsNullOrEmpty(text) && string.IsNullOrEmpty(pattern)))
+            {
+                return true;
+            }
+            if (text == null)
+            {
+                text = string.Empty;
+            }
             Regex regEx = new Regex(pattern);
             return regEx.IsMatch(text);
         }
