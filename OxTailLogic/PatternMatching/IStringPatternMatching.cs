@@ -25,6 +25,6 @@ namespace OxTailLogic.PatternMatching
 
     public interface IStringPatternMatching
     {
-      Inline MatchPattern(string text);
+      bool MatchPattern(string text, string pattern);
     }
 }

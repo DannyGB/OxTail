@@ -21,15 +21,21 @@ namespace OxTailLogic.PatternMatching
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Windows.Documents;
     using System.Windows.Controls;
 
     public class StringPatternMatching : IStringPatternMatching
     {
-        public Inline MatchPattern(string text)
+        public static IStringPatternMatching CreatePatternMatching()
         {
-          string highlighted = text;
-          return new Run(highlighted);
+            return new StringPatternMatching();
+        }
+
+        public bool MatchPattern(string text, string pattern)
+        {
+            Regex regEx = new Regex(pattern);
+            return regEx.IsMatch(text);
         }
     }
 }

@@ -66,17 +66,7 @@ namespace OxTail.Controls
         }
 
         private void buttonEdit_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(HighlightItem))
-            {
-                return;
-            }
-
-            HighlightItem selectedPattern = (HighlightItem)this.listViewPatterns.SelectedItem;
-            this.textBoxPattern.Text = selectedPattern.Pattern;
-            this.textBoxPattern.Foreground = new SolidColorBrush(selectedPattern.ForeColour);
-            this.textBoxPattern.Background = new SolidColorBrush(selectedPattern.BackColour);
-            this.checkBoxIgnoreCase.IsChecked = selectedPattern.IgnoreCase;
+        {                      
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
@@ -88,6 +78,11 @@ namespace OxTail.Controls
 
             ((HighlightItem)this.listViewPatterns.SelectedItem).Pattern = this.textBoxPattern.Text;
             ((HighlightItem)this.listViewPatterns.SelectedItem).ForeColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
+            ((HighlightItem)this.listViewPatterns.SelectedItem).BackColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;
+            ((HighlightItem)this.listViewPatterns.SelectedItem).IgnoreCase = this.checkBoxIgnoreCase.IsChecked;
+
+            this.listViewPatterns.DataContext = null;
+            this.listViewPatterns.DataContext = Patterns;
         }
 
         private void buttonBackColour_Click(object sender, RoutedEventArgs e)
@@ -104,7 +99,24 @@ namespace OxTail.Controls
 
         public void Bind()
         {
-            this.listViewPatterns.DataContext = Patterns;
+            this.listViewPatterns.DataContext = Patterns;            
+        }
+
+        private void listViewPatterns_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.listViewPatterns.SelectedItem == null || this.listViewPatterns.SelectedItem.GetType() != typeof(HighlightItem))
+            {
+                return;
+            }
+
+            if (e.AddedItems != null && e.AddedItems.Count == 1)
+            {
+                HighlightItem selectedPattern = (HighlightItem)e.AddedItems[0];
+                this.textBoxPattern.Text = selectedPattern.Pattern;
+                this.textBoxPattern.Foreground = new SolidColorBrush(selectedPattern.ForeColour);
+                this.textBoxPattern.Background = new SolidColorBrush(selectedPattern.BackColour);
+                this.checkBoxIgnoreCase.IsChecked = selectedPattern.IgnoreCase;
+            }
         }
     }
 }
