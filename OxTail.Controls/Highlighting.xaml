@@ -5,26 +5,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:custom="clr-namespace:OxTail.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="300" d:DesignWidth="350" Unloaded="UserControl_Unloaded">
     <Grid Width="Auto" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>            
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="165" />
+            <RowDefinition Height="220" />
             <RowDefinition Height="30"/>
-            <RowDefinition Height="70" />
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="5" />
+            <RowDefinition Height="50" />
+                      
         </Grid.RowDefinitions>
 
-        <custom:ColourfulListView Grid.Row="0" Grid.Column="0" Height="150" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Top" ItemsSource="{Binding}" />
-        <CheckBox Margin="10, 4" Grid.Row="3" Grid.Column="0" Content="Ignore Case" Height="16" HorizontalAlignment="Left"  Name="checkBoxIgnoreCase" VerticalAlignment="Center" />
+        <custom:ColourfulListView Grid.Row="0" Grid.Column="0" Height="200" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Top" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single" />
+        
         <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Name="stackPanel1" VerticalAlignment="Center">
-            <Button Margin="5" Content="Save" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" />
             <Button Margin="5" Content="Add" Height="23" Name="buttonAdd" Width="65" Click="buttonAdd_Click" />
-            <Button Margin="5" Content="Edit" Height="23" Name="buttonEdit" Width="65" Click="buttonEdit_Click" />
+            <Button Margin="5" Content="Update" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" />
             <Button Margin="5" Content="Delete" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" />
+            <CheckBox Margin="10, 4" Grid.Row="2" Grid.Column="0" Content="Ignore Case" Height="16" HorizontalAlignment="Left"  Name="checkBoxIgnoreCase" VerticalAlignment="Center" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Stretch" Name="stackPanel2" VerticalAlignment="Stretch">
             <TextBox Height="23" x:Name="textBoxPattern" Text="Enter String" Margin="10,0" Width="138" />

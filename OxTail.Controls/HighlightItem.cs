@@ -120,7 +120,7 @@ namespace OxTail.Controls
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} {1}", this.Pattern, this.IgnoreCase.Value.ToString());
+            sb.AppendFormat("{0} {1}", this.Pattern, ((this.IgnoreCase.Value) ? "(Ignoring Case)" : string.Empty ));
 
             return sb.ToString();
         }
@@ -136,18 +136,18 @@ namespace OxTail.Controls
 
         public static ObservableCollection<HighlightItem> LoadHighlights(string filename)
         {
-            //if (!File.Exists(filename))
-            //{
+            if (!File.Exists(filename))
+            {
                 return new ObservableCollection<HighlightItem>();
-            //}
-         
-            //XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<HighlightItem>));
+            }
 
-            //FileStream s = new System.IO.FileStream(filename, FileMode.Open);
-            //using (XmlTextReader reader = new XmlTextReader(s))
-            //{
-            //    return (ObservableCollection<HighlightItem>)serializer.Deserialize(reader);
-            //}
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<HighlightItem>));
+
+            FileStream s = new System.IO.FileStream(filename, FileMode.Open);
+            using (XmlTextReader reader = new XmlTextReader(s))
+            {
+                return (ObservableCollection<HighlightItem>)serializer.Deserialize(reader);
+            }
         }
     }
 }

@@ -56,6 +56,7 @@ namespace OxTail.Controls
         private long _offset = 0;
         private List<string> _readLines = new List<string>();
         private NewlineDetectionMode _newlineDetectionMode;
+        private static IStringPatternMatching patternMatching = StringPatternMatching.CreatePatternMatching();
 
         public string NewlineCharacters
         {
@@ -189,8 +190,8 @@ namespace OxTail.Controls
         public static IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
         {
             foreach (HighlightItem item in coll)
-            {
-                if (item.Pattern == text) // todo: match pattern
+            {                
+                if(patternMatching.MatchPattern(text, item.Pattern))
                 {
                     yield return item;
                 }

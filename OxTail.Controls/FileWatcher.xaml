@@ -38,7 +38,7 @@
       </StatusBarItem>
       <StatusBarItem Grid.Column="3">
         <Button x:Name="buttonRefresh" Click="buttonRefresh_Click">
-          <Image Source="/OxTail.Controls;component/Images/refresh.png"></Image>
+          <Image Source="/OxTail.Controls;component/Images/refresh.png" ToolTip="Refresh the document view"></Image>
         </Button>
       </StatusBarItem>
       <StatusBarItem Grid.Column="4">
