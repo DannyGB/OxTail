@@ -59,6 +59,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ValueConverters\LongToVanillaString.cs" />
+    <Compile Include="ValueConverters\LongToFriendlyFilesizeString.cs" />
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />
     <Compile Include="PatternMatching\PatternToMatchWasNullException.cs" />
     <Compile Include="PatternMatching\StringPatternMatching.cs" />

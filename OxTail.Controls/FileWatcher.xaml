@@ -4,47 +4,96 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" xmlns:my="clr-namespace:OxTail.Controls">
+             d:DesignHeight="241" d:DesignWidth="481" xmlns:my="clr-namespace:OxTail.Controls" SizeChanged="UserControl_SizeChanged">
+  <UserControl.Resources>
+    <!-- style used on text in status bar to show elipses (...) when text is cut off -->
+    <Style TargetType="TextBlock" x:Key="StatusBarTextBlock">
+      <Setter Property="TextWrapping" Value="NoWrap" />
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+      <Setter Property="Padding" Value="2,0" />
+    </Style>
+
+    <!-- since we are using a Seperator, but not as an immediate child of the StatusBar, we will make use of that style manually -->
+    <!-- thanks to WineNCheese for this one - http://tinyurl.com/byh9ac -->
+    <Style TargetType="Separator" BasedOn="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}">
+      <Setter Property="Margin" Value="2,0" />
+    </Style>
+
+  </UserControl.Resources>
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="276*"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
-    <StatusBar x:Name="statusBar" Grid.Row="1">
-      <StatusBar.ItemsPanel>
-        <ItemsPanelTemplate>
-          <Grid>
-            <Grid.RowDefinitions>
-              <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-              <ColumnDefinition Width="4*"/>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="Auto"/>
-              <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-          </Grid>
-        </ItemsPanelTemplate>
-      </StatusBar.ItemsPanel>
-      <StatusBarItem Grid.Column="0">
-        <TextBlock Name="textBlockMainStatus">Ready</TextBlock>
-      </StatusBarItem>
-      <StatusBarItem Grid.Column="1">
-        <ComboBox Name="comboBoxNewlineDetection" Width="70"/>
-      </StatusBarItem>
-      <StatusBarItem Grid.Column="2">
-        <ComboBox Name="comboBoxEncoding" Width="100"/>
-      </StatusBarItem>
-      <StatusBarItem Grid.Column="3">
-        <Button x:Name="buttonRefresh" Click="buttonRefresh_Click">
-          <Image Source="/OxTail.Controls;component/Images/refresh.png" ToolTip="Refresh the document view"></Image>
-        </Button>
-      </StatusBarItem>
-      <StatusBarItem Grid.Column="4">
-        <ProgressBar Name="progressBarStatus" Width="50" Height="18"/>
-      </StatusBarItem>
+    <StatusBar x:Name="statusBar" Grid.Row="1" HorizontalAlignment="Stretch" Grid.Column="0">
+      <Grid>
+        <Grid.RowDefinitions>
+          <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Column="0">
+          <StatusBarItem Grid.Column="0">
+            <TextBlock Name="textBlockStartLine">Start line</TextBlock>
+          </StatusBarItem>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="1">
+          <Separator />
+          <StatusBarItem>
+            <TextBlock Name="textBlockVisibleLines">Visible lines</TextBlock>
+          </StatusBarItem>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="2">
+          <Separator/>
+          <StatusBarItem>
+            <TextBlock Name="textBlockLinesInFile">Lines in file</TextBlock>
+          </StatusBarItem>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="3" >
+          <Separator/>
+          <StatusBarItem>
+            <TextBlock Name="textBlockMainStatus">Ready</TextBlock>
+          </StatusBarItem>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="4">
+          <Separator/>
+          <StatusBarItem>
+            <ComboBox Name="comboBoxNewlineDetection" Width="70"/>
+          </StatusBarItem>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="5">
+          <Separator/>
+          <StatusBarItem>
+            <ComboBox Name="comboBoxEncoding" Width="100"/>
+          </StatusBarItem>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="6">
+          <Separator/>
+          <StatusBarItem>
+            <Button x:Name="buttonRefresh" Height="18" ButtonBase.Click="buttonRefresh_Click">
+              <Image Source="/OxTail.Controls;component/Images/refresh.png"></Image>
+            </Button>
+          </StatusBarItem>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Column="7">
+          <Separator/>
+          <StatusBarItem>
+            <ProgressBar Name="progressBarStatus" Width="50" Height="18"/>
+          </StatusBarItem>
+        </StackPanel>
+      </Grid>
     </StatusBar>
-    <my:ColourfulListView x:Name="colourfulListView" Grid.Row="0" x:FieldModifier="private" FontFamily="Consolas"/>
+    <DockPanel Grid.Row="0" Grid.Column="0">
+      <ScrollBar x:Name="scrollBar" Orientation="Vertical" DockPanel.Dock="Right" ValueChanged="scrollBar_ValueChanged" />
+      <my:ColourfulListView ScrollViewer.VerticalScrollBarVisibility="Hidden" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left"/>
+    </DockPanel>
   </Grid>
 </UserControl>
