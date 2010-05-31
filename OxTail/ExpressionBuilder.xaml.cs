@@ -29,40 +29,29 @@ namespace OxTail
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
-    using OxTailLogic.PatternMatching;
-    using OxTail.Properties;
-    using OxTail.Controls;
 
     /// <summary>
-    /// Interaction logic for Highlight.xaml
+    /// Interaction logic for ExpressionBuilder.xaml
     /// </summary>
-    public partial class Highlight : Window
+    public partial class ExpressionBuilder : Window
     {
-        public Highlight()
+        public OxTail.Controls.Expression Expression { get; set; }
+
+        public ExpressionBuilder()
         {
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void RegularExpressionBuilder_OkClick(object sender, RoutedEventArgs e)
         {
-            this.hightlighting.Patterns = MainWindow.HighlightItems;
-            this.hightlighting.Bind();
+            this.Expression = this.regularExpressionBuilder.Expression;
+            this.DialogResult = true;
+            this.Close();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void RegularExpressionBuilder_CancelClick(object sender, RoutedEventArgs e)
         {
-            HighlightItem.SaveHighlights(this.hightlighting.Patterns, Settings.Default.HighlightFileLocations);
-        }
-
-        private void hightlighting_OpenExpressionBuilder(object sender, RoutedEventArgs e)
-        {
-            ExpressionBuilder builder = new ExpressionBuilder();
-            builder.ShowDialog();
-
-            if (builder.DialogResult.HasValue && builder.DialogResult.Value)
-            {
-                this.hightlighting.Pattern = builder.Expression.Text;
-            }
+            this.Close();
         }
     }
 }

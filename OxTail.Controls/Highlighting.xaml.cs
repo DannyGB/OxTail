@@ -21,13 +21,15 @@ namespace OxTail.Controls
     using System.Windows.Controls;
     using System.Windows.Media;
     using System.Collections.ObjectModel;
+    using System;
 
     /// <summary>
     /// Interaction logic for Highlighting.xaml
     /// </summary>
     public partial class Highlighting : UserControl
     {        
-        public ObservableCollection<HighlightItem> Patterns { get; set; }
+        public event RoutedEventHandler OpenExpressionBuilder;
+        public ObservableCollection<HighlightItem> Patterns { get; set; }        
 
         public Highlighting()
         {
@@ -35,6 +37,14 @@ namespace OxTail.Controls
             
             this.buttonColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
             this.buttonBackColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;
+        }
+
+        public string Pattern 
+        {
+            set
+            {
+                this.textBoxPattern.Text = value;
+            }
         }
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e)
@@ -63,10 +73,6 @@ namespace OxTail.Controls
             }
 
             ((ObservableCollection<HighlightItem>)this.listViewPatterns.DataContext).Remove((HighlightItem)this.listViewPatterns.SelectedItem);
-        }
-
-        private void buttonEdit_Click(object sender, RoutedEventArgs e)
-        {                      
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
@@ -116,6 +122,14 @@ namespace OxTail.Controls
                 this.textBoxPattern.Foreground = new SolidColorBrush(selectedPattern.ForeColour);
                 this.textBoxPattern.Background = new SolidColorBrush(selectedPattern.BackColour);
                 this.checkBoxIgnoreCase.IsChecked = selectedPattern.IgnoreCase;
+            }
+        }
+
+        private void buttonExpressionBuilder_Click(object sender, RoutedEventArgs e)
+        {
+            if (OpenExpressionBuilder != null)
+            {
+                this.OpenExpressionBuilder(this, e);
             }
         }
     }

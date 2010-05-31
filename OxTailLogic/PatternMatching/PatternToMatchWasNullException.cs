@@ -15,25 +15,23 @@
 * along with OxTail.  If not, see <http://www.gnu.org/licenses/>.
 * ********************************************************************/
 
-namespace OxTail.Controls
+
+namespace OxTailLogic.PatternMatching
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Windows;
 
-    class FileWatcherProgressChangedUserState
+    [Serializable]
+    public class PatternToMatchWasNullException : Exception
     {
-        public string MainStatusText { get; set; }
-        public bool ProgressBarIndeterminate { get; set; }
-        public Visibility ProgressBarVisibility { get; set; }
-
-        public FileWatcherProgressChangedUserState(string status, bool progressBarIndeterminate, Visibility progressBarVisibility)
-        {
-            this.MainStatusText = status;
-            this.ProgressBarIndeterminate = progressBarIndeterminate;
-            this.ProgressBarVisibility = progressBarVisibility;
-        }
-    }
+        public PatternToMatchWasNullException() { }
+        public PatternToMatchWasNullException(string message) : base(message) { }
+        public PatternToMatchWasNullException(string message, Exception inner) : base(message, inner) { }
+        protected PatternToMatchWasNullException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
+    }    
 }

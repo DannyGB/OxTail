@@ -15,7 +15,7 @@
 * along with OxTail.  If not, see <http://www.gnu.org/licenses/>.
 * ********************************************************************/
 
-namespace OxTail
+namespace OxTail.Controls
 {
     using System;
     using System.Collections.Generic;
@@ -29,40 +29,46 @@ namespace OxTail
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
-    using OxTailLogic.PatternMatching;
-    using OxTail.Properties;
-    using OxTail.Controls;
 
     /// <summary>
-    /// Interaction logic for Highlight.xaml
+    /// Interaction logic for SaveExpressionMessage.xaml
     /// </summary>
-    public partial class Highlight : Window
+    public partial class SaveExpressionMessage : Window
     {
-        public Highlight()
+        public SaveExpressionMessage()
         {
             InitializeComponent();
         }
 
+        public string Label
+        {
+            set
+            {
+                this.labelMessage.Content = value;
+            }
+        }
+
+        public string Message
+        {
+            get
+            {
+                return this.textBoxMessage.Text;
+            }
+        }
+
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = true;
+        }
+
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.DialogResult = false;
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            this.hightlighting.Patterns = MainWindow.HighlightItems;
-            this.hightlighting.Bind();
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            HighlightItem.SaveHighlights(this.hightlighting.Patterns, Settings.Default.HighlightFileLocations);
-        }
-
-        private void hightlighting_OpenExpressionBuilder(object sender, RoutedEventArgs e)
-        {
-            ExpressionBuilder builder = new ExpressionBuilder();
-            builder.ShowDialog();
-
-            if (builder.DialogResult.HasValue && builder.DialogResult.Value)
-            {
-                this.hightlighting.Pattern = builder.Expression.Text;
-            }
+            this.textBoxMessage.Focus();
         }
     }
 }

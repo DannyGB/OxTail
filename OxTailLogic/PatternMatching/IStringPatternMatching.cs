@@ -25,6 +25,12 @@ namespace OxTailLogic.PatternMatching
 
     public interface IStringPatternMatching
     {
-      bool MatchPattern(string text, string pattern);
+        /// <summary>
+        /// Match the pattern in the text
+        /// </summary>
+        /// <param name="text">The text to find the pattern in</param>
+        /// <param name="pattern">The pattern to find in the text</param>
+        /// <returns>A <see cref="bool"/> whether the pattern was found in the text</returns>
+        bool MatchPattern(string text, string pattern);
     }
 }

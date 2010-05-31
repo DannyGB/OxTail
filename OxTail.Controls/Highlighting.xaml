@@ -29,6 +29,7 @@
             <TextBox Height="23" x:Name="textBoxPattern" Text="Enter String" Margin="10,0" Width="138" />
             <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="Fore Colour" />
             <custom:ColourButton x:Name="buttonBackColour" Click="buttonBackColour_Click" Width="70" Content="Back Colour" />
+            <Button Name="buttonExpressionBuilder" Content="Expression Builder" Click="buttonExpressionBuilder_Click" />
         </StackPanel>
     </Grid>
 </UserControl>
