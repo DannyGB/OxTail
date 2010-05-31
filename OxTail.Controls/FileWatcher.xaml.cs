@@ -31,6 +31,9 @@ namespace OxTail.Controls
     using OxTailLogic.PatternMatching;
     using System.Collections.ObjectModel;
     using System.Windows.Media;
+    using OxTailLogic;
+    using OxTailHelpers;
+    using System.Windows.Controls.Primitives;
     
     /// <summary>
     /// Interaction logic for FileWatcher.xaml
@@ -42,7 +45,6 @@ namespace OxTail.Controls
         private BackgroundWorker _bw = null;
         private object _fileReadLock = new object();
         private long _startLine = 0;
-        private long _numberOfLinesInFile = 0;
         private int _visibleLines = 20;
         private Encoding _tailEncoding = Encoding.Default;
         private DateTime _dateLastTime = DateTime.MinValue;
@@ -71,6 +73,8 @@ namespace OxTail.Controls
             }
         }
 
+        public int LinesInFile { get; set; }
+
         public NewlineDetectionMode NewlineDetectionMode 
         {
             get 
@@ -93,6 +97,7 @@ namespace OxTail.Controls
                 ReadLines();
                 Dispatcher.Invoke(DispatcherPriority.Render, new Action(this.Update));
             }
+            this._previousLength = this._currentLength;
         }
 
         public Encoding TailEncoding
@@ -179,8 +184,23 @@ namespace OxTail.Controls
                     this.Lines[i] = item;
                 }
             }
-            // todo: add separate status bar item for start line, number of visible lines and total file lines. Probably file size too.
-            this.ReportProgress(0, string.Format("Showing lines {0}-{1} of {2}", this._startLine, this._startLine + this._visibleLines, this._numberOfLinesInFile), false, System.Windows.Visibility.Hidden);
+            if (this.VisibleLines < this.Lines.Count)
+            {
+                int linesToRemove = this.Lines.Count - this.VisibleLines;
+                for (int i = 0; i < linesToRemove; i++)
+                {
+                    if (this.Lines.Count > 0)
+                    {
+                        this.Lines.RemoveAt(this.Lines.Count - 1);
+                    }
+                }
+            }
+            this.ReportProgress(0, String.Empty, false, System.Windows.Visibility.Hidden);
+            this.textBlockStartLine.Text = this.StartLine.ToString();
+            this.textBlockLinesInFile.Text = this.LinesInFile.ToString();
+            this.textBlockVisibleLines.Text = this.VisibleLines.ToString();
+            this.scrollBar.Maximum = this.LinesInFile;
+            this.scrollBar.Value = this.StartLine;
         }
 
         public static IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
@@ -202,9 +222,6 @@ namespace OxTail.Controls
         {
             HighlightedItem highlighted = new HighlightedItem();
             highlighted.Text = text;
-
-            highlighted.ForeColour = Colors.Black;
-            highlighted.BackColour = Colors.AliceBlue;
 
             foreach (HighlightItem highlight in FindFirstHighlightByText(this.Patterns, text))
             {
@@ -249,7 +266,7 @@ namespace OxTail.Controls
         {
             this._readLines.Clear();
             // educated guess at quickest direction to go - position the cursor at the beginning if our first line is in the first "half" (variable line lengths!) of the file
-            if (this._startLine < (this._numberOfLinesInFile / 2))
+            if (this._startLine < (this.LinesInFile / 2))
             {
                 ReadLinesForwards();
             }
@@ -262,9 +279,9 @@ namespace OxTail.Controls
         private void PositionFilePointerToOffset(long target)
         {
             this._streamReader.DiscardBufferedData();
-            //long smallestOffset;
-            //SeekOrigin seekOrigin = this.CalculateClosestSeekOrigin(target, out smallestOffset);
-            //this._fileStream.Seek(smallestOffset, seekOrigin);
+            long smallestOffset;
+            SeekOrigin seekOrigin = this.CalculateClosestSeekOrigin(target, out smallestOffset);
+            this._fileStream.Seek(smallestOffset, seekOrigin);
             this._fileStream.Seek(target, SeekOrigin.Begin);
         }
 
@@ -277,7 +294,7 @@ namespace OxTail.Controls
             StringBuilder chunkAsString = new StringBuilder();
 
             // calculate how many lines we need to read
-            linesToRead = this._numberOfLinesInFile - this._startLine;
+            linesToRead = this.LinesInFile - this._startLine;
 
             // go directly to the end of the file
             this.PositionFilePointerToOffset(this._currentLength);
@@ -425,7 +442,8 @@ namespace OxTail.Controls
             this._fileInfo = new FileInfo(filename);
             this._fileStream = new FileStream(filename,FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize);
             this._streamReader = new StreamReader(this._fileStream, this.TailEncoding, true, this._chunkSize);
-            this.SetNewlineCharacters();    
+            this.SetNewlineCharacters();
+            this.CalculateVisibleLines();
             if (!this._bw.IsBusy)
             {
                 this._bw.RunWorkerAsync();
@@ -472,7 +490,6 @@ namespace OxTail.Controls
                 this._fileInfo.Refresh(); // see if file has changed
                 if (this.FollowTail && (this._currentLength != this._fileStream.Length || this._dateLastTime.Ticks != Math.Max(this._fileInfo.LastWriteTime.Ticks, this._fileInfo.CreationTime.Ticks)))
                 {
-                    this._previousLength = this._currentLength;
                     this._currentLength = length;
                     this._dateLastTime = new DateTime(Math.Max(this._fileInfo.CreationTime.Ticks, this._fileInfo.LastWriteTime.Ticks));
                     this.Refresh();
@@ -503,7 +520,7 @@ namespace OxTail.Controls
             long pos = this._fileStream.Position; // save current position
             if (this._previousLength == 0)
             {
-                this._numberOfLinesInFile = 0;
+                this.LinesInFile = 0;
                 this._previousLastLineOffset = 0;
             }
             if (this.NewlineCharacters != "\r\n" && this.NewlineCharacters != "\n" && this.NewlineCharacters != "\r")
@@ -530,16 +547,17 @@ namespace OxTail.Controls
                 offset += line.Length + this._newlineCharacters.Length;
                 if (this._previousLength == 0 ||  offset < this._currentLength)
                 {
-                    this._numberOfLinesInFile++;
+                    this.LinesInFile++;
                 }
-                if (this._numberOfLinesInFile % 1000 == 0)
+
+                if (this.LinesInFile % 1000 == 0)
                 {
-                    ReportProgress((int)(this._fileStream.Position * 100 / this._currentLength), string.Format("counting lines in file: {0}", this._numberOfLinesInFile), false, System.Windows.Visibility.Visible);
+                    ReportProgress((int)(offset * 100 / this._currentLength), string.Format("counting lines in file: {0}", this.LinesInFile), false, System.Windows.Visibility.Visible);
                 }
             }
             this.PositionFilePointerToOffset(pos); // back to saved position
-            ReportProgress(100, string.Format("counted {0} lines", this._numberOfLinesInFile), false, System.Windows.Visibility.Hidden);
-            return this._numberOfLinesInFile;
+            ReportProgress(100, string.Format("counted {0} lines", this.LinesInFile), false, System.Windows.Visibility.Hidden);
+            return this.LinesInFile;
         }
 
         private bool CancellationPending()
@@ -561,7 +579,7 @@ namespace OxTail.Controls
 
             if (this.FollowTail)
             {
-                newStartLine = Math.Max(this._numberOfLinesInFile - this.VisibleLines, 0);
+                newStartLine = Math.Max(this.LinesInFile - this.VisibleLines, 0);
             }
             else
             {
@@ -576,7 +594,7 @@ namespace OxTail.Controls
         private void ReportProgress(int progressBarPercentage, string status, bool progressBarIndeterminate, System.Windows.Visibility progressBarVisibility)
         {
             this.Dispatcher.Invoke(new StatusNotificationDelegate(this.ShowStatus), DispatcherPriority.Render, progressBarPercentage, new FileWatcherProgressChangedUserState(status, progressBarIndeterminate, progressBarVisibility));
-            //Thread.Sleep(100);
+            //Thread.Sleep(20);
         }
 
         internal void Stop()
@@ -629,6 +647,51 @@ namespace OxTail.Controls
                 this._patterns = value;
                 this.Patterns.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Patterns_CollectionChanged);
             }
+        }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            lock (this)
+            {
+                int visible = this.VisibleLines;
+                this.CalculateVisibleLines();
+                if (visible != this.VisibleLines)
+                {
+                    this.Refresh();
+                }
+            }
+        }
+
+        private void CalculateVisibleLines()
+        {
+            if (!this.colourfulListView.HasItems)
+            {
+                this.colourfulListView.Items.Add("");
+            }
+            object lvi = this.colourfulListView.ItemContainerGenerator.ContainerFromIndex(0);
+            double inner = this.colourfulListView.ActualHeight;
+            List<ScrollContentPresenter> scrollers = this.colourfulListView.GetVisualChildren<ScrollContentPresenter>();
+            if (scrollers != null && scrollers.Count > 0)
+            {
+                foreach (ScrollContentPresenter scroller in scrollers)
+                {
+                    if (scroller.IsVisible)
+                    {
+                        inner = Math.Floor(scroller.ActualHeight);
+                    }
+                }
+            }
+            if (lvi is ListViewItem)
+            {
+                double lineHeight = ((ListViewItem)lvi).ActualHeight;
+                this.VisibleLines = (int)Math.Floor((inner) / lineHeight) -1;
+            }
+        }
+
+        private void scrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.StartLine = (int)e.NewValue;
+            //this.Refresh();
         }
     }
 }
