@@ -21,19 +21,10 @@ namespace OxTail.Controls
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Windows;
+    using System.Windows.Controls;
 
-    class FileWatcherProgressChangedUserState
+    public class SpecialButton : Button
     {
-        public string MainStatusText { get; set; }
-        public bool ProgressBarIndeterminate { get; set; }
-        public Visibility ProgressBarVisibility { get; set; }
-
-        public FileWatcherProgressChangedUserState(string status, bool progressBarIndeterminate, Visibility progressBarVisibility)
-        {
-            this.MainStatusText = status;
-            this.ProgressBarIndeterminate = progressBarIndeterminate;
-            this.ProgressBarVisibility = progressBarVisibility;
-        }
+        public string HeldTextValue { get; set; }
     }
 }

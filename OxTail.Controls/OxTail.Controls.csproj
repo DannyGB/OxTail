@@ -57,6 +57,8 @@
     </Compile>
     <Compile Include="ColourButton.cs" />
     <Compile Include="ColourfulListView.cs" />
+    <Compile Include="Expression.cs" />
+    <Compile Include="ExpressionTextBox.cs" />
     <Compile Include="HighlightedItem.cs" />
     <Compile Include="FileWatcherProgressChangedUserState.cs" />
     <Compile Include="FileWatcherTabItem.xaml.cs">
@@ -73,6 +75,13 @@
     <Compile Include="FileWatcher.xaml.cs">
       <DependentUpon>FileWatcher.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RegularExpressionBuilder.xaml.cs">
+      <DependentUpon>RegularExpressionBuilder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SaveExpressionMessage.xaml.cs">
+      <DependentUpon>SaveExpressionMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="SpecialRadioButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\ColorSwatchCircle.png" />
@@ -107,6 +116,14 @@
     <Page Include="FileWatcher.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RegularExpressionBuilder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SaveExpressionMessage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="themes\generic.xaml">
       <SubType>Designer</SubType>

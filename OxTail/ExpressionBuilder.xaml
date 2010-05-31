@@ -1,0 +1,9 @@
+﻿<Window x:Class="OxTail.ExpressionBuilder"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ExpressionBuilder" Height="419" Width="564"
+        xmlns:oxtail="clr-namespace:OxTail.Controls;assembly=OxTail.Controls" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <oxtail:RegularExpressionBuilder x:Name="regularExpressionBuilder" OkClick="RegularExpressionBuilder_OkClick" CancelClick="RegularExpressionBuilder_CancelClick"></oxtail:RegularExpressionBuilder>
+    </Grid>
+</Window>

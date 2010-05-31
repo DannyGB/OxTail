@@ -60,7 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />
+    <Compile Include="PatternMatching\PatternToMatchWasNullException.cs" />
     <Compile Include="PatternMatching\StringPatternMatching.cs" />
+    <Compile Include="PatternMatching\TextToMatchWasNullException.cs" />
     <Compile Include="Persistance\ApplicationAttributes.cs" />
     <Compile Include="Persistance\IPersist.cs" />
     <Compile Include="Persistance\RegistryPersister.cs" />

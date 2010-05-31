@@ -187,9 +187,13 @@ namespace OxTail.Controls
         {
             foreach (HighlightItem item in coll)
             {
-                if(text == item.Pattern || patternMatching.MatchPattern(text, item.Pattern))
+                // Empty pattern should not exist (a blank line should be a "special" Highlight item?
+                if (!string.IsNullOrEmpty(item.Pattern) && !string.IsNullOrEmpty(text) )
                 {
-                    yield return item;
+                    if (text == item.Pattern || patternMatching.MatchPattern(text, item.Pattern))
+                    {
+                        yield return item;
+                    }
                 }
             }
         }

@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="OxTail.Controls.RegularExpressionBuilder"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="383" d:DesignWidth="542"
+             xmlns:oxtail="clr-namespace:OxTail.Controls" Loaded="UserControl_Loaded">
+    <Grid Name="GridMain" Width="532">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"></RowDefinition>
+            <RowDefinition Height="255"></RowDefinition>            
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Grid.Column="0" Name="grid3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80"></ColumnDefinition>
+                <ColumnDefinition Width="320"></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0"  Content="Expression:" Height="28" HorizontalAlignment="Left" Margin="2,5,0,0" Name="label1" VerticalAlignment="Bottom" FontWeight="Bold" />
+            <Label Grid.Column="1" Name="labelSavedExpressions" Content="Saved Expressions:" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,5,5,2" />
+            <ComboBox Name="comboBoxSavedExpressions" SelectedIndex="0" Grid.Column="1" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,5,5,2" Width="190" SelectionChanged="comboBoxSavedExpressions_SelectionChanged" ItemsSource="{Binding}">                
+            </ComboBox>
+            <Button Grid.Row="0" Grid.Column="2" Content="Save Expression" Height="23" Margin="10,10,12,2" Name="buttonSaveExpression" Width="110" HorizontalAlignment="Right" VerticalAlignment="Bottom" Click="buttonSaveExpression_Click" />
+            <oxtail:ExpressionTextBox Grid.Row="1" Grid.ColumnSpan="3" Height="55" HorizontalAlignment="Left" x:Name="textBoxExpression" VerticalAlignment="Top" Width="520" TextWrapping="Wrap" Margin="5,0,0,0" />            
+        </Grid>
+            <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="40"></RowDefinition>
+            </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0" Height="Auto" HorizontalAlignment="Left" Name="stackPanel1" VerticalAlignment="Top" Margin="10">
+                <oxtail:SpecialButton HeldTextValue="." Margin="2,10,2,2" Content="Any character (.)" Height="21" x:Name="radioButtonAnyCharacter" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="\w" Margin="2,10,2,2" Content="Alphanumeric (\w)" Height="21" x:Name="radioButtonAlphaNumric" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="\d" Margin="2,10,2,2" Content="Digit (\d)" Height="21" x:Name="radioButtonDigit" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="\s" Margin="2,10,2,2" Content="Whitespace (\s)" Height="21" x:Name="radioButtonWhitespace" Click="SpecialButton_Click" />
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="1" Height="Auto" HorizontalAlignment="Left" Name="stackPanel2" VerticalAlignment="Top" Margin="10">
+                <oxtail:SpecialButton HeldTextValue="*" Margin="2,10,2,2" Content="Any number (*)" Height="21" x:Name="radioButtonAnyNumber" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="+" Margin="2,10,2,2" Content="One or more (+)" Height="21" x:Name="radioButtonOneOrMore" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="?" Margin="2,10,2,2" Content="Zero or one (?)" Height="21" x:Name="radioButtonZeroOrOne" Click="SpecialButton_Click" />
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="2" Height="Auto" HorizontalAlignment="Left" Name="stackPanel3" VerticalAlignment="Top" Margin="10">
+                <oxtail:SpecialButton HeldTextValue="\n" Margin="2,10,2,2" Content="New line (\n)" Height="21" x:Name="radioButton1" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="\e" Margin="2,10,2,2" Content="Escape (\e)" Height="21" x:Name="radioButton2" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="\b" Margin="2,10,2,2" Content="Backspace (\b)" Height="21" x:Name="radioButton3" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="\t" Margin="2,10,2,2" Content="Tab (\t)" Height="21" x:Name="radioButton4" Click="SpecialButton_Click" />
+        </StackPanel>
+        <StackPanel Grid.Row="0" Grid.Column="3" Height="Auto" HorizontalAlignment="Left" Name="stackPanel4" VerticalAlignment="Top" Margin="10">
+                <oxtail:SpecialButton HeldTextValue="^" Margin="2,10,2,2" Content="Start of line (^)" Height="21" x:Name="radioButton5" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="$" Margin="2,10,2,2" Content="End of line ($)" Height="21" x:Name="radioButton6" Click="SpecialButton_Click" />
+                <oxtail:SpecialButton HeldTextValue="\f"  Margin="2,10,2,2" Content="Form feed (\f)" Height="21" x:Name="radioButton9" Click="SpecialButton_Click" />
+            <ComboBox Name="comboBoxSets" SelectionChanged="comboBoxSets_SelectionChanged">
+                    <ComboBoxItem Content="a-zA-z" />
+                    <ComboBoxItem Content="a-z" />
+                    <ComboBoxItem Content="A-Z" />
+                    <ComboBoxItem Content="0-9" />
+                    <ComboBoxItem Content="aeiou" />
+                </ComboBox>
+            </StackPanel>
+            <Button Grid.Row="1" Grid.Column="2" Name="buttonOk" Content="Ok" Click="buttonOk_Click" Margin="2,2,2,2"/>
+            <Button Grid.Row="1" Grid.Column="3" Name="buttonCancel" Content="Cancel" Click="buttonCancel_Click" Margin="2,2,2,2" />
+        </Grid>        
+    </Grid>
+</UserControl>
