@@ -28,20 +28,16 @@ namespace OxTail.Controls
     using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Threading;
-    using OxTailLogic.PatternMatching;
-    using System.Collections.ObjectModel;
-    using System.Windows.Media;
-    using OxTailLogic;
     using OxTailHelpers;
-    using System.Windows.Controls.Primitives;
-    
+    using OxTailLogic.PatternMatching;
+    using System.Windows.Media;
+
     /// <summary>
     /// Interaction logic for FileWatcher.xaml
     /// </summary>
     public partial class FileWatcher : UserControl, IDisposable
     {
         private StreamReader _streamReader = null;
-        private FileStream _fileStream = null;
         private BackgroundWorker _bw = null;
         private object _fileReadLock = new object();
         private long _startLine = 0;
@@ -60,6 +56,8 @@ namespace OxTail.Controls
         private NewlineDetectionMode _newlineDetectionMode;
         private static IStringPatternMatching patternMatching = StringPatternMatching.CreatePatternMatching();
         private long _previousLastLineOffset = 0;
+        private ScrollContentPresenter _scrollContentPresenter = null;
+        private int _interval = 1000;
 
         public string NewlineCharacters
         {
@@ -91,13 +89,21 @@ namespace OxTail.Controls
 
         private void Refresh()
         {
-            this.StartLine = this.CalculateStartLine();
-            if (this.StartLine > -1)
+            using (this._streamReader = this.OpenFile())
             {
-                ReadLines();
-                Dispatcher.Invoke(DispatcherPriority.Render, new Action(this.Update));
+                this.StartLine = this.CalculateStartLine();
+                if (this.StartLine > -1)
+                {
+                    ReadLines();
+                    Dispatcher.Invoke(DispatcherPriority.Render, new Action(this.Update));
+                }
+                this._previousLength = this._currentLength;
             }
-            this._previousLength = this._currentLength;
+        }
+
+        private StreamReader OpenFile()
+        {
+            return new StreamReader(new FileStream(this._fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize), this.TailEncoding, true, this._chunkSize);
         }
 
         public Encoding TailEncoding
@@ -168,12 +174,16 @@ namespace OxTail.Controls
             set { this._startLine = value; }
         }
 
+        /// <summary>
+        /// Updates the current display
+        /// </summary>
         private void Update()
         {
             IStringPatternMatching highlighting = new StringPatternMatching();
+            this.BeginInit();
+            // highlight and add/update items to the listview
             for (int i = 0; i < this._readLines.Count; i++)
             {
-                //TextBlock textBlock = new TextBlock(new Run(this._readLines[i]));
                 HighlightedItem item = this.Highlight(this._readLines[i]);
                 if (this.Lines.Count <= i)
                 {
@@ -184,6 +194,7 @@ namespace OxTail.Controls
                     this.Lines[i] = item;
                 }
             }
+            // remove excess lines (after window resized smaller)
             if (this.VisibleLines < this.Lines.Count)
             {
                 int linesToRemove = this.Lines.Count - this.VisibleLines;
@@ -195,12 +206,12 @@ namespace OxTail.Controls
                     }
                 }
             }
+            // update the status bar
             this.ReportProgress(0, String.Empty, false, System.Windows.Visibility.Hidden);
             this.textBlockStartLine.Text = this.StartLine.ToString();
             this.textBlockLinesInFile.Text = this.LinesInFile.ToString();
             this.textBlockVisibleLines.Text = this.VisibleLines.ToString();
-            this.scrollBar.Maximum = this.LinesInFile;
-            this.scrollBar.Value = this.StartLine;
+            this.EndInit();
         }
 
         public static IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
@@ -223,6 +234,10 @@ namespace OxTail.Controls
             HighlightedItem highlighted = new HighlightedItem();
             highlighted.Text = text;
 
+            // todo: make configurable?
+            highlighted.ForeColour = Colors.Black;
+            highlighted.BackColour = Colors.White;
+
             foreach (HighlightItem highlight in FindFirstHighlightByText(this.Patterns, text))
             {
                 highlighted.ForeColour = highlight.ForeColour;
@@ -236,8 +251,8 @@ namespace OxTail.Controls
         private SeekOrigin CalculateClosestSeekOrigin(long target, out long smallestOffset)
         {
             long beginOffset = target;
-            // we want the following be negative for use in conjunction with SeekOrigin.Current or SeekOrigin.End
-            long currentOffset = target - this._fileStream.Position;
+            // we want the following to be negative for use in conjunction with SeekOrigin.Current or SeekOrigin.End
+            long currentOffset = target - this._streamReader.BaseStream.Position;
             long endOffset = target - this._currentLength;
 
             smallestOffset = Math.Min(Math.Min(beginOffset, Math.Abs(currentOffset)), Math.Abs(endOffset));
@@ -281,8 +296,8 @@ namespace OxTail.Controls
             this._streamReader.DiscardBufferedData();
             long smallestOffset;
             SeekOrigin seekOrigin = this.CalculateClosestSeekOrigin(target, out smallestOffset);
-            this._fileStream.Seek(smallestOffset, seekOrigin);
-            this._fileStream.Seek(target, SeekOrigin.Begin);
+            this._streamReader.BaseStream.Seek(smallestOffset, seekOrigin);
+            this._streamReader.BaseStream.Seek(target, SeekOrigin.Begin);
         }
 
         private void ReadLinesBackwards()
@@ -311,7 +326,7 @@ namespace OxTail.Controls
                 // shorten chunk to remaining file if necessary
                 if (this._offset + indexIncrement < 0)
                 {
-                    indexIncrement = -(int)this._fileStream.Position;
+                    indexIncrement = -(int)this._streamReader.BaseStream.Position;
                 }
 
                 // set pointer to beginning of next chunk
@@ -323,7 +338,7 @@ namespace OxTail.Controls
                 chunkAsString.Append(chunk);
 
                 // rudimentary way to split the chunk into seperate lines
-                string[] lineArray = chunkAsString.ToString().Substring(0, Math.Max(Math.Abs(indexIncrement), (int)(this._currentLength - this._offset))).Split(new string[] { this._newlineCharacters }, StringSplitOptions.None);
+                string[] lineArray = chunkAsString.ToString().TrimEnd(new char[] {'\0'}).Split(new string[] { this._newlineCharacters }, StringSplitOptions.None);
 
                 // insert the last line of this chunk at the beginning of the first line of the previous chunk
                 // this covers the usual scenario where a chunk disects a line
@@ -396,7 +411,6 @@ namespace OxTail.Controls
             }
         }
 
-        private int _interval = 1000;
         int Interval 
         {
             get { return this._interval; }
@@ -406,7 +420,7 @@ namespace OxTail.Controls
         public FileWatcher()
         {
             InitializeComponent();
-            
+
             // setup the line ending detection combo box
             this.comboBoxNewlineDetection.ItemsSource = Enum.GetNames(typeof(NewlineDetectionMode));
             Binding bindingNewlineDetection = new Binding("NewlineDetectionMode");
@@ -427,11 +441,6 @@ namespace OxTail.Controls
             this._bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_bw_RunWorkerCompleted);
         }
 
-        void Patterns_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            this.Update();
-        }
-
         void _bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             return;
@@ -440,10 +449,11 @@ namespace OxTail.Controls
         public void Start(string filename)
         {
             this._fileInfo = new FileInfo(filename);
-            this._fileStream = new FileStream(filename,FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize);
-            this._streamReader = new StreamReader(this._fileStream, this.TailEncoding, true, this._chunkSize);
-            this.SetNewlineCharacters();
-            this.CalculateVisibleLines();
+            using (this._streamReader = this.OpenFile())
+            {
+                this.SetNewlineCharacters();
+                this.CalculateVisibleLines();
+            }
             if (!this._bw.IsBusy)
             {
                 this._bw.RunWorkerAsync();
@@ -470,7 +480,7 @@ namespace OxTail.Controls
             this._doWorkEventArgs = e;
             while (!this._bw.CancellationPending)
             {
-                this.Tail(this._fileStream.Length);
+                this.Tail();
                 if (!this.CancellationPending())
                 {
                     Thread.Sleep(this.Interval);
@@ -483,16 +493,17 @@ namespace OxTail.Controls
         /// <summary>
         /// Reads only the latest additional text that has been appended to the file
         /// </summary>
-        private void Tail(long length)
+        private void Tail()
         {
             lock (this._fileReadLock)
             {
                 this._fileInfo.Refresh(); // see if file has changed
-                if (this.FollowTail && (this._currentLength != this._fileStream.Length || this._dateLastTime.Ticks != Math.Max(this._fileInfo.LastWriteTime.Ticks, this._fileInfo.CreationTime.Ticks)))
+                if (this.FollowTail && (this._currentLength != this._fileInfo.Length || this._dateLastTime.Ticks != Math.Max(this._fileInfo.LastWriteTime.Ticks, this._fileInfo.CreationTime.Ticks)))
                 {
-                    this._currentLength = length;
+                    this._currentLength = this._fileInfo.Length;
                     this._dateLastTime = new DateTime(Math.Max(this._fileInfo.CreationTime.Ticks, this._fileInfo.LastWriteTime.Ticks));
                     this.Refresh();
+                    this.OnFileChanged();
                 }
 
             }
@@ -509,15 +520,17 @@ namespace OxTail.Controls
             remove { RemoveHandler(FileChangedEvent, value); }
         }
 
-        private void RaiseFileChangedEvent()
+        private void OnFileChanged()
         {
+            Dispatcher.Invoke((Action) (() => {
             RoutedEventArgs newEventArgs = new RoutedEventArgs(FileWatcher.FileChangedEvent);
             this.RaiseEvent(new RoutedEventArgs(FileWatcher.FileChangedEvent, this));
+            }
+            ));
         }
 
         private long CountLinesInFile()
         {
-            long pos = this._fileStream.Position; // save current position
             if (this._previousLength == 0)
             {
                 this.LinesInFile = 0;
@@ -528,7 +541,7 @@ namespace OxTail.Controls
                 this.SetNewlineCharacters();    
             }
             this.PositionFilePointerToOffset(this._previousLastLineOffset); // only count from previous length to save time
-            long offset = this._fileStream.Position;
+            long offset = this._streamReader.BaseStream.Position;
             while (offset < this._currentLength)
             {
                 // honour cancellation request
@@ -555,7 +568,6 @@ namespace OxTail.Controls
                     ReportProgress((int)(offset * 100 / this._currentLength), string.Format("counting lines in file: {0}", this.LinesInFile), false, System.Windows.Visibility.Visible);
                 }
             }
-            this.PositionFilePointerToOffset(pos); // back to saved position
             ReportProgress(100, string.Format("counted {0} lines", this.LinesInFile), false, System.Windows.Visibility.Hidden);
             return this.LinesInFile;
         }
@@ -619,11 +631,6 @@ namespace OxTail.Controls
                 this._streamReader.Close();
                 this._streamReader.Dispose();
             }
-            if (this._fileStream != null)
-            {
-                this._fileStream.Close();
-                this._fileStream.Dispose();
-            }
         }
 
         private void buttonRefresh_Click(object sender, RoutedEventArgs e)
@@ -635,8 +642,8 @@ namespace OxTail.Controls
             }
         }
 
-        private ObservableCollection<HighlightItem> _patterns;
-        public ObservableCollection<HighlightItem> Patterns
+        private BindingList<HighlightItem> _patterns;
+        public BindingList<HighlightItem> Patterns
         {
             get
             {
@@ -645,8 +652,13 @@ namespace OxTail.Controls
             set
             {
                 this._patterns = value;
-                this.Patterns.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Patterns_CollectionChanged);
+                this.Patterns.ListChanged += new ListChangedEventHandler(Patterns_ListChanged);
             }
+        }
+
+        void Patterns_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            this.Update();
         }
 
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -669,23 +681,33 @@ namespace OxTail.Controls
                 this.colourfulListView.Items.Add("");
             }
             object lvi = this.colourfulListView.ItemContainerGenerator.ContainerFromIndex(0);
-            double inner = this.colourfulListView.ActualHeight;
-            List<ScrollContentPresenter> scrollers = this.colourfulListView.GetVisualChildren<ScrollContentPresenter>();
-            if (scrollers != null && scrollers.Count > 0)
-            {
-                foreach (ScrollContentPresenter scroller in scrollers)
-                {
-                    if (scroller.IsVisible)
-                    {
-                        inner = Math.Floor(scroller.ActualHeight);
-                    }
-                }
-            }
+            double inner = GetScrollContentPresenterHeight();
+
             if (lvi is ListViewItem)
             {
                 double lineHeight = ((ListViewItem)lvi).ActualHeight;
-                this.VisibleLines = (int)Math.Floor((inner) / lineHeight) -1;
+                this.VisibleLines = (int)((inner) / lineHeight);
             }
+        }
+
+        private double GetScrollContentPresenterHeight()
+        {
+            if (this._scrollContentPresenter == null)
+            {
+                List<ScrollContentPresenter> scrollers = this.colourfulListView.GetVisualChildren<ScrollContentPresenter>();
+                if (scrollers != null && scrollers.Count > 0)
+                {
+                    foreach (ScrollContentPresenter scroller in scrollers)
+                    {
+                        if (scroller.IsVisible)
+                        {
+                            this._scrollContentPresenter = scroller;
+                            break;
+                        }
+                    }
+                }
+            }
+            return Math.Floor(this._scrollContentPresenter.ActualHeight);
         }
 
         private void scrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

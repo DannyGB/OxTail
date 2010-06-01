@@ -23,14 +23,15 @@ namespace OxTail.Controls
     using System.Windows;
     using System.Windows.Media.Imaging;
     using System.Collections.ObjectModel;
+    using System.ComponentModel;
 
     /// <summary>
     /// An extension of the CloseableTabItem control that views a file.
     /// </summary>
     public partial class FileWatcherTabItem : CloseableTabItem, IDisposable
     {
-        //private FileWatcher fileWatcher = null;
-        
+        private Image _image = null;
+
         public FileWatcherTabItem()
         {
             InitializeComponent();
@@ -39,7 +40,8 @@ namespace OxTail.Controls
         /// Creates an OxTailFileViewer instance and starts viewing the specified filename.
         /// </summary>
         /// <param name="filename">The full file path of the file to view.</param>
-        public FileWatcherTabItem(string filename, ObservableCollection<HighlightItem> patterns): this()
+        public FileWatcherTabItem(string filename, BindingList<HighlightItem> patterns)
+            : this()
         {
             this.Header = Path.GetFileName(filename);
             this.ToolTip = filename;
@@ -51,16 +53,12 @@ namespace OxTail.Controls
 
         void fileWatcher_FileChanged(object sender, RoutedEventArgs e)
         {
-            RaiseFileChangedEvent();
+            OnFileChanged();
         }
 
         void OxTailFileViewer_GotFocus(object sender, RoutedEventArgs e)
         {
-            Image img = base.GetTemplateChild("PART_Icon") as Image;
-            if (img != null)
-            {
-                img.Source = null;
-            }
+            SetImage(null);
         }
 
         public override void closeButton_Click(object sender, RoutedEventArgs e)
@@ -81,15 +79,37 @@ namespace OxTail.Controls
         }
 
         // This method raises the FileChanged event
-        void RaiseFileChangedEvent()
+        void OnFileChanged()
         {
-            Image img = base.GetTemplateChild("PART_Icon") as Image;
-            if (img != null)
+            SetImage("Images/bell.png");
+            Dispatcher.Invoke((Action)(() =>
             {
-                img.Source = new BitmapImage(new Uri("Images/bell.png", UriKind.Relative));
+                RoutedEventArgs newEventArgs = new RoutedEventArgs(FileWatcher.FileChangedEvent);
+                this.RaiseEvent(new RoutedEventArgs(FileWatcher.FileChangedEvent, this));
             }
-            RoutedEventArgs newEventArgs = new RoutedEventArgs(FileWatcherTabItem.FileChangedEvent);
-            this.RaiseEvent(new RoutedEventArgs(FileWatcherTabItem.FileChangedEvent, this));
+             ));
+        }
+
+        private void SetImage(string path)
+        {
+            //Dispatcher.Invoke((Action<string>)((path) =>
+            //{
+            if (this._image == null)
+            {
+                this._image = base.GetTemplateChild("PART_Icon") as Image;
+            }
+            if (this._image != null)
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    this._image.Source = null;
+                }
+                else
+                {
+                    this._image.Source = new BitmapImage(new Uri(path, UriKind.Relative));
+                }
+            }
+            //}), imagePath);
         }
 
         #region IDisposable Members

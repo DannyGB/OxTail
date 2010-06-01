@@ -1,7 +1,8 @@
 ﻿<UserControl x:Class="OxTail.Controls.ColorPicker"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Height="340" Width="510">
+    Height="340" Width="510"
+    >
 
 
     <UserControl.Resources>

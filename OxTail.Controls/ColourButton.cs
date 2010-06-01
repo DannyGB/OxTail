@@ -41,6 +41,7 @@ namespace OxTail.Controls
         {
             ColorDialog colorDialog = new ColorDialog();
             colorDialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            colorDialog.SelectedColor = this.SelectedColour;
             bool retVal = (bool)colorDialog.ShowDialog().Value;
             if (retVal)
             {

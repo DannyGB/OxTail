@@ -17,11 +17,11 @@
 
 namespace OxTail.Controls
 {
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
-    using System.Collections.ObjectModel;
-    using System;
 
     /// <summary>
     /// Interaction logic for Highlighting.xaml
@@ -29,7 +29,7 @@ namespace OxTail.Controls
     public partial class Highlighting : UserControl
     {        
         public event RoutedEventHandler OpenExpressionBuilder;
-        public ObservableCollection<HighlightItem> Patterns { get; set; }        
+        public BindingList<HighlightItem> Patterns { get; set; }        
 
         public Highlighting()
         {
@@ -72,7 +72,7 @@ namespace OxTail.Controls
                 return;
             }
 
-            ((ObservableCollection<HighlightItem>)this.listViewPatterns.DataContext).Remove((HighlightItem)this.listViewPatterns.SelectedItem);
+            ((BindingList<HighlightItem>)this.listViewPatterns.DataContext).Remove((HighlightItem)this.listViewPatterns.SelectedItem);
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
@@ -122,6 +122,8 @@ namespace OxTail.Controls
                 this.textBoxPattern.Foreground = new SolidColorBrush(selectedPattern.ForeColour);
                 this.textBoxPattern.Background = new SolidColorBrush(selectedPattern.BackColour);
                 this.checkBoxIgnoreCase.IsChecked = selectedPattern.IgnoreCase;
+                this.buttonColour.SelectedColour = selectedPattern.ForeColour;
+                this.buttonBackColour.SelectedColour = selectedPattern.BackColour;
             }
         }
 
