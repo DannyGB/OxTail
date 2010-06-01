@@ -19,17 +19,21 @@ namespace OxTail.Controls
     /// </summary>
     public partial class ColorDialog : Window
     {
+        private Color color;
+
         #region Ctor
         public ColorDialog()
         {
             InitializeComponent();
         }
+
         #endregion
 
         #region Public Properties
         public Color SelectedColor
         {
             get { return colorPicker.SelectedColor; }
+            set { colorPicker.SetColor(value); }
         }
         #endregion
 

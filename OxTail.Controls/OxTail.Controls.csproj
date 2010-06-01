@@ -59,6 +59,7 @@
     <Compile Include="ColourfulListView.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="ExpressionTextBox.cs" />
+    <Compile Include="FileWatcherColourfulListView.cs" />
     <Compile Include="HighlightedItem.cs" />
     <Compile Include="FileWatcherProgressChangedUserState.cs" />
     <Compile Include="FileWatcherTabItem.xaml.cs">

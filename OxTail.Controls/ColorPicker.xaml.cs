@@ -76,7 +76,7 @@ namespace OxTail.Controls
         /// </summary>
         private void ColorPicker_Loaded(object sender, RoutedEventArgs e)
         {
-            SelectedColor = Colors.Black;
+            //SelectedColor = Colors.Black;
         }
 
         /// <summary>
@@ -219,5 +219,14 @@ namespace OxTail.Controls
         }
         #endregion
 
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        internal void SetColor(Color value)
+        {
+            this.SelectedColor = value;
+        }
     }
 }

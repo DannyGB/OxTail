@@ -125,28 +125,31 @@ namespace OxTail.Controls
             return sb.ToString();
         }
 
-        public static void SaveHighlights(ObservableCollection<HighlightItem> patterns, string filename)
+        public static void SaveHighlights(BindingList<HighlightItem> patterns, string filename)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<HighlightItem>));
+            filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
+            XmlSerializer serializer = new XmlSerializer(typeof(BindingList<HighlightItem>));
             using (XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8))
             {
                 serializer.Serialize(writer, patterns);
             }
         }
 
-        public static ObservableCollection<HighlightItem> LoadHighlights(string filename)
+        public static BindingList<HighlightItem> LoadHighlights(string filename)
         {
+            filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
+
             if (!File.Exists(filename))
             {
-                return new ObservableCollection<HighlightItem>();
+                return new BindingList<HighlightItem>();
             }
 
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<HighlightItem>));
+            XmlSerializer serializer = new XmlSerializer(typeof(BindingList<HighlightItem>));
 
             FileStream s = new System.IO.FileStream(filename, FileMode.Open);
             using (XmlTextReader reader = new XmlTextReader(s))
             {
-                return (ObservableCollection<HighlightItem>)serializer.Deserialize(reader);
+                return (BindingList<HighlightItem>)serializer.Deserialize(reader);
             }
         }
     }
