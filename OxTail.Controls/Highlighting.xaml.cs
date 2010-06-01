@@ -49,7 +49,7 @@ namespace OxTail.Controls
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e)
         {
-            Patterns.Add(new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.checkBoxIgnoreCase.IsChecked, this.buttonBackColour.SelectedColour));            
+            Patterns.Add(new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.buttonBackColour.SelectedColour));            
         }
 
         private void buttonColour_Click(object sender, RoutedEventArgs e)
@@ -62,7 +62,7 @@ namespace OxTail.Controls
 
         private void buttonDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (this.listViewPatterns.DataContext == null || this.listViewPatterns.DataContext.GetType() != typeof(ObservableCollection<HighlightItem>))
+            if (this.listViewPatterns.DataContext == null || this.listViewPatterns.DataContext.GetType() != typeof(BindingList<HighlightItem>))
             {
                 return;
             }
@@ -85,7 +85,6 @@ namespace OxTail.Controls
             ((HighlightItem)this.listViewPatterns.SelectedItem).Pattern = this.textBoxPattern.Text;
             ((HighlightItem)this.listViewPatterns.SelectedItem).ForeColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
             ((HighlightItem)this.listViewPatterns.SelectedItem).BackColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;
-            ((HighlightItem)this.listViewPatterns.SelectedItem).IgnoreCase = this.checkBoxIgnoreCase.IsChecked;
 
             this.listViewPatterns.DataContext = null;
             this.listViewPatterns.DataContext = Patterns;
@@ -121,7 +120,6 @@ namespace OxTail.Controls
                 this.textBoxPattern.Text = selectedPattern.Pattern;
                 this.textBoxPattern.Foreground = new SolidColorBrush(selectedPattern.ForeColour);
                 this.textBoxPattern.Background = new SolidColorBrush(selectedPattern.BackColour);
-                this.checkBoxIgnoreCase.IsChecked = selectedPattern.IgnoreCase;
                 this.buttonColour.SelectedColour = selectedPattern.ForeColour;
                 this.buttonBackColour.SelectedColour = selectedPattern.BackColour;
             }

@@ -59,7 +59,7 @@ namespace OxTail
         private void MenuHighlightingClick(object sender, RoutedEventArgs e)
         {
             Highlight hl = new Highlight();
-            hl.ShowDialog();
+            hl.Show();
         }
 
         private void OpenFile(string filename)

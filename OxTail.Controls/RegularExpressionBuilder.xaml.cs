@@ -26,6 +26,8 @@ namespace OxTail.Controls
     using System.Collections.Generic;
     using System.Collections;
     using System.IO;
+    using System.Collections.ObjectModel;
+    using OxTail.Helpers;
 
     /// <summary>
     /// Interaction logic for RegularExpressionBuilder.xaml
@@ -60,7 +62,7 @@ namespace OxTail.Controls
         {
             if(sender.GetType() == typeof(SpecialButton))
             {
-                this.textBoxExpression.Text += ((SpecialButton)sender).HeldTextValue;
+                this.InsertIntoExpression(((SpecialButton)sender).HeldTextValue);
             }
         }
 
@@ -76,7 +78,14 @@ namespace OxTail.Controls
                 return;
             }
 
-            this.textBoxExpression.Expression = ((Expression)e.AddedItems[0]);
+            if (e.AddedItems.Count <= 0)
+            {
+                this.textBoxExpression.Expression = new Expression();
+            }
+            else if (((Expression)e.AddedItems[0]).Name != "Choose Item:")
+            {
+                this.textBoxExpression.Expression = ((Expression)e.AddedItems[0]);
+            }
         }
 
         private void buttonOk_Click(object sender, RoutedEventArgs e)
@@ -105,14 +114,14 @@ namespace OxTail.Controls
             msg.ShowDialog();
 
             if (msg.DialogResult.HasValue && msg.DialogResult.Value)
-            {                
-                ((List<Expression>)this.comboBoxSavedExpressions.DataContext).Add(CreateExpression(this.textBoxExpression.Text, msg.Message));
+            {
+                ((ObservableCollection<Expression>)this.comboBoxSavedExpressions.DataContext).Add(CreateExpression(this.textBoxExpression.Text, msg.Message));
             }            
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            List<Expression> expr = new List<Expression>();
+            ObservableCollection<Expression> expr = new ObservableCollection<Expression>();
 
             if (!File.Exists(FILENAME))
             {
@@ -122,33 +131,69 @@ namespace OxTail.Controls
             }
             else
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Expression>));
-
-                FileStream s = new System.IO.FileStream(FILENAME, FileMode.Open);
-                using (XmlTextReader reader = new XmlTextReader(s))
-                {
-                    expr = (List<Expression>)serializer.Deserialize(reader);
-                }
+                XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Expression>));
+                expr = (ObservableCollection<Expression>)FileHelper.DeserializeFromExecutableDirectory(FILENAME, serializer);
             }
 
             this.comboBoxSavedExpressions.DataContext = expr;
+            this.textBoxExpression.Focus();
         }
 
         private void SaveExpressions()
         {
-            List<Expression> list = (List<Expression>)this.comboBoxSavedExpressions.DataContext;         
+            ObservableCollection<Expression> list = (ObservableCollection<Expression>)this.comboBoxSavedExpressions.DataContext;
 
-            XmlSerializer serializer = new XmlSerializer(typeof(List<Expression>));
-            using (XmlTextWriter writer = new XmlTextWriter(FILENAME, Encoding.UTF8))
-            {
-                serializer.Serialize(writer, list);
-            }
+            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Expression>));
+            FileHelper.SerializeToExecutableDirectory(FILENAME, serializer, list);
         }
 
         private Expression CreateExpression(string text, string content)
         {
             Expression item = new Expression(text, content);           
             return item;
+        }
+
+        private void buttonExactNumberOfMatches_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender.GetType() == typeof(SpecialButton))
+            {
+                this.InsertIntoExpression(((SpecialButton)sender).HeldTextValue.Replace("n", textBoxN.Text));
+            }
+        }
+
+        private void buttonAtLeastNumberOfMatches_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender.GetType() == typeof(SpecialButton))
+            {
+                this.InsertIntoExpression(((SpecialButton)sender).HeldTextValue.Replace("n", textBoxN.Text));
+            }
+        }
+
+        private void buttonBetweenNandMMatches_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender.GetType() == typeof(SpecialButton))
+            {
+                this.InsertIntoExpression(((SpecialButton)sender).HeldTextValue.Replace("n", textBoxN.Text).Replace("m", textBoxM.Text));
+            }
+        }
+
+        private void buttonDeleteExpression_Click(object sender, RoutedEventArgs e)
+        {
+            Expression expr = (Expression)this.comboBoxSavedExpressions.SelectedItem;
+            if (expr.Name != "Choose Item:")
+            {
+                ((ObservableCollection<Expression>)this.comboBoxSavedExpressions.DataContext).Remove(expr);
+            }
+            
+            this.SaveExpressions();
+        }
+
+        private void InsertIntoExpression(string text)
+        {
+            int caretIndexHolder = this.textBoxExpression.CaretIndex;
+            this.textBoxExpression.Text = this.textBoxExpression.Text.Insert(caretIndexHolder, text);
+            this.textBoxExpression.CaretIndex = caretIndexHolder;
+            this.textBoxExpression.Focus();
         }
     }
 }
