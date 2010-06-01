@@ -125,6 +125,11 @@ namespace OxTail.Controls
             if (!IsMouseDown)
                 return;
 
+            GetColourFromSwatch();
+        }
+
+        private void GetColourFromSwatch()
+        {
             try
             {
                 CroppedBitmap cb = new CroppedBitmap(ColorImage.Source as BitmapSource,
@@ -208,6 +213,7 @@ namespace OxTail.Controls
         private void CanvImage_MouseDown(object sender, MouseButtonEventArgs e)
         {
             IsMouseDown = true;
+            GetColourFromSwatch();
         }
 
         /// <summary>
@@ -227,6 +233,21 @@ namespace OxTail.Controls
         internal void SetColor(Color value)
         {
             this.SelectedColor = value;
+        }
+
+        private void CanvImage_DragEnter(object sender, DragEventArgs e)
+        {
+            return;
+        }
+
+        private void CanvImage_DragLeave(object sender, DragEventArgs e)
+        {
+            return;
+        }
+
+        private void CanvImage_DragOver(object sender, DragEventArgs e)
+        {
+            return;
         }
     }
 }

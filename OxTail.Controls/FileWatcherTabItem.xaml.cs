@@ -102,11 +102,13 @@ namespace OxTail.Controls
             {
                 if (string.IsNullOrEmpty(path))
                 {
-                    this._image.Source = null;
+                    this._image.Visibility = System.Windows.Visibility.Hidden;
+                    //this._image.Source = null;
                 }
                 else
                 {
-                    this._image.Source = new BitmapImage(new Uri(path, UriKind.Relative));
+                    this._image.Visibility = System.Windows.Visibility.Visible;
+                    //this._image.Source = new BitmapImage(new Uri(path, UriKind.Relative));
                 }
             }
             //}), imagePath);

@@ -102,15 +102,7 @@
             <StackPanel Grid.Column="1" Orientation="Vertical" >
                 <Label Content="Preview" Margin="5,0,0,0" HorizontalAlignment="Left" 
                        Foreground="Black" FontWeight="Bold" VerticalAlignment="Center"/>
-
-                <Border Margin="4,5,10,0" Width="154" Height="154" 
-                        HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="2"
-                        Background="{StaticResource CheckerboardBrush}">
-                    <InkPresenter Name="previewPresenter" Margin="0" Width="150" Height="150"
-                        Strokes="AOcBAxdIEESAgYAERYQBGwIAJAFGhAEbAgAkAQUBOBkgMgkA9P8CAekiOkUzCQD4nwIBWiA6RTgIAP4DAAAAgH8RAACAPx8JEQAAAAAAAPA/CpYBNIfm3uajgcQgUUiUkjUelEal0KkUBh0HichlM1mtJotZp9JodDl8jk8ZgcBiUOjUYl08m0+l0+lFCjksjESAh+kg6auNwaEwSBQiEQyLRKTRiVSiUSSORyLQ6JQSBIPFYnKZTL5fOZfMZXL4/H47DYLBYHFoJLIpEo9GgIP3OB5PlxLCJiZmU1MISSi4SJiS74+D4+4o" />
-                </Border>
-
-            </StackPanel>
+      </StackPanel>
 
             <!-- TextBoxes, Column2-->
             <StackPanel Grid.Column="2" Orientation="Vertical" >
@@ -190,8 +182,10 @@
                 </StackPanel>
                 
             </StackPanel>
-            
-        </Grid>
+      <Border Margin="5,30,0,46" Width="154" Height="154" HorizontalAlignment="Left" BorderBrush="Black" BorderThickness="2" Background="{StaticResource CheckerboardBrush}" Grid.Column="1">
+        <InkPresenter Name="previewPresenter" Margin="0" Width="150" Height="150" Strokes="AOcBAxdIEESAgYAERYQBGwIAJAFGhAEbAgAkAQUBOBkgMgkA9P8CAekiOkUzCQD4nwIBWiA6RTgIAP4DAAAAgH8RAACAPx8JEQAAAAAAAPA/CpYBNIfm3uajgcQgUUiUkjUelEal0KkUBh0HichlM1mtJotZp9JodDl8jk8ZgcBiUOjUYl08m0+l0+lFCjksjESAh+kg6auNwaEwSBQiEQyLRKTRiVSiUSSORyLQ6JQSBIPFYnKZTL5fOZfMZXL4/H47DYLBYHFoJLIpEo9GgIP3OB5PlxLCJiZmU1MISSi4SJiS74+D4+4o" />
+      </Border>
+    </Grid>
 
         <!--AlphaSlider-->
         <Border x:Name="AlphaBorder" Grid.Row="2" Grid.ColumnSpan="2" 
