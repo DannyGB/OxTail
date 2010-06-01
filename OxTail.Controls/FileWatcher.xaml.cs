@@ -31,6 +31,7 @@ namespace OxTail.Controls
     using OxTailHelpers;
     using OxTailLogic.PatternMatching;
     using System.Windows.Media;
+using System.Windows.Controls.Primitives;
 
     /// <summary>
     /// Interaction logic for FileWatcher.xaml
@@ -179,7 +180,6 @@ namespace OxTail.Controls
         private void Update()
         {
             IStringPatternMatching highlighting = new StringPatternMatching();
-            this.BeginInit();
             // highlight and add/update items to the listview
             for (int i = 0; i < this._readLines.Count; i++)
             {
@@ -210,7 +210,6 @@ namespace OxTail.Controls
             this.textBlockStartLine.Text = this.StartLine.ToString();
             this.textBlockLinesInFile.Text = this.LinesInFile.ToString();
             this.textBlockVisibleLines.Text = this.VisibleLines.ToString();
-            this.EndInit();
         }
 
         public static IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
@@ -709,6 +708,16 @@ namespace OxTail.Controls
         {
             this.StartLine = (int)e.NewValue;
             //this.Refresh();
+        }
+
+        private void colourfulListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+
+        }
+
+        private void colourfulListView_Scroll(object sender, ScrollEventArgs e)
+        {
+
         }
     }
 }

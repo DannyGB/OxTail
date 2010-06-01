@@ -58,7 +58,7 @@ namespace OxTail.Controls
 
         void OxTailFileViewer_GotFocus(object sender, RoutedEventArgs e)
         {
-            SetImage(null);
+            ShowImage(System.Windows.Visibility.Hidden);
         }
 
         public override void closeButton_Click(object sender, RoutedEventArgs e)
@@ -81,7 +81,7 @@ namespace OxTail.Controls
         // This method raises the FileChanged event
         void OnFileChanged()
         {
-            SetImage("Images/bell.png");
+            ShowImage(System.Windows.Visibility.Visible);
             Dispatcher.Invoke((Action)(() =>
             {
                 RoutedEventArgs newEventArgs = new RoutedEventArgs(FileWatcher.FileChangedEvent);
@@ -90,28 +90,16 @@ namespace OxTail.Controls
              ));
         }
 
-        private void SetImage(string path)
+        private void ShowImage(System.Windows.Visibility visibility)
         {
-            //Dispatcher.Invoke((Action<string>)((path) =>
-            //{
             if (this._image == null)
             {
                 this._image = base.GetTemplateChild("PART_Icon") as Image;
             }
             if (this._image != null)
             {
-                if (string.IsNullOrEmpty(path))
-                {
-                    this._image.Visibility = System.Windows.Visibility.Hidden;
-                    //this._image.Source = null;
-                }
-                else
-                {
-                    this._image.Visibility = System.Windows.Visibility.Visible;
-                    //this._image.Source = new BitmapImage(new Uri(path, UriKind.Relative));
-                }
+                this._image.Visibility = visibility;
             }
-            //}), imagePath);
         }
 
         #region IDisposable Members

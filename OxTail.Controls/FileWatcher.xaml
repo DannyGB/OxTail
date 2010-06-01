@@ -93,9 +93,7 @@
       </StatusBarItem>
     </StatusBar>
     <DockPanel Grid.Row="0" Grid.Column="0">
-      <my:FileWatcherScroller>
-        <my:ColourfulListView ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" Width="Auto" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left"/>
-      </my:FileWatcherScroller>
+      <my:ColourfulListView ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left"/>
     </DockPanel>
   </Grid>
 </UserControl>
