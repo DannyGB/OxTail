@@ -40,5 +40,15 @@ namespace OxTail.Controls
                 lvi.Foreground = new SolidColorBrush(p.ForeColour);
             }
         }
+
+        protected override System.Windows.Size ArrangeOverride(System.Windows.Size arrangeBounds)
+        {
+            return base.ArrangeOverride(arrangeBounds);
+        }
+
+        protected override System.Windows.Size MeasureOverride(System.Windows.Size constraint)
+        {
+            return base.MeasureOverride(constraint);
+        }
     }
 }
