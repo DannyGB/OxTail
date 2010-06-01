@@ -28,24 +28,23 @@ namespace OxTail.Controls
     using System.Xml;
     using System.IO;
     using OxTail.Controls;
+    using OxTail.Helpers;
 
     [Serializable]
     public class HighlightItem : INotifyPropertyChanged, IColourfulItem
     {
         private string _stringPattern;
         private Color _colour;
-        private bool? _ignoreCase;
         private Color _backColour;
 
         public HighlightItem()
         {
         }
 
-        public HighlightItem(string pattern, Color colour, bool? ignoreCase, Color backColour)
+        public HighlightItem(string pattern, Color colour, Color backColour)
         {
             Pattern = pattern;
             ForeColour = colour;
-            IgnoreCase = ignoreCase;
             BackColour = backColour;
         }
 
@@ -76,21 +75,7 @@ namespace OxTail.Controls
                 this._colour = value;
                 OnPropertyChanged("Colour");
             }
-        }
-
-        public bool? IgnoreCase
-        {
-            get
-            {
-                return this._ignoreCase;
-            }
-
-            set
-            {
-                this._ignoreCase = value;
-                OnPropertyChanged("IgnoreCase");
-            }
-        }
+        }    
 
         public Color BackColour
         {
@@ -120,37 +105,26 @@ namespace OxTail.Controls
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} {1}", this.Pattern, ((this.IgnoreCase.Value) ? "(Ignoring Case)" : string.Empty ));
+            sb.AppendFormat("{0}", this.Pattern);
 
             return sb.ToString();
         }
 
         public static void SaveHighlights(BindingList<HighlightItem> patterns, string filename)
         {
-            filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
             XmlSerializer serializer = new XmlSerializer(typeof(BindingList<HighlightItem>));
-            using (XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8))
-            {
-                serializer.Serialize(writer, patterns);
-            }
+            FileHelper.SerializeToExecutableDirectory(filename, serializer, patterns);
         }
 
         public static BindingList<HighlightItem> LoadHighlights(string filename)
         {
-            filename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), filename);
-
             if (!File.Exists(filename))
             {
                 return new BindingList<HighlightItem>();
             }
 
             XmlSerializer serializer = new XmlSerializer(typeof(BindingList<HighlightItem>));
-
-            FileStream s = new System.IO.FileStream(filename, FileMode.Open);
-            using (XmlTextReader reader = new XmlTextReader(s))
-            {
-                return (BindingList<HighlightItem>)serializer.Deserialize(reader);
-            }
+            return (BindingList<HighlightItem>)FileHelper.DeserializeFromExecutableDirectory(filename, serializer);
         }
     }
 }

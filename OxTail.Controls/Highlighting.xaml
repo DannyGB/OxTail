@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:custom="clr-namespace:OxTail.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="350" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="301" d:DesignWidth="401" Unloaded="UserControl_Unloaded">
     <Grid Width="Auto" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>            
@@ -23,7 +23,6 @@
             <Button Margin="5" Content="Add" Height="23" Name="buttonAdd" Width="65" Click="buttonAdd_Click" />
             <Button Margin="5" Content="Update" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" />
             <Button Margin="5" Content="Delete" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" />
-            <CheckBox Margin="10, 4" Grid.Row="2" Grid.Column="0" Content="Ignore Case" Height="16" HorizontalAlignment="Left"  Name="checkBoxIgnoreCase" VerticalAlignment="Center" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Stretch" Name="stackPanel2" VerticalAlignment="Stretch">
             <TextBox Height="23" x:Name="textBoxPattern" Text="Enter String" Margin="10,0" Width="138" />

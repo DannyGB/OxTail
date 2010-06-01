@@ -26,6 +26,8 @@ namespace OxTail.Helpers
     using System.IO;
     using System.Windows.Documents;
     using System.Reflection;
+    using System.Xml.Serialization;
+    using System.Xml;
 
     public class FileHelper
     {
@@ -65,10 +67,46 @@ namespace OxTail.Helpers
         }
 
         public static Stream GetResourceStream(Assembly assembly, string resourceName)
-        {            
+        {
             Stream s = assembly.GetManifestResourceStream(resourceName);
 
             return s;
+        }
+
+        public static void SerializeToExecutableDirectory(string filename, XmlSerializer serializer, object list)
+        {
+            if (string.IsNullOrEmpty(filename) || string.IsNullOrWhiteSpace(filename))
+            {
+                throw new ArgumentNullException();
+            }
+
+            filename = CreateExecutableFilename(filename);
+            using (XmlTextWriter writer = new XmlTextWriter(filename, Encoding.UTF8))
+            {
+                serializer.Serialize(writer, list);
+            }
+        }
+
+        private static string CreateExecutableFilename(string filename)
+        {
+            filename = string.Format("{0}\\{1}", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename);
+            return filename;
+        }
+
+        public static object DeserializeFromExecutableDirectory(string filename, XmlSerializer serializer)
+        {
+            if (string.IsNullOrEmpty(filename) || string.IsNullOrWhiteSpace(filename))
+            {
+                throw new ArgumentNullException();
+            }
+
+            filename = CreateExecutableFilename(filename);
+
+            FileStream s = new System.IO.FileStream(filename, FileMode.Open);
+            using (XmlTextReader reader = new XmlTextReader(s))
+            {
+                return serializer.Deserialize(reader);
+            }
         }
     }
 }
