@@ -6,13 +6,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="418" d:DesignWidth="620"
              xmlns:oxtail="clr-namespace:OxTail.Controls" Loaded="UserControl_Loaded">
-    <Grid Name="GridMain">
+    <Grid Name="GridMain" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="120"></RowDefinition>
-            <RowDefinition Height="300"></RowDefinition>            
+            <RowDefinition></RowDefinition>            
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Grid.Column="0" Name="grid3">
             <Grid.ColumnDefinitions>
@@ -36,9 +36,9 @@
                 <oxtail:ExpressionTextBox DockPanel.Dock="Left" Height="55" x:Name="textBoxExpression" VerticalAlignment="Top" TextWrapping="Wrap" Margin="5,5,5,0" />
             </DockPanel>
         </Grid>
-        <TabControl Grid.Row="1">
-            <TabItem Header="Builder">
-                <Grid>
+        <TabControl Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3">
+            <TabItem Header="Builder" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition Width="250"></ColumnDefinition>
@@ -46,8 +46,8 @@
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition MinHeight="200"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
                 </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Grid.Column="0" Height="Auto" HorizontalAlignment="Left" Name="stackPanel1" VerticalAlignment="Top" Margin="10">
                     <oxtail:SpecialButton HeldTextValue="." Margin="2,10,2,2" Content="Any character (.)" Height="21" x:Name="radioButtonAnyCharacter" Click="SpecialButton_Click" />
@@ -89,18 +89,18 @@
                 <Button Grid.Row="1" Grid.Column="3" Name="buttonCancel" Content="Cancel" Click="buttonCancel_Click" Margin="2,2,2,2" />
             </Grid>
             </TabItem>
-            <TabItem Header="Test Area">
-                <Grid>
+            <TabItem Header="Test Area" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition></RowDefinition>
+                        <RowDefinition MinHeight="200"></RowDefinition>
                         <RowDefinition Height="50"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <TextBox Grid.Column="0" Grid.Row="0" Name="textBoxTextInput" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"></TextBox>
-                    <TextBox Grid.Column="1" Grid.Row="0" Name="textBoxFoundMatches" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True"></TextBox>
+                    <TextBox MinHeight="200" Grid.Column="0" Grid.Row="0" Name="textBoxTextInput" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"></TextBox>
+                    <TextBox MinHeight="200" Grid.Column="1" Grid.Row="0" Name="textBoxFoundMatches" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True"></TextBox>
                     <Button Grid.Column="1" Grid.Row="1" Name="buttonFindMatches" Content="Find Matches" Margin="2" Click="buttonFindMatches_Click"></Button>
                 </Grid>
             </TabItem>
