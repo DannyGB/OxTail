@@ -5,27 +5,27 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:custom="clr-namespace:OxTail.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="336" d:DesignWidth="432" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="331" d:DesignWidth="491" Unloaded="UserControl_Unloaded">
     <Grid Width="Auto" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>            
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="220" />
+            <RowDefinition MinHeight="220" />
             <RowDefinition Height="40"/>
             <RowDefinition Height="30" />
             <RowDefinition Height="35" />
         </Grid.RowDefinitions>
-
-        <custom:ColourfulListView Grid.Row="0" Grid.Column="0" Height="200" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Top" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Pattern" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />  
-                    <GridViewColumn Header="Order" />
-                </GridView>
-            </ListView.View>
-        </custom:ColourfulListView>
-        
+        <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <custom:ColourfulListView DockPanel.Dock="Bottom" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Stretch" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single" HorizontalAlignment="Stretch">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Pattern" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />  
+                        <GridViewColumn Header="Order" />
+                    </GridView>
+                </ListView.View>
+            </custom:ColourfulListView>
+        </DockPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center" Name="stackPanel1" VerticalAlignment="Center">
             <Button Margin="5" Content="Add" Height="23" Name="buttonAdd" Width="65" Click="buttonAdd_Click" />
             <Button Margin="5" Content="Update" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" />

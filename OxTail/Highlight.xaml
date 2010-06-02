@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
-        Title="Highlighting" Height="363" Width="438" WindowStyle="ToolWindow" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
+        Title="Highlighting" Height="363" Width="438" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
     <Grid>
         <custom:Highlighting x:Name="hightlighting" OpenExpressionBuilder="hightlighting_OpenExpressionBuilder"></custom:Highlighting>
     </Grid>
