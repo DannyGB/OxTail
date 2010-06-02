@@ -17,17 +17,17 @@
 
 namespace OxTail.Controls
 {
+    using System.Collections.ObjectModel;
+    using System.IO;
     using System.Windows;
     using System.Windows.Controls;
     using System.Xml.Serialization;
-    using System.Xml;
-    using System.Text;
-    using System.Reflection;
-    using System.Collections.Generic;
-    using System.Collections;
-    using System.IO;
-    using System.Collections.ObjectModel;
     using OxTail.Helpers;
+    using OxTailLogic.PatternMatching;
+    using System.Text;
+    using System.Text.RegularExpressions;
+    using System;
+    using System.Reflection;
 
     /// <summary>
     /// Interaction logic for RegularExpressionBuilder.xaml
@@ -68,7 +68,7 @@ namespace OxTail.Controls
 
         private void comboBoxSets_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            this.textBoxExpression.Text += ((ComboBoxItem)e.AddedItems[0]).Content;
+            this.InsertIntoExpression(((ComboBoxItem)e.AddedItems[0]).Content.ToString());
         }
 
         private void comboBoxSavedExpressions_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -89,9 +89,7 @@ namespace OxTail.Controls
         }
 
         private void buttonOk_Click(object sender, RoutedEventArgs e)
-        {
-            this.SaveExpressions();
-
+        {            
             if (this.OkClick != null)
             {                
                 this.OkClick(this, e);
@@ -116,7 +114,9 @@ namespace OxTail.Controls
             if (msg.DialogResult.HasValue && msg.DialogResult.Value)
             {
                 ((ObservableCollection<Expression>)this.comboBoxSavedExpressions.DataContext).Add(CreateExpression(this.textBoxExpression.Text, msg.Message));
-            }            
+            }
+
+            this.SaveExpressions();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
@@ -136,7 +136,18 @@ namespace OxTail.Controls
             }
 
             this.comboBoxSavedExpressions.DataContext = expr;
+            this.FillExampleRegExData();
             this.textBoxExpression.Focus();
+        }
+
+        private void FillExampleRegExData()
+        {
+            Stream s = FileHelper.GetResourceStream(Assembly.GetExecutingAssembly(), "OxTail.Controls.ExampleRegexData.txt");
+
+            if (s != null)
+            {
+                this.textBoxTextInput.Text = FileHelper.GetStringFromStream(s);
+            } 
         }
 
         private void SaveExpressions()
@@ -194,6 +205,20 @@ namespace OxTail.Controls
             this.textBoxExpression.Text = this.textBoxExpression.Text.Insert(caretIndexHolder, text);
             this.textBoxExpression.CaretIndex = caretIndexHolder;
             this.textBoxExpression.Focus();
+        }
+
+        private void buttonFindMatches_Click(object sender, RoutedEventArgs e)
+        {
+            this.textBoxFoundMatches.Text = string.Empty;
+
+            IStringPatternMatching patternMatching = StringPatternMatching.CreatePatternMatching();
+            MatchCollection coll = patternMatching.MatchPattern(this.textBoxTextInput.Text, new StringBuilder(this.textBoxExpression.Text));
+
+            foreach (Match m in coll)
+            {
+		        this.textBoxFoundMatches.Text += m.Value + Environment.NewLine;
+
+            }
         }
     }
 }

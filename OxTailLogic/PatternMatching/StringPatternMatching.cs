@@ -72,5 +72,11 @@ namespace OxTailLogic.PatternMatching
             Regex regEx = new Regex(pattern);
             return regEx.IsMatch(text);
         }
+
+        public MatchCollection MatchPattern(string text, StringBuilder pattern)
+        {
+            Regex regEx = new Regex(pattern.ToString());
+            return regEx.Matches(text);
+        }
     }
 }

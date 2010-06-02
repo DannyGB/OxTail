@@ -5,30 +5,39 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:custom="clr-namespace:OxTail.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="301" d:DesignWidth="401" Unloaded="UserControl_Unloaded">
+             d:DesignHeight="336" d:DesignWidth="432" Unloaded="UserControl_Unloaded">
     <Grid Width="Auto" Height="Auto">
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>            
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="220" />
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="50" />
-                      
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="35" />
         </Grid.RowDefinitions>
 
-        <custom:ColourfulListView Grid.Row="0" Grid.Column="0" Height="200" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Top" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single" />
+        <custom:ColourfulListView Grid.Row="0" Grid.Column="0" Height="200" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Top" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Pattern" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />  
+                    <GridViewColumn Header="Order" />
+                </GridView>
+            </ListView.View>
+        </custom:ColourfulListView>
         
-        <StackPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Name="stackPanel1" VerticalAlignment="Center">
+        <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center" Name="stackPanel1" VerticalAlignment="Center">
             <Button Margin="5" Content="Add" Height="23" Name="buttonAdd" Width="65" Click="buttonAdd_Click" />
             <Button Margin="5" Content="Update" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" />
             <Button Margin="5" Content="Delete" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Stretch" Name="stackPanel2" VerticalAlignment="Stretch">
-            <TextBox Height="23" x:Name="textBoxPattern" Text="Enter String" Margin="10,0" Width="138" />
-            <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="Fore Colour" />
-            <custom:ColourButton x:Name="buttonBackColour" Click="buttonBackColour_Click" Width="70" Content="Back Colour" />
-            <Button Name="buttonExpressionBuilder" Content="Expression Builder" Click="buttonExpressionBuilder_Click" />
-        </StackPanel>
+        <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto">
+            <TextBox DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="Enter String" Margin="10,0" />
+        </DockPanel>
+        <WrapPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Name="stackPanel2" VerticalAlignment="Center">            
+            <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="Fore Colour" Margin="10,2,2,2" />
+            <custom:ColourButton x:Name="buttonBackColour" Click="buttonBackColour_Click" Width="70" Content="Back Colour" Margin="2,2,2,2" />
+            <Button Name="buttonExpressionBuilder" Content="Expression Builder" Click="buttonExpressionBuilder_Click" Margin="2,2,2,2" />
+        </WrapPanel>
     </Grid>
 </UserControl>

@@ -108,5 +108,11 @@ namespace OxTail.Helpers
                 return serializer.Deserialize(reader);
             }
         }
+
+        public static string GetStringFromStream(Stream s)
+        {
+            StreamReader reader = new StreamReader(s);
+            return reader.ReadToEnd();
+        }
     }
 }
