@@ -9,6 +9,6 @@
             <Button Content="Save" Height="23" Name="buttonSave" Width="75" Margin="2" Click="buttonSave_Click" />
             <Button Content="Cancel" Height="23" Name="buttonCancel" Width="75" Margin="2" Click="buttonCancel_Click" />
         </DockPanel>
-        <Label FontWeight="Bold" Content="Label" Height="28" HorizontalAlignment="Left" Margin="3,12,0,0" Name="labelMessage" VerticalAlignment="Top" Width="130" />
+        <Label FontWeight="Bold" Content="Label" Height="28" HorizontalAlignment="Left" Margin="3,12,0,0" Name="labelMessage" VerticalAlignment="Top" Width="275" />
     </Grid>
 </Window>

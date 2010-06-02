@@ -22,6 +22,7 @@ namespace OxTailLogic.PatternMatching
     using System.Linq;
     using System.Text;
     using System.Windows.Documents;
+    using System.Text.RegularExpressions;
 
     public interface IStringPatternMatching
     {
@@ -32,5 +33,13 @@ namespace OxTailLogic.PatternMatching
         /// <param name="pattern">The pattern to find in the text</param>
         /// <returns>A <see cref="bool"/> whether the pattern was found in the text</returns>
         bool MatchPattern(string text, string pattern);
+
+        /// <summary>
+        /// Matches the passed in pattern in the text and passes back a <see cref="MatcheCollection"/>
+        /// </summary>
+        /// <param name="text">The text to find the pattern in</param>
+        /// <param name="pattern">The pattern to find in the text</param>
+        /// <returns>A <see cref="MacthCollection"/> containig all of the found matches</returns>
+        MatchCollection MatchPattern(string text, StringBuilder pattern);
     }
 }
