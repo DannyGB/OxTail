@@ -36,8 +36,10 @@
             <Grid.ColumnDefinitions>
               <!-- status -->
               <ColumnDefinition Width="*"/>
-              <!-- Line end -->
+              <!-- Follow Tail -->
               <ColumnDefinition Width="Auto"/>
+              <ColumnDefinition Width="Auto"/>
+              <!-- Line end -->
               <ColumnDefinition Width="Auto"/>
               <!-- encoding -->
               <ColumnDefinition Width="Auto"/>
@@ -65,35 +67,38 @@
       </StatusBarItem>
       <Separator Grid.Column="1"/>
       <StatusBarItem Grid.Column="2">
-        <ComboBox Name="comboBoxNewlineDetection" Width="70"/>
+        <CheckBox Name="checkBoxFollowTail" ToolTip="Follow tail"/>
       </StatusBarItem>
       <StatusBarItem Grid.Column="3">
-        <ComboBox Name="comboBoxEncoding" Width="100"/>
+        <ComboBox Name="comboBoxNewlineDetection" Width="70" ToolTip="Line ends"/>
       </StatusBarItem>
       <StatusBarItem Grid.Column="4">
-        <Button x:Name="buttonRefresh" Height="18" ButtonBase.Click="buttonRefresh_Click">
+        <ComboBox Name="comboBoxEncoding" Width="100" ToolTip="Encoding"/>
+      </StatusBarItem>
+      <StatusBarItem Grid.Column="5">
+        <Button x:Name="buttonRefresh" Height="18" ButtonBase.Click="buttonRefresh_Click" ToolTip="Refresh">
           <Image Source="/OxTail.Controls;component/Images/refresh.png"></Image>
         </Button>
       </StatusBarItem>
-      <Separator Grid.Column="5"/>
-      <StatusBarItem Grid.Column="6">
+      <Separator Grid.Column="6"/>
+      <StatusBarItem Grid.Column="7">
         <ProgressBar Name="progressBarStatus" Width="50" Height="18"/>
       </StatusBarItem>
-      <Separator Grid.Column="7"/>
-      <StatusBarItem Grid.Column="8">
-        <TextBlock Name="textBlockStartLine">Start line</TextBlock>
+      <Separator Grid.Column="8"/>
+      <StatusBarItem Grid.Column="9">
+        <TextBlock Name="textBlockStartLine" ToolTip="Start line">Start line</TextBlock>
       </StatusBarItem>
-      <Separator Grid.Column="9"/>
-      <StatusBarItem Grid.Column="10">
-        <TextBlock Name="textBlockVisibleLines">Visible lines</TextBlock>
+      <Separator Grid.Column="10"/>
+      <StatusBarItem Grid.Column="11">
+        <TextBlock Name="textBlockVisibleLines" ToolTip="Visible lines">Visible lines</TextBlock>
       </StatusBarItem>
-      <Separator Grid.Column="11"/>
-      <StatusBarItem Grid.Column="12">
-        <TextBlock Name="textBlockLinesInFile">Lines in file</TextBlock>
+      <Separator Grid.Column="12"/>
+      <StatusBarItem Grid.Column="13">
+        <TextBlock Name="textBlockLinesInFile" ToolTip="Lines in file">Lines in file</TextBlock>
       </StatusBarItem>
     </StatusBar>
     <DockPanel Grid.Row="0" Grid.Column="0">
-      <my:ColourfulListView ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left"/>
+      <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left"/>
     </DockPanel>
   </Grid>
 </UserControl>
