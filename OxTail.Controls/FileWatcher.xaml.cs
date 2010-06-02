@@ -31,7 +31,7 @@ namespace OxTail.Controls
     using OxTailHelpers;
     using OxTailLogic.PatternMatching;
     using System.Windows.Media;
-using System.Windows.Controls.Primitives;
+    using System.Windows.Controls.Primitives;
 
     /// <summary>
     /// Interaction logic for FileWatcher.xaml
@@ -54,9 +54,10 @@ using System.Windows.Controls.Primitives;
         private long _offset = 0;
         private List<string> _readLines = new List<string>();
         private NewlineDetectionMode _newlineDetectionMode;
-        private static IStringPatternMatching patternMatching = StringPatternMatching.CreatePatternMatching();
+        private static IStringPatternMatching _patternMatching = StringPatternMatching.CreatePatternMatching();
         private long _previousLastLineOffset = 0;
         private ScrollContentPresenter _scrollContentPresenter = null;
+        private ScrollViewer _scrollViewer = null;
         private int _interval = 1000;
 
         public string NewlineCharacters
@@ -83,17 +84,23 @@ using System.Windows.Controls.Primitives;
             {
                 this._newlineDetectionMode = value;
                 this.SetNewlineCharacters();
-                this.Refresh();
+                this.Refresh(false, true);
             }
         }
 
-        private void Refresh()
+        private void Refresh(bool tail, bool calculateStartLine)
         {
-            this.StartLine = this.CalculateStartLine();
-            if (this.StartLine > -1)
+            if (calculateStartLine)
             {
-                ReadLines();
-                Dispatcher.Invoke(DispatcherPriority.Normal, new Action(this.Update));
+                this.StartLine = this.CalculateStartLine();
+            }
+            if (this.FollowTail || !tail)
+            {
+                if (this.StartLine > -1)
+                {
+                    ReadLines();
+                }
+                Dispatcher.Invoke(DispatcherPriority.Render, new Action(this.Update));
             }
             this._previousLength = this._currentLength;
         }
@@ -179,11 +186,41 @@ using System.Windows.Controls.Primitives;
         /// </summary>
         private void Update()
         {
-            IStringPatternMatching highlighting = new StringPatternMatching();
-            // highlight and add/update items to the listview
-            for (int i = 0; i < this._readLines.Count; i++)
+            HighlightedItem blank = new HighlightedItem();
+            // make the number of items match the number of lines
+            if (this.LinesInFile > this.Lines.Count)
             {
-                HighlightedItem item = this.Highlight(this._readLines[i]);
+                int extra = this.LinesInFile - this.Lines.Count;
+                for (int i = 0; i < extra; i++)
+                {
+                    this.Lines.Add(blank);
+                }
+            }
+            // remove excess lines 
+            else if (this.LinesInFile < this.Lines.Count)
+            {
+                int linesToRemove = this.LinesInFile - this.Lines.Count;
+                for (int i = 0; i < linesToRemove; i++)
+                {
+                    if (this.Lines.Count > 0)
+                    {
+                        this.Lines.RemoveAt(this.Lines.Count - 1);
+                    }
+                }
+            }
+
+            // highlight and add/update items to the listview
+            for (int i = (int)this.StartLine; i < this.StartLine + this._readLines.Count; i++)
+            {
+                HighlightedItem item = null;
+                //if (i >= this.StartLine && i < this.StartLine + this.VisibleLines && this._readLines.Count > i - (int)this.StartLine)
+                {
+                    item = this.Highlight(i.ToString() + ": " + this._readLines[i - (int)this.StartLine].Replace("\r", "^M").Replace("\n", "^J")); // in case of incorrectly selected line end
+                }
+                //else
+                //{
+                //    item = blank;
+                //}
                 if (this.Lines.Count <= i)
                 {
                     this.Lines.Add(item);
@@ -193,17 +230,9 @@ using System.Windows.Controls.Primitives;
                     this.Lines[i] = item;
                 }
             }
-            // remove excess lines (after window resized smaller)
-            if (this.VisibleLines < this.Lines.Count)
+            if (this.FollowTail)
             {
-                int linesToRemove = this.Lines.Count - this.VisibleLines;
-                for (int i = 0; i < linesToRemove; i++)
-                {
-                    if (this.Lines.Count > 0)
-                    {
-                        this.Lines.RemoveAt(this.Lines.Count - 1);
-                    }
-                }
+                this._scrollViewer.ScrollToEnd();
             }
             // update the status bar
             this.ReportProgress(0, String.Empty, false, System.Windows.Visibility.Hidden);
@@ -219,7 +248,7 @@ using System.Windows.Controls.Primitives;
                 // Empty pattern should not exist (a blank line should be a "special" Highlight item?
                 if (!string.IsNullOrEmpty(item.Pattern) && !string.IsNullOrEmpty(text))
                 {
-                    if (text == item.Pattern || patternMatching.MatchPattern(text, item.Pattern))
+                    if (text == item.Pattern || _patternMatching.MatchPattern(text, item.Pattern))
                     {
                         yield return item;
                     }
@@ -392,11 +421,15 @@ using System.Windows.Controls.Primitives;
                         return;
                     }
 
-                    //this._streamReader.DiscardBufferedData();
                     streamReader.ReadLine();
+                    if (i % 100 == 0)
+                    {
+                        ReportProgress((int)(i * 100 / this._startLine), string.Format("Skipped {0} of {1} lines forwards", this._readLines.Count, this._startLine), false, System.Windows.Visibility.Visible);
+                    }
+
                 }
                 // load lines
-                for (int i = 0; i < this._visibleLines; i++)
+                for (int i = 0; i < this.VisibleLines; i++)
                 {
                     string line = streamReader.ReadLine();
                     if (!string.IsNullOrEmpty(line))
@@ -432,6 +465,11 @@ using System.Windows.Controls.Primitives;
             comboBoxEncoding.DisplayMemberPath = "DisplayName";
             comboBoxEncoding.SelectedValuePath = "DisplayName";
 
+            // bind the follow tail checkbox
+            Binding bindingFollowTail = new Binding("FollowTail");
+            bindingFollowTail.Source = this;
+            this.checkBoxFollowTail.SetBinding(CheckBox.IsCheckedProperty, bindingFollowTail);
+
             this._bw = new BackgroundWorker();
             this._bw.WorkerSupportsCancellation = true;
             this._bw.DoWork += new DoWorkEventHandler(_bw_DoWork);
@@ -447,7 +485,9 @@ using System.Windows.Controls.Primitives;
         {
             this._filename = filename;
             this.SetNewlineCharacters();
-            this.CalculateVisibleLines();
+            //this.CalculateVisibleLines();
+            List<ScrollViewer> scrollviewers = this.GetVisualChildren<ScrollViewer>();
+            this._scrollViewer = scrollviewers[0];
             if (!this._bw.IsBusy)
             {
                 this._bw.RunWorkerAsync();
@@ -493,16 +533,16 @@ using System.Windows.Controls.Primitives;
             {
                 // see if file has changed
                 FileInfo fileInfo = new FileInfo(this._filename);
-                if (this.FollowTail && (this._currentLength != fileInfo.Length || this._dateLastTime.Ticks != Math.Max(fileInfo.LastWriteTime.Ticks, fileInfo.CreationTime.Ticks)))
+                if ((this._currentLength != fileInfo.Length || this._dateLastTime.Ticks != Math.Max(fileInfo.LastWriteTime.Ticks, fileInfo.CreationTime.Ticks)))
                 {
                     this._currentLength = fileInfo.Length;
                     this._dateLastTime = new DateTime(Math.Max(fileInfo.CreationTime.Ticks, fileInfo.LastWriteTime.Ticks));
-                    this.Refresh();
+                    this.Refresh(true, true);
                     this.OnFileChanged();
                 }
             }
         }
-       
+
 
         // Create a custom routed event by first registering a RoutedEventID
         // This event uses the bubbling routing strategy
@@ -583,9 +623,13 @@ using System.Windows.Controls.Primitives;
         private long CalculateStartLine()
         {
             long newStartLine;
-            if (this.CountLinesInFile() < 0)
+            // only count lines if the file length has changed
+            if (this._previousLength != this._currentLength)
             {
-                return -1;
+                if (this.CountLinesInFile() < 0)
+                {
+                    return -1;
+                }
             }
 
             if (this.FollowTail)
@@ -604,7 +648,7 @@ using System.Windows.Controls.Primitives;
 
         private void ReportProgress(int progressBarPercentage, string status, bool progressBarIndeterminate, System.Windows.Visibility progressBarVisibility)
         {
-            this.Dispatcher.Invoke(new StatusNotificationDelegate(this.ShowStatus), DispatcherPriority.Normal, progressBarPercentage, new FileWatcherProgressChangedUserState(status, progressBarIndeterminate, progressBarVisibility));
+            this.Dispatcher.Invoke(new StatusNotificationDelegate(this.ShowStatus), DispatcherPriority.Render, progressBarPercentage, new FileWatcherProgressChangedUserState(status, progressBarIndeterminate, progressBarVisibility));
             //Thread.Sleep(20);
         }
 
@@ -632,7 +676,7 @@ using System.Windows.Controls.Primitives;
             lock (this._fileReadLock)
             {
                 this._previousLength = 0;
-                this.Refresh();
+                this.Refresh(false, true);
             }
         }
 
@@ -659,28 +703,32 @@ using System.Windows.Controls.Primitives;
         {
             lock (this)
             {
-                int visible = this.VisibleLines;
-                this.CalculateVisibleLines();
-                if (visible != this.VisibleLines)
-                {
-                    this.Refresh();
-                }
+                //int visible = this.VisibleLines;
+                //this.CalculateVisibleLines();
+                //if (visible != this.VisibleLines)
+                //{
+                //    this.Refresh(false, false);
+                //}
             }
         }
 
         private void CalculateVisibleLines()
         {
-            if (!this.colourfulListView.HasItems)
-            {
-                this.colourfulListView.Items.Add("");
-            }
-            object lvi = this.colourfulListView.ItemContainerGenerator.ContainerFromIndex(0);
-            double inner = GetScrollContentPresenterHeight();
+            //if (!this.colourfulListView.HasItems)
+            //{
+            //    this.colourfulListView.Items.Add("");
+            //}
+            //object lvi = this.colourfulListView.ItemContainerGenerator.ContainerFromIndex(0);
+            //double inner = GetScrollContentPresenterHeight();
 
-            if (lvi is ListViewItem)
+            //if (lvi is ListViewItem)
+            //{
+            //    double lineHeight = ((ListViewItem)lvi).ActualHeight;
+            //    this.VisibleLines = (int)((inner) / lineHeight);
+            //}
+            if (_scrollViewer != null)
             {
-                double lineHeight = ((ListViewItem)lvi).ActualHeight;
-                this.VisibleLines = (int)((inner) / lineHeight);
+                this.VisibleLines = (int)this._scrollViewer.ViewportHeight;
             }
         }
 
@@ -704,20 +752,14 @@ using System.Windows.Controls.Primitives;
             return Math.Floor(this._scrollContentPresenter.ActualHeight);
         }
 
-        private void scrollBar_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            this.StartLine = (int)e.NewValue;
-            //this.Refresh();
-        }
-
         private void colourfulListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-
-        }
-
-        private void colourfulListView_Scroll(object sender, ScrollEventArgs e)
-        {
-
+            if (e.VerticalChange != 0 || e.ViewportHeightChange != 0)
+            {
+                this.VisibleLines = (int)e.ViewportHeight;
+                this.StartLine = (int)e.VerticalOffset;
+                this.Refresh(false, false);
+            }
         }
     }
 }
