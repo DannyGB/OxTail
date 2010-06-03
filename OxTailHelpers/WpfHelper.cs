@@ -8,6 +8,12 @@ namespace OxTailHelpers
 {
     public static class WpfHelper
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="referenceVisual"></param>
+        /// <returns></returns>
         public static List<T> GetVisualChildren<T>(this Visual referenceVisual) where T : Visual
         {
             List<T> children = new List<T>();
