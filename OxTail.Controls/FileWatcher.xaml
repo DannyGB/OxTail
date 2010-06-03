@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="277" d:DesignWidth="595" xmlns:my="clr-namespace:OxTail.Controls" SizeChanged="UserControl_SizeChanged">
+             d:DesignHeight="277" d:DesignWidth="595" xmlns:my="clr-namespace:OxTail.Controls">
   <UserControl.Resources>
     <!-- style used on text in status bar to show elipses (...) when text is cut off -->
     <Style TargetType="TextBlock" x:Key="StatusBarTextBlock">
@@ -98,7 +98,7 @@
       </StatusBarItem>
     </StatusBar>
     <DockPanel Grid.Row="0" Grid.Column="0">
-      <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left"/>
+      <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left"/>
     </DockPanel>
   </Grid>
 </UserControl>

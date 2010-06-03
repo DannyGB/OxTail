@@ -39,9 +39,7 @@ namespace OxTail.Controls
     public partial class FileWatcher : UserControl, IDisposable
     {
         private BackgroundWorker _bw = null;
-        private object _fileReadLock = new object();
-        private long _startLine = 0;
-        private int _visibleLines = 20;
+        //private object _lock = new object();
         private Encoding _tailEncoding = Encoding.Default;
         private DateTime _dateLastTime = DateTime.MinValue;
         private int _chunkSize = 16384;
@@ -51,86 +49,88 @@ namespace OxTail.Controls
         private string _newlineCharacters = null;
         private long _currentLength = 0;
         private long _previousLength = 0;
-        private long _offset = 0;
+        private long _previousStartLine = 0;
         private List<string> _readLines = new List<string>();
         private NewlineDetectionMode _newlineDetectionMode;
         private static IStringPatternMatching _patternMatching = StringPatternMatching.CreatePatternMatching();
-        private long _previousLastLineOffset = 0;
-        private ScrollContentPresenter _scrollContentPresenter = null;
         private ScrollViewer _scrollViewer = null;
         private int _interval = 1000;
+        private int _linesInFile = 0;
 
-        public string NewlineCharacters
+        public long StartLine
         {
             get
             {
-                return this._newlineCharacters;
-            }
-            set
-            {
-                this._newlineCharacters = value;
+                return (long)this.ScrollViewer.VerticalOffset + this.HorizontalScrollbarVisibilityOffset;
             }
         }
 
-        public int LinesInFile { get; set; }
+        private int HorizontalScrollbarVisibilityOffset
+        {
+            get { return 0; } // (this.ScrollViewer.ScrollableWidth == 0 ? 0 : 1); }
+        }
 
-        public NewlineDetectionMode NewlineDetectionMode
+        public ScrollViewer ScrollViewer
         {
             get
             {
-                return this._newlineDetectionMode;
+                if (this._scrollViewer == null)
+                {
+                    List<ScrollViewer> scrollviewers = this.colourfulListView.GetVisualChildren<ScrollViewer>();
+                    if (scrollviewers != null && scrollviewers.Count > 0)
+                    {
+                        foreach (ScrollViewer scrollviewer in scrollviewers)
+                        {
+                            if (scrollviewer.IsVisible)
+                            {
+                                this._scrollViewer = scrollviewer;
+                                break;
+                            }
+                        }
+                    }
+                }
+                return this._scrollViewer;
             }
+        }
+
+        public NewlineDetectionMode NewlineDetectionMode
+        {
+            get { return this._newlineDetectionMode; }
             set
             {
                 this._newlineDetectionMode = value;
                 this.SetNewlineCharacters();
-                this.Refresh(false, true);
+                this.ScanLinesInFile();
+                this.ShowLines();
             }
         }
 
-        private void Refresh(bool tail, bool calculateStartLine)
+        private void ShowLines()
         {
-            if (calculateStartLine)
-            {
-                this.StartLine = this.CalculateStartLine();
-            }
-            if (this.FollowTail || !tail)
-            {
-                if (this.StartLine > -1)
-                {
-                    ReadLines();
-                }
-                Dispatcher.Invoke(DispatcherPriority.Render, new Action(this.Update));
-            }
-            this._previousLength = this._currentLength;
+            ReadLines();
+            Dispatcher.Invoke(DispatcherPriority.Loaded, new Action(this.Update));
         }
 
         private StreamReader OpenFile()
         {
-            return new StreamReader(new FileStream(this._filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize), this.TailEncoding, true, this._chunkSize);
-        }
-
-        public Encoding TailEncoding
-        {
-            get { return this._tailEncoding; }
-            set { this._tailEncoding = value; }
+            return new StreamReader(new FileStream(this._filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize), this._tailEncoding, true, this._chunkSize);
         }
 
         private void SetNewlineCharacters()
         {
-            switch (this.NewlineDetectionMode)
+            switch (this._newlineDetectionMode)
             {
                 case NewlineDetectionMode.Auto:
                     this.AutoDetectNewLineCharacters();
                     break;
                 case NewlineDetectionMode.Windows:
-                    this.NewlineCharacters = "\r\n";
+                    this._newlineCharacters = "\r\n";
                     break;
                 case NewlineDetectionMode.Unix:
-                    this.NewlineCharacters = "\n";
+                    this._newlineCharacters = "\n";
                     break;
                 case NewlineDetectionMode.Mac:
-                    this.NewlineCharacters = "\r";
+                    this._newlineCharacters = "\r";
                     break;
                 default:
                     break;
@@ -143,7 +143,7 @@ namespace OxTail.Controls
         private void AutoDetectNewLineCharacters()
         {
             char[] chars = new char[2];
-            this.NewlineCharacters = null;
+            this._newlineCharacters = null;
             using (StreamReader streamReader = this.OpenFile())
             {
                 // read first line of file
@@ -153,32 +153,32 @@ namespace OxTail.Controls
                 {
                     this.PositionFilePointerToOffset(streamReader, line.Length);
                     streamReader.Read(chars, 0, 2);
-                    this.NewlineCharacters = new string(chars);
+                    this._newlineCharacters = new string(chars);
                     // if the second character is not line feed ("\n") then it must have been a single character newline - either unix ("\n") or mac ("\r")
-                    if (this.NewlineCharacters.Substring(1, 1) != "\n")
+                    if (this._newlineCharacters.Substring(1, 1) != "\n")
                     {
-                        this.NewlineCharacters = this.NewlineCharacters.Substring(0, 1);
+                        this._newlineCharacters = this._newlineCharacters.Substring(0, 1);
                     }
                 }
             }
         }
 
+        // Gets a value that indicates the number of visible lines 
         public int VisibleLines
         {
-            get { return this._visibleLines; }
-            set { this._visibleLines = value; }
+            get { return (int)this.ScrollViewer.ViewportHeight - this.HorizontalScrollbarVisibilityOffset; }
         }
 
-        public bool FollowTail
+        public ItemCollection Lines
+        {
+            get { return this.colourfulListView.Items; }
+        }
+
+        // Determines whether this file watcher follows the tail
+        public bool IsFollowTail
         {
             get { return this._followTail; }
             set { this._followTail = value; }
-        }
-
-        public long StartLine
-        {
-            get { return this._startLine; }
-            set { this._startLine = value; }
         }
 
         /// <summary>
@@ -186,20 +186,50 @@ namespace OxTail.Controls
         /// </summary>
         private void Update()
         {
-            HighlightedItem blank = new HighlightedItem();
-            // make the number of items match the number of lines
-            if (this.LinesInFile > this.Lines.Count)
+            // highlight and add/update items to the listview
+            for (int i = 0; i < this._readLines.Count; i++)
             {
-                int extra = this.LinesInFile - this.Lines.Count;
+                HighlightedItem item = null;
+                int lineIndex = i + (int)this.StartLine;
+                item = this.Highlight(lineIndex.ToString() + ": " + this._readLines[i]);
+                if (this.Lines.Count <= i)
+                {
+                    this.Lines.Add(item);
+                }
+                else
+                {
+                    this.Lines[lineIndex] = item;
+                }
+            }
+
+            if (this.Lines.Count > this.StartLine + this.VisibleLines)
+            {
+                this.Lines[(int)this.StartLine + this.VisibleLines] = new TextBlock(new Run(string.Format("{0}: visible lines = {1}", (int)this.StartLine + this.VisibleLines, this.VisibleLines)));
+                Console.WriteLine("line {0} was the last visible line of {1} apparently ", (int)this.StartLine + this.VisibleLines, this.VisibleLines);
+            }
+
+            // update the status bar
+            this.ReportProgress(0, String.Empty, false, System.Windows.Visibility.Hidden);
+            this.textBlockStartLine.Text = this.StartLine.ToString();
+            this.textBlockLinesInFile.Text = this._linesInFile.ToString();
+            this.textBlockVisibleLines.Text = this.VisibleLines.ToString();
+        }
+
+        private void PadOutListView()
+        {
+            // make the number of items match the number of lines
+            if (this._linesInFile > this.Lines.Count)
+            {
+                int extra = this._linesInFile - this.Lines.Count;
                 for (int i = 0; i < extra; i++)
                 {
-                    this.Lines.Add(blank);
+                    this.Lines.Add(string.Empty);
                 }
             }
             // remove excess lines 
-            else if (this.LinesInFile < this.Lines.Count)
+            else if (this._linesInFile < this.Lines.Count)
             {
-                int linesToRemove = this.LinesInFile - this.Lines.Count;
+                int linesToRemove = this._linesInFile - this.Lines.Count;
                 for (int i = 0; i < linesToRemove; i++)
                 {
                     if (this.Lines.Count > 0)
@@ -208,37 +238,6 @@ namespace OxTail.Controls
                     }
                 }
             }
-
-            // highlight and add/update items to the listview
-            for (int i = (int)this.StartLine; i < this.StartLine + this._readLines.Count; i++)
-            {
-                HighlightedItem item = null;
-                //if (i >= this.StartLine && i < this.StartLine + this.VisibleLines && this._readLines.Count > i - (int)this.StartLine)
-                {
-                    item = this.Highlight(i.ToString() + ": " + this._readLines[i - (int)this.StartLine].Replace("\r", "^M").Replace("\n", "^J")); // in case of incorrectly selected line end
-                }
-                //else
-                //{
-                //    item = blank;
-                //}
-                if (this.Lines.Count <= i)
-                {
-                    this.Lines.Add(item);
-                }
-                else
-                {
-                    this.Lines[i] = item;
-                }
-            }
-            if (this.FollowTail)
-            {
-                this._scrollViewer.ScrollToEnd();
-            }
-            // update the status bar
-            this.ReportProgress(0, String.Empty, false, System.Windows.Visibility.Hidden);
-            this.textBlockStartLine.Text = this.StartLine.ToString();
-            this.textBlockLinesInFile.Text = this.LinesInFile.ToString();
-            this.textBlockVisibleLines.Text = this.VisibleLines.ToString();
         }
 
         public static IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
@@ -280,7 +279,7 @@ namespace OxTail.Controls
             long beginOffset = target;
             // we want the following to be negative for use in conjunction with SeekOrigin.Current or SeekOrigin.End
             long currentOffset = target - streamReader.BaseStream.Position;
-            long endOffset = target - this._currentLength;
+            long endOffset = target - this.CurrentLength;
 
             smallestOffset = Math.Min(Math.Min(beginOffset, Math.Abs(currentOffset)), Math.Abs(endOffset));
 
@@ -306,15 +305,28 @@ namespace OxTail.Controls
 
         private void ReadLines()
         {
-            this._readLines.Clear();
-            // educated guess at quickest direction to go - position the cursor at the beginning if our first line is in the first "half" (variable line lengths!) of the file
-            if (this._startLine < (this.LinesInFile / 2))
+            Console.WriteLine("Read {2} Lines {0} - {1}", this.StartLine, this.StartLine + this.VisibleLines, this.VisibleLines);
+            this._readLines = new List<string>(this.VisibleLines);
+            long offset = 0;
+            if (!this._LineOffsets.TryGetValue(this.StartLine, out offset))
             {
-                ReadLinesForwards();
+                ReportProgress(0, "Don't know about line #" + this.StartLine.ToString(), true, System.Windows.Visibility.Hidden);
+                return;
             }
-            else
+
+            using (StreamReader streamReader = this.OpenFile())
             {
-                ReadLinesBackwards();
+                this.PositionFilePointerToOffset(streamReader, offset);
+
+                for (int i = 0; i < this.VisibleLines; i++)
+                {
+                    string line = streamReader.ReadLine();
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        line = line.TrimEnd('\0').Replace("\r", "<cr>").Replace("\n", "<lf>"); // in case of incorrectly selected line end;
+                    }
+                    this._readLines.Add(line);
+                }
             }
         }
 
@@ -326,118 +338,13 @@ namespace OxTail.Controls
             streamReader.BaseStream.Seek(smallestOffset, seekOrigin);
         }
 
-        private void ReadLinesBackwards()
+        public long CurrentLength
         {
-            int indexIncrement = -this._chunkSize;
-            int chunksRead = 0;
-            char[] chunk = new char[this._chunkSize];
-            long linesToRead;
-            StringBuilder chunkAsString = new StringBuilder();
-
-            // calculate how many lines we need to read
-            linesToRead = this.LinesInFile - this._startLine;
-
-            using (StreamReader streamReader = this.OpenFile())
+            get { return this._currentLength; }
+            set
             {
-                // go directly to the end of the file
-                this.PositionFilePointerToOffset(streamReader, this._currentLength);
-                this._offset = Math.Max(this._currentLength + indexIncrement, 0);
-
-                do
-                {
-                    // honour cancellation request
-                    if (this.CancellationPending())
-                    {
-                        return;
-                    }
-
-                    // shorten chunk to remaining file if necessary
-                    if (this._offset + indexIncrement < 0)
-                    {
-                        indexIncrement = -(int)streamReader.BaseStream.Position;
-                    }
-
-                    // set pointer to beginning of next chunk
-                    this.PositionFilePointerToOffset(streamReader, this._offset);
-                    // read the chunk 
-                    streamReader.Read(chunk, 0, this._chunkSize);
-                    chunksRead++;
-                    chunkAsString.Clear();
-                    chunkAsString.Append(chunk);
-
-                    // rudimentary way to split the chunk into seperate lines
-                    string[] lineArray = chunkAsString.ToString().TrimEnd(new char[] { '\0' }).Split(new string[] { this._newlineCharacters }, StringSplitOptions.None);
-
-                    // insert the last line of this chunk at the beginning of the first line of the previous chunk
-                    // this covers the usual scenario where a chunk disects a line
-                    if (lineArray.Length > 0)
-                    {
-                        if (this._readLines.Count == 0)
-                        {
-                            this._readLines.Add(string.Empty);
-                        }
-                        this._readLines[0] = lineArray[lineArray.Length - 1] + this._readLines[0].Trim('\0');
-                    }
-
-                    // we will almost definitely have read more than we needed to unless by some miracle the nth newline is exactly in position 0 of the most recent chunk
-                    int linesToTrim = Math.Max((int)(this._readLines.Count - 1 + lineArray.Length - linesToRead), 0);
-
-                    // insert our lines at the beginning (except the last one because that has been inserted at the beginning of the first line of the previous chunk) 
-                    for (int i = lineArray.Length - 2; i >= linesToTrim; i--)
-                    {
-                        this._readLines.Insert(0, lineArray[i].Trim('\0'));
-                    }
-
-                    // have we read enough lines?
-                    if (this._readLines.Count >= linesToRead)
-                    {
-                        break;
-                    }
-
-                    ReportProgress((int)(Math.Min(this._readLines.Count, linesToRead) * 100 / linesToRead), string.Format("Skipped {0} of {1} lines backwards", this._readLines.Count, linesToRead), false, System.Windows.Visibility.Visible);
-
-                    // start of next chunk to read
-                    this._offset += indexIncrement;
-
-                    // rewind the pointer back to where it started on the most recent read operation
-                    this.PositionFilePointerToOffset(streamReader, this._offset);
-
-                } while (this._readLines.Count <= linesToRead && this._offset > 0);
-
-            }
-        }
-
-        private void ReadLinesForwards()
-        {
-            using (StreamReader streamReader = this.OpenFile())
-            {
-                this.PositionFilePointerToOffset(streamReader, 0);
-                // skip to start line
-                for (int i = 0; i < this._startLine; i++)
-                {
-                    // honour cancellation request
-                    if (this.CancellationPending())
-                    {
-                        return;
-                    }
-
-                    streamReader.ReadLine();
-                    if (i % 100 == 0)
-                    {
-                        ReportProgress((int)(i * 100 / this._startLine), string.Format("Skipped {0} of {1} lines forwards", this._readLines.Count, this._startLine), false, System.Windows.Visibility.Visible);
-                    }
-
-                }
-                // load lines
-                for (int i = 0; i < this.VisibleLines; i++)
-                {
-                    string line = streamReader.ReadLine();
-                    if (!string.IsNullOrEmpty(line))
-                    {
-                        line = line.TrimEnd('\0');
-                    }
-                    this._readLines.Add(line);
-                }
+                this._previousLength = this.CurrentLength;
+                this._currentLength = value;
             }
         }
 
@@ -466,7 +373,7 @@ namespace OxTail.Controls
             comboBoxEncoding.SelectedValuePath = "DisplayName";
 
             // bind the follow tail checkbox
-            Binding bindingFollowTail = new Binding("FollowTail");
+            Binding bindingFollowTail = new Binding("IsFollowTail");
             bindingFollowTail.Source = this;
             this.checkBoxFollowTail.SetBinding(CheckBox.IsCheckedProperty, bindingFollowTail);
 
@@ -484,19 +391,10 @@ namespace OxTail.Controls
         public void Start(string filename)
         {
             this._filename = filename;
-            this.SetNewlineCharacters();
-            //this.CalculateVisibleLines();
-            List<ScrollViewer> scrollviewers = this.GetVisualChildren<ScrollViewer>();
-            this._scrollViewer = scrollviewers[0];
             if (!this._bw.IsBusy)
             {
                 this._bw.RunWorkerAsync();
             }
-        }
-
-        public ItemCollection Lines
-        {
-            get { return this.colourfulListView.Items; }
         }
 
         private delegate void StatusNotificationDelegate(int progressPercentage, FileWatcherProgressChangedUserState userState);
@@ -529,20 +427,32 @@ namespace OxTail.Controls
         /// </summary>
         private void Tail()
         {
-            lock (this._fileReadLock)
+            //lock (this._fileReadLock)
             {
                 // see if file has changed
                 FileInfo fileInfo = new FileInfo(this._filename);
-                if ((this._currentLength != fileInfo.Length || this._dateLastTime.Ticks != Math.Max(fileInfo.LastWriteTime.Ticks, fileInfo.CreationTime.Ticks)))
+                if ((this.CurrentLength != fileInfo.Length || this._dateLastTime.Ticks != Math.Max(fileInfo.LastWriteTime.Ticks, fileInfo.CreationTime.Ticks)))
                 {
-                    this._currentLength = fileInfo.Length;
+                    this.CurrentLength = fileInfo.Length;
                     this._dateLastTime = new DateTime(Math.Max(fileInfo.CreationTime.Ticks, fileInfo.LastWriteTime.Ticks));
-                    this.Refresh(true, true);
+                    this.ScanLinesInFile();
+                    if (this.IsFollowTail)
+                    {
+                        this.ScrollToEnd();
+                    }
                     this.OnFileChanged();
                 }
             }
         }
 
+        private void ScrollToEnd()
+        {
+            this.Dispatcher.Invoke(DispatcherPriority.Loaded, (Action)(() => 
+            {
+                Console.WriteLine("Scroll to end");
+                this.ScrollViewer.ScrollToVerticalOffset(this._linesInFile); 
+            })); // this will change the vertical offset which will induce an update
+        }
 
         // Create a custom routed event by first registering a RoutedEventID
         // This event uses the bubbling routing strategy
@@ -565,29 +475,43 @@ namespace OxTail.Controls
             ));
         }
 
-        private long CountLinesInFile()
+        /// <summary>
+        /// Counts the number of lines in the file and stores the line offsets 
+        /// </summary>
+        /// <returns>A boolean value that indicates whether the scan completed successfully.</returns>
+        private bool ScanLinesInFile()
         {
             using (StreamReader streamReader = this.OpenFile())
             {
                 if (this._previousLength == 0)
                 {
-                    this.LinesInFile = 0;
-                    this._previousLastLineOffset = 0;
+                    this._LineOffsets = new Dictionary<long, long>();
+                    this._linesInFile = 0;
                 }
-                if (this.NewlineCharacters != "\r\n" && this.NewlineCharacters != "\n" && this.NewlineCharacters != "\r")
+                if (this._newlineCharacters != "\r\n" && this._newlineCharacters != "\n" && this._newlineCharacters != "\r")
                 {
                     this.SetNewlineCharacters();
                 }
-                this.PositionFilePointerToOffset(streamReader, this._previousLastLineOffset); // only count from previous length to save time
+                long start = 0;
+                this._LineOffsets.TryGetValue(this._linesInFile, out start);
+                this.PositionFilePointerToOffset(streamReader, start); // only count from previously loaded last line offset
                 long offset = streamReader.BaseStream.Position;
-                while (offset < this._currentLength)
+                while (offset < this.CurrentLength)
                 {
                     // honour cancellation request
                     if (this.CancellationPending())
                     {
-                        return -1;
+                        return false;
                     }
-                    this._previousLastLineOffset = offset;
+                    // record the offset for the current line
+                    if (this._LineOffsets.ContainsKey(this._linesInFile))
+                    {
+                        // do nothing for now
+                    }
+                    else
+                    {
+                        this._LineOffsets.Add(this._linesInFile, offset);
+                    }
                     // skip lines and keep track of the position of the end of the line by measuring the length of the line and adding on the length of our line ending
                     // n.b. StreamReader.Readline reads a block of data from the underlying filestream so does not reflect the position of the end of each line
                     string line = streamReader.ReadLine();
@@ -596,20 +520,23 @@ namespace OxTail.Controls
                         break;
                     }
                     offset += line.Length + this._newlineCharacters.Length;
-                    if (this._previousLength == 0 || offset < this._currentLength)
+                    if (this._previousLength == 0 || offset < this.CurrentLength)
                     {
-                        this.LinesInFile++;
+                        this._linesInFile++;
                     }
 
-                    if (this.LinesInFile % 1000 == 0)
+                    if (this._linesInFile % 1000 == 0)
                     {
-                        ReportProgress((int)(offset * 100 / this._currentLength), string.Format("counting lines in file: {0}", this.LinesInFile), false, System.Windows.Visibility.Visible);
+                        ReportProgress((int)(offset * 100 / this.CurrentLength), string.Format("counting lines in file: {0}", this._linesInFile), false, System.Windows.Visibility.Visible);
                     }
                 }
-                ReportProgress(100, string.Format("counted {0} lines", this.LinesInFile), false, System.Windows.Visibility.Hidden);
-                return this.LinesInFile;
             }
+            this.Dispatcher.Invoke(DispatcherPriority.Loaded, (Action)(() => { this.PadOutListView(); }));
+            ReportProgress(100, string.Format("counted {0} lines", this._linesInFile), false, System.Windows.Visibility.Hidden);
+            return true;
         }
+
+        private Dictionary<long, long> _LineOffsets;
 
         private bool CancellationPending()
         {
@@ -620,36 +547,9 @@ namespace OxTail.Controls
             return this._bw.CancellationPending;
         }
 
-        private long CalculateStartLine()
-        {
-            long newStartLine;
-            // only count lines if the file length has changed
-            if (this._previousLength != this._currentLength)
-            {
-                if (this.CountLinesInFile() < 0)
-                {
-                    return -1;
-                }
-            }
-
-            if (this.FollowTail)
-            {
-                newStartLine = Math.Max(this.LinesInFile - this.VisibleLines, 0);
-            }
-            else
-            {
-                // return the current start line if we're not following the tail
-                newStartLine = this.StartLine;
-            }
-            ReportProgress(0, "start line = " + newStartLine.ToString(), false, Visibility.Hidden);
-
-            return newStartLine;
-        }
-
         private void ReportProgress(int progressBarPercentage, string status, bool progressBarIndeterminate, System.Windows.Visibility progressBarVisibility)
         {
-            this.Dispatcher.Invoke(new StatusNotificationDelegate(this.ShowStatus), DispatcherPriority.Render, progressBarPercentage, new FileWatcherProgressChangedUserState(status, progressBarIndeterminate, progressBarVisibility));
-            //Thread.Sleep(20);
+            this.Dispatcher.Invoke(new StatusNotificationDelegate(this.ShowStatus), DispatcherPriority.Normal, progressBarPercentage, new FileWatcherProgressChangedUserState(status, progressBarIndeterminate, progressBarVisibility));
         }
 
         internal void Stop()
@@ -673,14 +573,13 @@ namespace OxTail.Controls
 
         private void buttonRefresh_Click(object sender, RoutedEventArgs e)
         {
-            lock (this._fileReadLock)
-            {
-                this._previousLength = 0;
-                this.Refresh(false, true);
-            }
+            this._previousLength = 0;
+            this.ScanLinesInFile();
+            this.ShowLines();
         }
 
         private BindingList<HighlightItem> _patterns;
+
         public BindingList<HighlightItem> Patterns
         {
             get
@@ -699,67 +598,34 @@ namespace OxTail.Controls
             this.Update();
         }
 
-        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            lock (this)
-            {
-                //int visible = this.VisibleLines;
-                //this.CalculateVisibleLines();
-                //if (visible != this.VisibleLines)
-                //{
-                //    this.Refresh(false, false);
-                //}
-            }
-        }
-
-        private void CalculateVisibleLines()
-        {
-            //if (!this.colourfulListView.HasItems)
-            //{
-            //    this.colourfulListView.Items.Add("");
-            //}
-            //object lvi = this.colourfulListView.ItemContainerGenerator.ContainerFromIndex(0);
-            //double inner = GetScrollContentPresenterHeight();
-
-            //if (lvi is ListViewItem)
-            //{
-            //    double lineHeight = ((ListViewItem)lvi).ActualHeight;
-            //    this.VisibleLines = (int)((inner) / lineHeight);
-            //}
-            if (_scrollViewer != null)
-            {
-                this.VisibleLines = (int)this._scrollViewer.ViewportHeight;
-            }
-        }
-
-        private double GetScrollContentPresenterHeight()
-        {
-            if (this._scrollContentPresenter == null)
-            {
-                List<ScrollContentPresenter> scrollers = this.colourfulListView.GetVisualChildren<ScrollContentPresenter>();
-                if (scrollers != null && scrollers.Count > 0)
-                {
-                    foreach (ScrollContentPresenter scroller in scrollers)
-                    {
-                        if (scroller.IsVisible)
-                        {
-                            this._scrollContentPresenter = scroller;
-                            break;
-                        }
-                    }
-                }
-            }
-            return Math.Floor(this._scrollContentPresenter.ActualHeight);
-        }
-
         private void colourfulListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (e.VerticalChange != 0 || e.ViewportHeightChange != 0)
+            Console.WriteLine("ScrollChanged: {0} {1}", e.VerticalChange, e.ViewportHeightChange);
+            if (e.VerticalChange != 0)
             {
-                this.VisibleLines = (int)e.ViewportHeight;
-                this.StartLine = (int)e.VerticalOffset;
-                this.Refresh(false, false);
+                Console.WriteLine("Vertical offset changed {0}", e.VerticalChange);
+                this.ShowLines();
             }
+            //else if (e.ViewportHeightChange != 0)
+            //{
+            //    Console.WriteLine("Viewport height changed {0}", e.ViewportHeightChange);
+            //    if (this.IsFollowTail)
+            //    {
+            //        this.ScrollToEnd();
+            //    }
+            //    else
+            //    {
+            //        this.ShowLines();
+            //    }
+            //}
+
+            this._previousStartLine = this.StartLine;
         }
+
+        private void colourfulListView_Scroll(object sender, ScrollEventArgs e)
+        {
+            Console.WriteLine("Scroll: {0}", e.ReflectToString());
+        }
+
     }
 }

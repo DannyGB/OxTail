@@ -108,7 +108,7 @@ namespace OxTail.Controls
         {
             if (this.fileWatcher != null)
             {
-                this.fileWatcher.Stop();
+                //this.fileWatcher.Stop();
                 this.fileWatcher.Dispose();
             }
         }
