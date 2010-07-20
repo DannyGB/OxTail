@@ -490,6 +490,7 @@ namespace OxTail.Controls
                     this.CurrentLength = fileInfo.Length;
                     this._dateLastTime = new DateTime(Math.Max(fileInfo.CreationTime.Ticks, fileInfo.LastWriteTime.Ticks));
                     this.ScanLinesInFile();
+                    this.ShowLines();
                     if (this.IsFollowTail)
                     {
                         this.ScrollToEnd();
