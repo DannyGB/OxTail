@@ -29,6 +29,7 @@ namespace OxTail
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
+    using System.Reflection;
 
     /// <summary>
     /// Interaction logic for About.xaml
@@ -43,6 +44,7 @@ namespace OxTail
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.textBoxCredits.Text = string.Format("Dan Beavon{0}Dave Wedgbury", System.Environment.NewLine);
+            this.TextBoxVersion.Text += Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
         }
     }
 }
