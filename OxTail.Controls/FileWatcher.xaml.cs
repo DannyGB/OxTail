@@ -56,6 +56,7 @@ namespace OxTail.Controls
         private ScrollViewer _scrollViewer = null;
         private int _interval = 1000;
         private int _linesInFile = 0;
+        public List<HighlightedItem> SelectedItem { get; private set; }
 
         public long CurrentLength
         {
@@ -114,7 +115,11 @@ namespace OxTail.Controls
         {
             get
             {
-                return (long)this.ScrollViewer.VerticalOffset + this.HorizontalScrollbarVisibilityOffset;
+                ScrollViewer vw = this.ScrollViewer;
+                if (vw != null)
+                    return (long)this.ScrollViewer.VerticalOffset + this.HorizontalScrollbarVisibilityOffset;
+                else
+                    return 0;
             }
         }
 
@@ -127,6 +132,8 @@ namespace OxTail.Controls
         {
             get
             {
+                // If the tab is not visible then the GetVisualChildren call returns 0
+                // So whilst opening multiple tabs most tabs are not visible during the load.
                 if (this._scrollViewer == null)
                 {
                     List<ScrollViewer> scrollviewers = this.colourfulListView.GetVisualChildren<ScrollViewer>();
@@ -219,7 +226,14 @@ namespace OxTail.Controls
         // Gets a value that indicates the number of visible lines 
         public int VisibleLines
         {
-            get { return (int)this.ScrollViewer.ViewportHeight - this.HorizontalScrollbarVisibilityOffset; }
+            get
+            {
+                ScrollViewer vw = this.ScrollViewer;
+                if (vw != null)
+                    return (int)this.ScrollViewer.ViewportHeight - this.HorizontalScrollbarVisibilityOffset;
+                else
+                    return 0;
+            }
         }
 
         public ItemCollection Lines
@@ -435,6 +449,8 @@ namespace OxTail.Controls
             this._bw.WorkerSupportsCancellation = true;
             this._bw.DoWork += new DoWorkEventHandler(_bw_DoWork);
             this._bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_bw_RunWorkerCompleted);
+
+            this.SelectedItem = new List<HighlightedItem>();
         }
 
         void _bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -664,7 +680,7 @@ namespace OxTail.Controls
         void Patterns_ListChanged(object sender, ListChangedEventArgs e)
         {
             this.Update();
-        }
+        }      
 
         private void colourfulListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
@@ -695,5 +711,14 @@ namespace OxTail.Controls
             Console.WriteLine("Scroll: {0}", e.ReflectToString());
         }
 
+        private void colourfulListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            this.SelectedItem.Clear();
+
+            foreach (var item in e.AddedItems)
+            {
+                this.SelectedItem.Add((HighlightedItem)item);
+            }
+        }
     }
 }

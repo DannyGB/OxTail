@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Media;
+using System.Threading;
 
 namespace OxTailHelpers
 {
     public static class WpfHelper
     {
+        delegate int ReturnInt();
+        delegate Visual ReturnVisual();
+
         /// <summary>
         /// 
         /// </summary>
@@ -18,9 +22,11 @@ namespace OxTailHelpers
         {
             List<T> children = new List<T>();
             Visual child = null;
-            for (Int32 i = 0; i < VisualTreeHelper.GetChildrenCount(referenceVisual); i++)
+            int count = GetChildCount(referenceVisual);
+
+            for (Int32 i = 0; i < count; i++)
             {
-                child = VisualTreeHelper.GetChild(referenceVisual, i) as Visual;
+                child = (Visual)referenceVisual.Dispatcher.Invoke(new ReturnVisual(delegate() { return VisualTreeHelper.GetChild(referenceVisual, i) as Visual; }));
                 if (child != null)
                 {
                     if (child is T)
@@ -35,6 +41,12 @@ namespace OxTailHelpers
                 }
             }
             return children;
+        }
+
+        private static int GetChildCount(Visual referenceVisual)
+        {
+            int count = (int)referenceVisual.Dispatcher.Invoke(new ReturnInt(delegate() { return VisualTreeHelper.GetChildrenCount(referenceVisual); }));
+            return count;
         }
     }
 }

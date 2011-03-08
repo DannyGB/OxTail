@@ -24,6 +24,7 @@ namespace OxTail.Controls
     using System.Windows.Media.Imaging;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Collections.Generic;
 
     /// <summary>
     /// An extension of the CloseableTabItem control that views a file.
@@ -31,6 +32,14 @@ namespace OxTail.Controls
     public partial class FileWatcherTabItem : CloseableTabItem, IDisposable
     {
         private Image _image = null;
+
+        public List<HighlightedItem> SelectedItem 
+        {
+            get
+            {
+                return this.fileWatcher.SelectedItem;
+            }
+        }
 
         public FileWatcherTabItem()
         {
@@ -50,6 +59,7 @@ namespace OxTail.Controls
             this.fileWatcher.Patterns = patterns;
             this.GotFocus += new RoutedEventHandler(OxTailFileViewer_GotFocus);
         }
+
 
         void fileWatcher_FileChanged(object sender, RoutedEventArgs e)
         {

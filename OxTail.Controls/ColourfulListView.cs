@@ -49,6 +49,6 @@ namespace OxTail.Controls
         protected override System.Windows.Size MeasureOverride(System.Windows.Size constraint)
         {
             return base.MeasureOverride(constraint);
-        }
+        }     
     }
 }

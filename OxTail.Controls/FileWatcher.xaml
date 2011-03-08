@@ -98,7 +98,7 @@
       </StatusBarItem>
     </StatusBar>
     <DockPanel Grid.Row="0" Grid.Column="0">
-      <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left"/>
+      <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left" SelectionChanged="colourfulListView_SelectionChanged" />
     </DockPanel>
   </Grid>
 </UserControl>

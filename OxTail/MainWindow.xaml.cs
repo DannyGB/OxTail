@@ -25,13 +25,16 @@ namespace OxTail
     using OxTail.Controls;
     using OxTail.Helpers;
     using OxTail.Properties;
-    using System.Collections.Generic;    
+    using System.Collections.Generic;
+    using System.Text;    
 
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool pageLoad = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -75,15 +78,17 @@ namespace OxTail
             {
                 if (File.Exists(filename))
                 {
+                    pageLoad = true;
                     OxTail.Controls.FileWatcherTabItem newTab = FindTabByFilename(filename);
                     if (newTab == null)
-                    {
+                    {                        
                         newTab = new OxTail.Controls.FileWatcherTabItem(filename, MainWindow.HighlightItems);
                         newTab.CloseTab += new RoutedEventHandler(newTab_CloseTab);
-                        tabControlMain.Items.Add(newTab);
+                        tabControlMain.Items.Add(newTab);                        
                     }
-                    tabControlMain.SelectedItem = newTab;
+                    tabControlMain.SelectedItem = newTab;                    
                     RecentFileList.InsertFile(filename);
+                    pageLoad = false;
                 }
                 else if (MessageBox.Show("Remove from recent file list?", "File not found!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
@@ -191,6 +196,29 @@ namespace OxTail
         private void MenuItemCloseAll_Click(object sender, RoutedEventArgs e)
         {
             tabControlMain.Items.Clear();
+        }
+
+        private void tabControlMain_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {          
+        }
+
+        private void MenuCopy_Click(object sender, RoutedEventArgs e)
+        {
+            if (tabControlMain.SelectedIndex >= 0 && tabControlMain.SelectedIndex < tabControlMain.Items.Count)
+            {
+                FileWatcherTabItem tab = tabControlMain.Items[tabControlMain.SelectedIndex] as FileWatcherTabItem;
+                if (tab != null)
+                {
+                    StringBuilder sb = new StringBuilder();
+
+                    foreach (HighlightedItem item in tab.SelectedItem)
+                    {
+                        sb.AppendLine(item.Text);
+                    }
+
+                    Clipboard.SetData(DataFormats.Text, sb.ToString());
+                }
+            }
         }        
     }
 }
