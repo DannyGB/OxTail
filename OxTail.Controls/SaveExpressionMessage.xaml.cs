@@ -45,6 +45,7 @@ namespace OxTail.Controls
             set
             {
                 this.labelMessage.Content = value;
+                this.Title = value;
             }
         }
 
@@ -53,6 +54,10 @@ namespace OxTail.Controls
             get
             {
                 return this.textBoxMessage.Text;
+            }
+            set
+            {
+                this.textBoxMessage.Text = value;
             }
         }
 

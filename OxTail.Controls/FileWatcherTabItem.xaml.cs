@@ -40,7 +40,7 @@ namespace OxTail.Controls
         /// Creates an OxTailFileViewer instance and starts viewing the specified filename.
         /// </summary>
         /// <param name="filename">The full file path of the file to view.</param>
-        public FileWatcherTabItem(string filename, BindingList<HighlightItem> patterns)
+        public FileWatcherTabItem(string filename, HighlightCollection<HighlightItem> patterns)
             : this()
         {
             this.Header = Path.GetFileName(filename);

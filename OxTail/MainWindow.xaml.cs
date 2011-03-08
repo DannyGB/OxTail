@@ -25,6 +25,7 @@ namespace OxTail
     using OxTail.Controls;
     using OxTail.Helpers;
     using OxTail.Properties;
+    using System.Collections.Generic;    
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -36,7 +37,7 @@ namespace OxTail
             InitializeComponent();
         }
 
-        public static BindingList<HighlightItem> HighlightItems { get; set; }
+        public static HighlightCollection<HighlightItem> HighlightItems { get; set; }
 
         private void MenuAboutClick(object sender, RoutedEventArgs e)
         {
@@ -59,7 +60,13 @@ namespace OxTail
         private void MenuHighlightingClick(object sender, RoutedEventArgs e)
         {
             Highlight hl = new Highlight();
-            hl.Show();
+            hl.ShowDialog();
+        }
+
+        private void MenuExpressionBuilderClick(object sender, RoutedEventArgs e)
+        {
+            ExpressionBuilder hl = new ExpressionBuilder();
+            hl.ShowDialog();
         }
 
         private void OpenFile(string filename)
@@ -119,5 +126,71 @@ namespace OxTail
         {
             HighlightItems = HighlightItem.LoadHighlights(Settings.Default.HighlightFileLocations);
         }
+
+        private void MenuOpenDirectory_Click(object sender, RoutedEventArgs e)
+        {
+            List<FileInfo> files = OpenDirectory();
+
+            foreach (FileInfo item in files)
+            {
+                OpenFile(item.FullName);
+            }
+        }
+
+        private List<FileInfo> OpenDirectory()
+        {
+            MessageBox.Show(string.Format("Limited to only open a maximum of {0} files!", Settings.Default.MaxFilesToOpen), Application.Current.MainWindow.GetType().Assembly.GetName().Name);
+
+            List<FileInfo> fileInfoList = new List<FileInfo>();
+
+            System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                fileInfoList = FileHelper.GetFiles(folderDialog.SelectedPath, "*", Settings.Default.MaxFilesToOpen);
+            }
+
+            return fileInfoList;
+        }
+
+        private void MenuOpenFilePattern_Click(object sender, RoutedEventArgs e)
+        {
+            List<FileInfo> fileInfos = OpenFilePattern();
+            foreach (FileInfo item in fileInfos)
+            {
+                this.OpenFile(item.FullName);
+            }
+        }
+
+        private static List<FileInfo> OpenFilePattern()
+        {
+            // Currently using the OpenFileDialog box and then hacking the return value.
+            // 
+            // Started to look at inheriting from OpenFileDialog but it's a sealed class so this is the 
+            // short term "get it working" code and will look at creating an OpenFilePatternDialog
+            // latter
+            string filename = FileHelper.ShowOpenFileDialog();
+            List<FileInfo> fileInfos = new List<FileInfo>();
+
+            SaveExpressionMessage msg = new SaveExpressionMessage();
+            msg.Label = "Add pattern (wildcard only)";
+            msg.Message = Path.GetFileName(filename);
+            msg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+
+            if (!string.IsNullOrEmpty(filename) && !string.IsNullOrWhiteSpace(filename))
+            {
+                bool? result = msg.ShowDialog();
+                if (result.HasValue && result.Value)
+                {
+                    fileInfos = FileHelper.GetFiles(Path.GetDirectoryName(filename), msg.Message);
+                }
+            }
+
+            return fileInfos;
+        }
+
+        private void MenuItemCloseAll_Click(object sender, RoutedEventArgs e)
+        {
+            tabControlMain.Items.Clear();
+        }        
     }
 }

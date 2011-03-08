@@ -87,7 +87,12 @@ namespace OxTail.Helpers
             }
         }
 
-        private static string CreateExecutableFilename(string filename)
+        /// <summary>
+        /// Creates a <see cref="string"/> containing the executing assembly location and the filename appended
+        /// </summary>
+        /// <param name="filename">The filename to append to the executing assembly location</param>
+        /// <returns>A <see cref="string"/> containing the executing assembly location and the filename appended</returns>
+        public static string CreateExecutableFilename(string filename)
         {
             filename = string.Format("{0}\\{1}", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filename);
             return filename;
@@ -114,5 +119,31 @@ namespace OxTail.Helpers
             StreamReader reader = new StreamReader(s);
             return reader.ReadToEnd();
         }
+
+        public static List<FileInfo> GetFiles(string path, string searchPattern)
+        {
+            string[] files = Directory.GetFiles(path, searchPattern);
+            List<FileInfo> fileInfos = new List<FileInfo>(files.Length);
+
+            foreach (string file in files)
+            {
+                fileInfos.Add(new FileInfo(file));
+            }
+
+            return fileInfos;
+        }
+
+        public static List<FileInfo> GetFiles(string path, string searchPattern, int maxFiles)
+        {
+            List<FileInfo> fileInfos = GetFiles(path, searchPattern);
+
+            if (fileInfos.Count > maxFiles)
+            {
+                int diff = fileInfos.Count - maxFiles;
+                fileInfos.RemoveRange((fileInfos.Count - diff), (fileInfos.Count - maxFiles));
+            }
+
+            return fileInfos;
+        }        
     }
 }

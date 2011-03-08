@@ -22,24 +22,34 @@ namespace OxTail.Controls
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using System.Windows.Data;
+    using System.Xml;
+    using System;
+
+    public enum Direction
+    {
+        Up,
+        Down
+        }
 
     /// <summary>
     /// Interaction logic for Highlighting.xaml
     /// </summary>
     public partial class Highlighting : UserControl
-    {        
+    {
         public event RoutedEventHandler OpenExpressionBuilder;
-        public BindingList<HighlightItem> Patterns { get; set; }        
+        public HighlightCollection<HighlightItem> Patterns { get; set; }
+        private const string SORT_HEADER = "Order";
 
         public Highlighting()
         {
             InitializeComponent();
-            
+
             this.buttonColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
             this.buttonBackColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;
         }
 
-        public string Pattern 
+        public string Pattern
         {
             set
             {
@@ -49,20 +59,21 @@ namespace OxTail.Controls
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e)
         {
-            Patterns.Add(new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.buttonBackColour.SelectedColour));            
+            Patterns.Add(new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.buttonBackColour.SelectedColour));
+            this.Sort(SORT_HEADER, ListSortDirection.Descending);
         }
 
         private void buttonColour_Click(object sender, RoutedEventArgs e)
         {
             if ((bool)this.buttonColour.ShowColourSelectDialog())
             {
-                this.textBoxPattern.Foreground = buttonColour.ColorBrush;                
+                this.textBoxPattern.Foreground = buttonColour.ColorBrush;
             }
-        }        
+        }
 
         private void buttonDelete_Click(object sender, RoutedEventArgs e)
         {
-            if (this.listViewPatterns.DataContext == null || this.listViewPatterns.DataContext.GetType() != typeof(BindingList<HighlightItem>))
+            if (this.listViewPatterns.DataContext == null || this.listViewPatterns.DataContext.GetType() != typeof(HighlightCollection<HighlightItem>))
             {
                 return;
             }
@@ -72,7 +83,7 @@ namespace OxTail.Controls
                 return;
             }
 
-            ((BindingList<HighlightItem>)this.listViewPatterns.DataContext).Remove((HighlightItem)this.listViewPatterns.SelectedItem);
+            ((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).Remove((HighlightItem)this.listViewPatterns.SelectedItem);
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
@@ -94,17 +105,28 @@ namespace OxTail.Controls
         {
             if ((bool)this.buttonBackColour.ShowColourSelectDialog())
             {
-                this.textBoxPattern.Background = buttonBackColour.ColorBrush;                
+                this.textBoxPattern.Background = buttonBackColour.ColorBrush;
             }
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {                       
+        {
         }
 
         public void Bind()
         {
-            this.listViewPatterns.DataContext = Patterns;            
+            this.listViewPatterns.DataContext = Patterns;
+
+            ICollectionView view = CollectionViewSource.GetDefaultView(this.listViewPatterns.DataContext);
+            if (view != null && !view.CanSort)
+            {
+                MessageBox.Show("No sorting allowed");
+                return;
+            }
+
+            view.SortDescriptions.Clear();
+            view.SortDescriptions.Add(new SortDescription("Order", ListSortDirection.Descending));
+            view.Refresh();
         }
 
         private void listViewPatterns_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -131,6 +153,59 @@ namespace OxTail.Controls
             {
                 this.OpenExpressionBuilder(this, e);
             }
+        }
+      
+        private void Sort(string sortBy, ListSortDirection direction)
+        {
+            ICollectionView dataView =
+              CollectionViewSource.GetDefaultView(listViewPatterns.ItemsSource);
+
+            dataView.SortDescriptions.Clear();
+            SortDescription sd = new SortDescription(sortBy, direction);
+            dataView.SortDescriptions.Add(sd);
+            dataView.Refresh();
+
+        }
+
+        private void buttonOrderDown_Click(object sender, RoutedEventArgs e)
+        {
+            this.SortItems((HighlightItem)((Button)sender).DataContext, Direction.Down);
+        }
+
+        private void buttonOrderUp_Click(object sender, RoutedEventArgs e)
+        {
+            this.SortItems((HighlightItem)((Button)sender).DataContext, Direction.Up);
+        }
+
+        private void SortItems(HighlightItem item, Direction dir)
+        {
+            int? i = null;
+            int? tmp = null;
+            switch (dir)
+            {
+                case Direction.Up:
+                    i = ((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).IndexOf(item);
+                    if (i != null && i > 0 && i < ((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).Count)
+                    {
+                        tmp = item.Order;
+                        item.Order = ((HighlightItem)((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext)[i.Value - 1]).Order;
+                        ((HighlightItem)((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext)[i.Value - 1]).Order = tmp.Value;
+                    }
+                    break;
+                case Direction.Down:
+                    i = ((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).IndexOf(item);
+                    if (i != null && i >= 0 && i < (((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).Count - 1))
+                    {
+                        tmp = item.Order;
+                        item.Order = ((HighlightItem)((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext)[i.Value + 1]).Order;
+                        ((HighlightItem)((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext)[i.Value + 1]).Order = tmp.Value;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            this.Sort(SORT_HEADER, ListSortDirection.Descending);
         }
     }
 }

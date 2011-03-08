@@ -94,6 +94,12 @@
   <ItemGroup>
     <Folder Include="ValueConverters\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OxTailHelpers\OxTail.Helpers.csproj">
+      <Project>{58383B31-C051-4C54-82A3-0D0DF514AFC7}</Project>
+      <Name>OxTail.Helpers</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

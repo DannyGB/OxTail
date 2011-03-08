@@ -507,7 +507,11 @@ namespace OxTail.Controls
                 lock (this)
                 {
                     Console.WriteLine("Scroll to end");
-                    this.ScrollViewer.ScrollToVerticalOffset(this.LinesInFile + 1);
+
+                    if (this.ScrollViewer != null)
+                    {
+                        this.ScrollViewer.ScrollToVerticalOffset(this.LinesInFile + 1);
+                    }
                 }
             })); // this will change the vertical offset which will induce an update
         }
@@ -642,9 +646,9 @@ namespace OxTail.Controls
             this.ShowLines();
         }
 
-        private BindingList<HighlightItem> _patterns;
+        private HighlightCollection<HighlightItem> _patterns;
 
-        public BindingList<HighlightItem> Patterns
+        public HighlightCollection<HighlightItem> Patterns
         {
             get
             {

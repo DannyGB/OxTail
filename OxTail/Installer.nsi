@@ -65,12 +65,14 @@ Section "Core OxTail Files" SecCoreFiles
 
   ;ADD YOUR OWN FILES HERE...
 
-  File "bin\Debug\OxTail.exe"
-  File "bin\Debug\OxTail.Controls.dll"			  
-  File "bin\Debug\OxTailHelpers.dll"			  
-  File "bin\Debug\OxTailLogic.dll"			  
-  File "bin\Debug\SavedExpression.xml"			  
-  File "bin\Debug\highlights.xml"	
+  File "bin\Release\OxTail.exe"
+  File "bin\Release\OxTail.Controls.dll"			  
+  File "bin\Release\OxTailHelpers.dll"			  
+  File "bin\Release\OxTailLogic.dll"			  
+  File "bin\Release\SavedExpression.xml"			  
+  File "bin\Release\highlights.xml"
+  File "COPYING.txt"
+  File "bin\Release\OxTail.exe.config"
 
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
@@ -102,6 +104,8 @@ Section "Uninstall"
   Delete "$INSTDIR\SavedExpression.xml"			  
   Delete "$INSTDIR\highlights.xml"	
   Delete "$INSTDIR\Uninstall.exe"
+  Delete "$INSTDIR\COPYING.txt"
+  Delete "$INSTDIR\OxTail.exe.config"
 
   Delete "$SMPROGRAMS\OxTail\Uninstall.lnk"
   Delete "$SMPROGRAMS\OxTail\OxTail.lnk"
