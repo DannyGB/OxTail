@@ -30,7 +30,7 @@ namespace OxTail.Controls
     {
         Up,
         Down
-        }
+    }
 
     /// <summary>
     /// Interaction logic for Highlighting.xaml
@@ -84,6 +84,8 @@ namespace OxTail.Controls
             }
 
             ((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).Remove((HighlightItem)this.listViewPatterns.SelectedItem);
+            ICollectionView view = CollectionViewSource.GetDefaultView(this.listViewPatterns.DataContext);
+            view.Refresh();
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)

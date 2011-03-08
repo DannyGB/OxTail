@@ -19,7 +19,7 @@
 
   ;Name and file
   Name "OxTail"
-  OutFile "OxTail_Installer.exe"
+  OutFile "OxTail.exe"
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\OxTail"
@@ -68,7 +68,8 @@ Section "Core OxTail Files" SecCoreFiles
   File "bin\Release\OxTail.exe"
   File "bin\Release\OxTail.Controls.dll"			  
   File "bin\Release\OxTailHelpers.dll"			  
-  File "bin\Release\OxTailLogic.dll"			  
+  File "bin\Release\OxTailLogic.dll"	
+  File "bin\Release\NSort.dll"
   File "bin\Release\SavedExpression.xml"			  
   File "bin\Release\highlights.xml"
   File "COPYING.txt"
@@ -100,7 +101,8 @@ Section "Uninstall"
   Delete "$INSTDIR\OxTail.exe"
   Delete "$INSTDIR\OxTail.Controls.dll"			  
   Delete "$INSTDIR\OxTailHelpers.dll"			  
-  Delete "$INSTDIR\OxTailLogic.dll"			  
+  Delete "$INSTDIR\OxTailLogic.dll"	
+  Delete "$INSTDIR\NSort.dll"			  
   Delete "$INSTDIR\SavedExpression.xml"			  
   Delete "$INSTDIR\highlights.xml"	
   Delete "$INSTDIR\Uninstall.exe"
