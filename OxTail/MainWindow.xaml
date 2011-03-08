@@ -21,7 +21,7 @@
             <MenuItem Name="MenuEdit" Header="Edit">
                 <MenuItem Name="MenuFind" Header="Find" />
                 <Separator></Separator>
-                <MenuItem Name="MenuCopy" Header="Copy" />                
+                <MenuItem Name="MenuCopy" Header="Copy" Click="MenuCopy_Click" />                
             </MenuItem>
             <MenuItem Name="MenuSettings" Header="Settings">
                 <MenuItem Name="MenuHighlighting" Header="Highlighting" Click="MenuHighlightingClick">
@@ -35,6 +35,6 @@
                 <MenuItem Name="MenuAbout"  Header="About" Click="MenuAboutClick" />
             </MenuItem>
         </Menu>
-        <TabControl Name="tabControlMain"></TabControl>
+        <TabControl Name="tabControlMain" SelectionChanged="tabControlMain_SelectionChanged"></TabControl>
     </DockPanel>
 </Window>
