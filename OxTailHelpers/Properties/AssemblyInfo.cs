@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("OxTailHelpers")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("vrs")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("OxTailHelpers")]
-[assembly: AssemblyCopyright("Copyright © vrs 2010")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

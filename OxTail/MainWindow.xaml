@@ -8,12 +8,27 @@
     <DockPanel Name="dockPanelMain" LastChildFill="True">
         <Menu Name="menu1" DockPanel.Dock="Top" >
             <MenuItem  Header="File">
-                <MenuItem Name="MenuOpen" Header="Open" Click="MenuOpen_Click" />
+                <MenuItem Name="MenuOpen" Header="Open">
+                    <MenuItem Name="MenuOpenFile" Header="File" Click="MenuOpen_Click" />
+                    <MenuItem Name="MenuOpenFilePattern" Header="File Pattern" Click="MenuOpenFilePattern_Click" />
+                    <MenuItem Name="MenuOpenDirectory" Header="Directory" Click="MenuOpenDirectory_Click" />
+                </MenuItem>                
+                <Separator></Separator>
+                <MenuItem Name="MenuItemCloseAll" Header="Close All" Click="MenuItemCloseAll_Click" />
                 <oxtail:RecentFileList x:Name="RecentFileList" MenuClick="RecentFileList_MenuClick"/>
                 <MenuItem Name="MenuExit" Header="Exit" Click="MenuExitClick" />
             </MenuItem>
+            <MenuItem Name="MenuEdit" Header="Edit">
+                <MenuItem Name="MenuFind" Header="Find" />
+                <Separator></Separator>
+                <MenuItem Name="MenuCopy" Header="Copy" />                
+            </MenuItem>
             <MenuItem Name="MenuSettings" Header="Settings">
                 <MenuItem Name="MenuHighlighting" Header="Highlighting" Click="MenuHighlightingClick">
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Name="MenuTools" Header="Tools">
+                <MenuItem Name="MenuExpressionBuilder" Header="Reg Ex Expression Builder" Click="MenuExpressionBuilderClick">
                 </MenuItem>
             </MenuItem>
             <MenuItem  Header="Help">

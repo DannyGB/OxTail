@@ -9,9 +9,9 @@ using System.Windows;
 [assembly: AssemblyTitle("OxTail.Controls")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("vrs")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("OxTail.Controls")]
-[assembly: AssemblyCopyright("Copyright © vrs 2010")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -36,12 +36,7 @@ namespace OxTailLogic.Persistance
 
         public XmlPersister()
         {
-            Filepath =
-                Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                    ApplicationAttributes.CompanyName + "\\" +
-                    ApplicationAttributes.ProductName + "\\" +
-                    "RecentFileList.xml");
+            Filepath = OxTail.Helpers.FileHelper.CreateExecutableFilename("RecentFileList.xml");
         }
 
         public XmlPersister(string filepath)

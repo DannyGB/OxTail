@@ -31,5 +31,14 @@ namespace OxTail.Properties {
                 return ((string)(this["HighlightFileLocations"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int MaxFilesToOpen {
+            get {
+                return ((int)(this["MaxFilesToOpen"]));
+            }
+        }
     }
 }

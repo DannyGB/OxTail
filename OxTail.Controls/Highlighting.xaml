@@ -19,9 +19,23 @@
         <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <custom:ColourfulListView DockPanel.Dock="Bottom" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Stretch" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single" HorizontalAlignment="Stretch">
                 <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="Pattern" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />  
-                        <GridViewColumn Header="Order" />
+                    <GridView>                        
+                        <GridViewColumn Header="Pattern" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />                            
+                        <GridViewColumn Header="Order" DisplayMemberBinding="{Binding Order}" />
+                        <GridViewColumn Header="">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="buttonOrderUp" Content="^" Width="50"  Click="buttonOrderUp_Click"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Name="buttonOrderDown" Content="v" Width="50" Click="buttonOrderDown_Click" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>                        
                     </GridView>
                 </ListView.View>
             </custom:ColourfulListView>
@@ -32,7 +46,7 @@
             <Button Margin="5" Content="Delete" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" />
         </StackPanel>
         <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto">
-            <TextBox DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="Enter String" Margin="10,0" />
+            <TextBox DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="Enter Pattern" Margin="10,0" />
         </DockPanel>
         <WrapPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Name="stackPanel2" VerticalAlignment="Center">            
             <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="Fore Colour" Margin="10,2,2,2" />

@@ -29,13 +29,17 @@ namespace OxTail.Controls
     using System.IO;
     using OxTail.Controls;
     using OxTail.Helpers;
+    using System.Runtime.Serialization;
+    using System.Security.Permissions;
 
     [Serializable]
-    public class HighlightItem : INotifyPropertyChanged, IColourfulItem
+    [XmlInclude(typeof(HighlightItem))]
+    public class HighlightItem : INotifyPropertyChanged, IColourfulItem, IComparable
     {
         private string _stringPattern;
         private Color _colour;
         private Color _backColour;
+        private int _order;
 
         public HighlightItem()
         {
@@ -89,7 +93,20 @@ namespace OxTail.Controls
                 this._backColour = value;
                 OnPropertyChanged("Colour");
             }
-        }        
+        }
+
+        public int Order
+        {
+            get
+            {
+                return this._order;
+            }
+            set
+            {
+                this._order = value;
+                OnPropertyChanged("Order");
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -110,21 +127,43 @@ namespace OxTail.Controls
             return sb.ToString();
         }
 
-        public static void SaveHighlights(BindingList<HighlightItem> patterns, string filename)
+        public static void SaveHighlights(HighlightCollection<HighlightItem> patterns, string filename)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(BindingList<HighlightItem>));
+            XmlSerializer serializer = new XmlSerializer(typeof(HighlightCollection<HighlightItem>), new Type[] { typeof(HighlightItem) });
             FileHelper.SerializeToExecutableDirectory(filename, serializer, patterns);
         }
 
-        public static BindingList<HighlightItem> LoadHighlights(string filename)
+        public static HighlightCollection<HighlightItem> LoadHighlights(string filename)
         {
             if (!File.Exists(filename))
             {
-                return new BindingList<HighlightItem>();
+                return new HighlightCollection<HighlightItem>();
             }
 
-            XmlSerializer serializer = new XmlSerializer(typeof(BindingList<HighlightItem>));
-            return (BindingList<HighlightItem>)FileHelper.DeserializeFromExecutableDirectory(filename, serializer);
+            XmlSerializer serializer = new XmlSerializer(typeof(HighlightCollection<HighlightItem>), new Type[]{ typeof(HighlightItem) });
+            
+            return (HighlightCollection<HighlightItem>)FileHelper.DeserializeFromExecutableDirectory(filename, serializer);
+        }   
+ 
+         #region IComparable
+
+        public int CompareTo(object obj)
+        {
+            if (((HighlightItem)obj).Order == this.Order)
+            {
+                return 0;
+            }
+
+            if (((HighlightItem)obj).Order > this.Order)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
         }
+
+        #endregion IComparable
     }
 }
