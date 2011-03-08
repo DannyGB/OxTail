@@ -26,7 +26,8 @@ namespace OxTail
     using OxTail.Helpers;
     using OxTail.Properties;
     using System.Collections.Generic;
-    using System.Text;    
+    using System.Text;
+    using OxTailHelpers;    
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -216,7 +217,7 @@ namespace OxTail
                         sb.AppendLine(item.Text);
                     }
 
-                    Clipboard.SetData(DataFormats.Text, sb.ToString());
+                    ClipboardHelper.AddTextToClipboard(sb.ToString());
                 }
             }
         }        
