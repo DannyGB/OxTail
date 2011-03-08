@@ -4,7 +4,15 @@
         xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
     Title="About" Height="400" Width="400" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Grid>
-        <TabControl>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox Name="TextBoxVersion" Text="Version " Grid.Row="0"/>
+        <TabControl  Grid.Row="1">
             <TabItem Header="Credits">
                 <TextBox Name="textBoxCredits" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto">                    
                 </TextBox>
@@ -13,6 +21,5 @@
                 <custom:About Margin="12"></custom:About>
             </TabItem>           
         </TabControl>
-        
     </Grid>    
 </Window>
