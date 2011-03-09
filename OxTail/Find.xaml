@@ -1,0 +1,9 @@
+﻿<custom:BaseWindow x:Class="OxTail.Find"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
+        Title="Find" WindowStartupLocation="Manual" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" WindowStyle="ToolWindow" ResizeMode="CanResizeWithGrip" ShowInTaskbar="True" Height="164" Width="374" Topmost="True">
+    <Grid>
+        <custom:Find x:Name="find" ExpressionBuilderButtonClick="find_ExpressionBuilderButtonClick" FindButtonClick="find_FindButtonClick" />
+    </Grid>
+</custom:BaseWindow>
