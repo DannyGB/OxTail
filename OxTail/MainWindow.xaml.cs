@@ -33,10 +33,13 @@ namespace OxTail
     /// Interaction logic for Window1.xaml
     /// </summary>
     public partial class MainWindow : BaseWindow
-    {
+    {        
+        private List<Window> OpenWindows { get; set; }
+ 
         public MainWindow()
         {
-            InitializeComponent();            
+            InitializeComponent();
+            this.OpenWindows = new List<Window>();
         }
 
         public static HighlightCollection<HighlightItem> HighlightItems { get; set; }
@@ -223,6 +226,61 @@ namespace OxTail
                     ClipboardHelper.AddTextToClipboard(sb.ToString());
                 }
             }
-        }        
+        }
+
+        private void MenuFind_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Window w in this.OpenWindows)
+            {
+                if (w is Find)
+                {
+                    w.Activate();
+                    return;
+                }
+            }
+
+            Find find = new Find();
+            find.FindCriteria += new Controls.Find.FindText(find_FindCriteria);
+            find.Closed += new EventHandler(find_Closed);
+            this.OpenWindows.Add(find);
+
+            find.Show();
+        }
+
+        void find_Closed(object sender, EventArgs e)
+        {
+            if (this.OpenWindows.Contains((sender as Window)))
+            {
+                this.OpenWindows.Remove((sender as Window));
+
+                if (tabControlMain.Items.Count > 0)
+                {
+                    ((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).ResetSearchCriteria();
+                }
+            }
+        }
+
+        void find_FindCriteria(object sender, FindEventArgs e)
+        {
+            if (tabControlMain.Items.Count > 0)
+            {
+                if (e.Options == OxTailLogic.PatternMatching.FindOptions.AllOpenDocuments)
+                {
+                    //foreach (FileWatcherTabItem item in tabControlMain.Items)
+                    //{
+                    //    item.Find(e.FindCriteria);
+                    //}
+                }
+                else if (e.Options == OxTailLogic.PatternMatching.FindOptions.CurrentDocument)
+                {
+                    ((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).Find(e.FindCriteria);
+                }
+            }
+        }
+
+        private void MenuOnWeb_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(Settings.Default.WebsiteUrl);
+        }
     }
 }
