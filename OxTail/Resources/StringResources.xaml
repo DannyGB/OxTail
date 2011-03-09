@@ -29,6 +29,8 @@
 
     <system:String x:Key="help">Help</system:String>
     <system:String x:Key="about">About</system:String>
+    <system:String x:Key="onWeb">Visit Website</system:String>
+    <system:String x:Key="opensWebBrowser">Opens in web browser</system:String>
 
     <!-- Highlighting form -->
 
@@ -55,6 +57,11 @@
     <system:String x:Key="colourPickerWindowTitle">Pick Colour</system:String>
     <system:String x:Key="pickSwatchType">Pick swatch type</system:String>
     <system:String x:Key="previewColour">Preview</system:String>
+
+    <!-- Find form -->
+
+    <system:String x:Key="labelFind">Find</system:String>
+    <system:String x:Key="findButton">Find</system:String>
 
     <!-- Expression Builder form -->
 
@@ -102,5 +109,6 @@
     <system:String x:Key="invalidValueType">Value was not of the correct type</system:String>
     <system:String x:Key="noSortingAllowed">No sorting allowed</system:String>
     <system:String x:Key="parentMustBeMenuItem">Parent must be a MenuItem</system:String>
+    <system:String x:Key="fileNoLongerExistsOnDisk">File no longer exists on disk</system:String>    
 
 </ResourceDictionary>

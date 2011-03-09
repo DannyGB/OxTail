@@ -46,7 +46,7 @@ namespace OxTail
         {
             this.textBoxCredits.Text = string.Format("Dan Beavon{0}Dave Wedgbury", System.Environment.NewLine);
             this.textBoxCredits.Text += string.Format("{0}Sorting algorithms in use are from here: http://www.codeproject.com/KB/recipes/cssorters.aspx", Environment.NewLine);
-            this.TextBoxVersion.Text += " " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
+            this.TextBoxVersion.Content += " " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
         }
     }
 }

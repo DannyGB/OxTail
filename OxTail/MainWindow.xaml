@@ -20,7 +20,7 @@
                 <MenuItem Name="MenuExit" Header="{DynamicResource exit}" Click="MenuExitClick" />
             </MenuItem>
             <MenuItem Name="MenuEdit" Header="{DynamicResource edit}">
-                <MenuItem Name="MenuFind" Header="{DynamicResource find}" />
+                <MenuItem Name="MenuFind" Header="{DynamicResource find}" Click="MenuFind_Click" />
                 <Separator></Separator>
                 <MenuItem Name="MenuCopy" Header="{DynamicResource copy}" Click="MenuCopy_Click" />                
             </MenuItem>
@@ -34,6 +34,7 @@
             </MenuItem>
             <MenuItem  Header="{DynamicResource help}">
                 <MenuItem Name="MenuAbout"  Header="{DynamicResource about}" Click="MenuAboutClick" />
+                <MenuItem Name="MenuOnWeb" Header="{DynamicResource onWeb}" Click="MenuOnWeb_Click" ToolTip="{DynamicResource opensWebBrowser}" />
             </MenuItem>
         </Menu>
         <TabControl Name="tabControlMain" SelectionChanged="tabControlMain_SelectionChanged"></TabControl>

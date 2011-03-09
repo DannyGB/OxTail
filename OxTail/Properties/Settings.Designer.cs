@@ -40,5 +40,14 @@ namespace OxTail.Properties {
                 return ((int)(this["MaxFilesToOpen"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://sourceforge.net/projects/oxtail")]
+        public string WebsiteUrl {
+            get {
+                return ((string)(this["WebsiteUrl"]));
+            }
+        }
     }
 }

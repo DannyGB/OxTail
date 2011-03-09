@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBox Name="TextBoxVersion" Text="{DynamicResource version}" Grid.Row="0"/>
+        <Label Name="TextBoxVersion" Content="{DynamicResource version}" Grid.Row="0"/>
         <TabControl  Grid.Row="1">
             <TabItem Header="{DynamicResource credits}">
                 <TextBox Name="textBoxCredits" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto">                    

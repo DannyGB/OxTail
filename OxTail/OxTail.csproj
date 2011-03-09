@@ -104,6 +104,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Find.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Highlight.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -120,6 +124,9 @@
     </Compile>
     <Compile Include="ExpressionBuilder.xaml.cs">
       <DependentUpon>ExpressionBuilder.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Find.xaml.cs">
+      <DependentUpon>Find.xaml</DependentUpon>
     </Compile>
     <Compile Include="Highlight.xaml.cs">
       <DependentUpon>Highlight.xaml</DependentUpon>

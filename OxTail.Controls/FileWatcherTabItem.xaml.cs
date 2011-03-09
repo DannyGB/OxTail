@@ -32,6 +32,7 @@ namespace OxTail.Controls
     public partial class FileWatcherTabItem : CloseableTabItem, IDisposable
     {
         private Image _image = null;
+        private double LastFindOffset { get; set; }
 
         public List<HighlightedItem> SelectedItem 
         {
@@ -128,6 +129,16 @@ namespace OxTail.Controls
         private void CloseableTabItem_Loaded(object sender, RoutedEventArgs e)
         {
             this.fileWatcher.Start(this.Uid);
+        }
+
+        public void Find(string searchCriteria)
+        {
+            LastFindOffset = this.fileWatcher.Find(searchCriteria, LastFindOffset);
+        }
+
+        public void ResetSearchCriteria()
+        {
+            this.fileWatcher.ResetSearchCriteria();
         }
     }
 }

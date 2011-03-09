@@ -63,6 +63,10 @@
     <Compile Include="ColourfulListView.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="ExpressionTextBox.cs" />
+    <Compile Include="Find.xaml.cs">
+      <DependentUpon>Find.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FindEventArgs.cs" />
     <Compile Include="HighlightCollection.cs" />
     <Compile Include="HighlightedItem.cs" />
     <Compile Include="FileWatcherProgressChangedUserState.cs" />
@@ -112,6 +116,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="FileWatcherTabItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Find.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

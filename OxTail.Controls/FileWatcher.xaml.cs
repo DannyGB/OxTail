@@ -57,6 +57,7 @@ namespace OxTail.Controls
         private int _interval = 1000;
         private int _linesInFile = 0;
         public List<HighlightedItem> SelectedItem { get; private set; }
+        private string SearchText { get; set; }
 
         public long CurrentLength
         {
@@ -313,8 +314,18 @@ namespace OxTail.Controls
             }
         }
 
-        public static IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
+        public IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
         {
+            // Special Search item
+            HighlightItem special = new HighlightItem(this.SearchText, Colors.White, Colors.Black);
+            if (!string.IsNullOrEmpty(special.Pattern) && !string.IsNullOrEmpty(text))
+            {
+                if (text == special.Pattern || _patternMatching.MatchPattern(text, special.Pattern))
+                {
+                    yield return special;
+                }
+            }
+
             foreach (HighlightItem item in coll)
             {
                 // Empty pattern should not exist (a blank line should be a "special" Highlight item?
@@ -737,6 +748,66 @@ namespace OxTail.Controls
             {
                 this.SelectedItem.Add((HighlightedItem)item);
             }
+        }
+
+        internal double Find(string searchCriteria, double lastFindOffset)
+        {
+            return FindText(searchCriteria, lastFindOffset);
+        }
+
+        private double FindText(string text, double lastFindOffset)
+        {
+            this.SearchText = text;
+
+            if(!File.Exists(this._filename))
+            {
+                throw new Exception(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "fileNoLongerExistsOnDisk"));
+            }
+
+            FileStream fs = File.Open(this._filename, FileMode.Open, FileAccess.Read);
+            StreamReader read = new StreamReader(fs);
+            int i = 0;
+            try
+            {
+                while (read.Peek() >= 0)
+                {
+                    string line = read.ReadLine();
+
+                    if (i > lastFindOffset)
+                    {
+
+                        if (_patternMatching.MatchPattern(line, text))
+                        {
+                            this.ScrollViewer.ScrollToVerticalOffset(Convert.ToDouble(i));
+                            break;
+                        }
+                    }
+
+                    i++;
+                }
+
+                // If we reached the end of the stream reset the last search position
+                if (read.EndOfStream)
+                {
+                    i = 0;
+                }
+
+            }
+            finally
+            {
+                read.Close();
+                read.Dispose();
+                fs.Close();
+                fs.Dispose();
+            }
+
+            return i;
+        }
+
+        internal void ResetSearchCriteria()
+        {
+            this.SearchText = string.Empty;
+            this.Update();
         }
     }
 }
