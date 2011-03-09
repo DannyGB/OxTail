@@ -139,7 +139,7 @@ namespace OxTail.Controls
 
             else
             {
-                throw new ArgumentException("value was not of the correct type", "value");
+                throw new ArgumentException("Value was not of the correct type", "value");
             }
         }
 

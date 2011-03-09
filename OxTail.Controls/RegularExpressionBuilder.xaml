@@ -24,20 +24,20 @@
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0"  Content="Expression:" HorizontalAlignment="Left" Margin="5,5,5,2" Name="label1" VerticalAlignment="Bottom" FontWeight="Bold" />
-            <Label Grid.Column="1" Name="labelSavedExpressions" Content="Saved Expressions:" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,5,5,2" />
+            <Label Grid.Row="0" Grid.Column="0"  Content="{DynamicResource expressionLabel}" HorizontalAlignment="Left" Margin="5,5,5,2" Name="label1" VerticalAlignment="Bottom" FontWeight="Bold" />
+            <Label Grid.Column="1" Name="labelSavedExpressions" Content="{DynamicResource savedExpressionLabel}" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,5,5,2" />
             <ComboBox Name="comboBoxSavedExpressions" SelectedIndex="0" Grid.Column="1" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="5,5,5,2" Width="140" SelectionChanged="comboBoxSavedExpressions_SelectionChanged" ItemsSource="{Binding}">                
             </ComboBox>
             <WrapPanel Grid.Row="0" Grid.Column="2" VerticalAlignment="Bottom" >
-                <Button Content="Delete Expression" Height="23" Margin="5,5,5,2" Name="buttonDeleteExpression" Width="110" Click="buttonDeleteExpression_Click" />
-                <Button Content="Save Expression" Height="23" Margin="5,5,5,2" Name="buttonSaveExpression" Width="110" Click="buttonSaveExpression_Click" />
+                <Button Content="{DynamicResource deleteExpressionButton}" Height="23" Margin="5,5,5,2" Name="buttonDeleteExpression" Width="110" Click="buttonDeleteExpression_Click" />
+                <Button Content="{DynamicResource saveExpressionButton}" Height="23" Margin="5,5,5,2" Name="buttonSaveExpression" Width="110" Click="buttonSaveExpression_Click" />
             </WrapPanel>
             <DockPanel Grid.Row="1" Grid.ColumnSpan="3">
                 <oxtail:ExpressionTextBox DockPanel.Dock="Left" Height="55" x:Name="textBoxExpression" VerticalAlignment="Top" TextWrapping="Wrap" Margin="5,5,5,0" />
             </DockPanel>
         </Grid>
         <TabControl Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="3">
-            <TabItem Header="Builder" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <TabItem Header="{DynamicResource builderTabLabel}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -50,33 +50,33 @@
                     <RowDefinition Height="50"></RowDefinition>
                 </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Grid.Column="0" Height="Auto" HorizontalAlignment="Left" Name="stackPanel1" VerticalAlignment="Top" Margin="10">
-                    <oxtail:SpecialButton HeldTextValue="." Margin="2,10,2,2" Content="Any character (.)" Height="21" x:Name="radioButtonAnyCharacter" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="\w" Margin="2,10,2,2" Content="Alphanumeric (\w)" Height="21" x:Name="radioButtonAlphaNumric" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="\d" Margin="2,10,2,2" Content="Digit (\d)" Height="21" x:Name="radioButtonDigit" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="\s" Margin="2,10,2,2" Content="Whitespace (\s)" Height="21" x:Name="radioButtonWhitespace" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="." Margin="2,10,2,2" Content="{DynamicResource anyCharacterButton}" Height="21" x:Name="radioButtonAnyCharacter" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="\w" Margin="2,10,2,2" Content="{DynamicResource alphaNumericButton}" Height="21" x:Name="radioButtonAlphaNumric" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="\d" Margin="2,10,2,2" Content="{DynamicResource digitButton}" Height="21" x:Name="radioButtonDigit" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="\s" Margin="2,10,2,2" Content="{DynamicResource whiteSpaceButton}" Height="21" x:Name="radioButtonWhitespace" Click="SpecialButton_Click" />
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="1" Height="Auto" HorizontalAlignment="Left" Name="stackPanel2" VerticalAlignment="Top" Margin="10">
-                    <oxtail:SpecialButton HeldTextValue="*" Margin="2,10,2,2" Content="Any number (*)" Height="21" x:Name="radioButtonAnyNumber" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="+" Margin="2,10,2,2" Content="One or more (+)" Height="21" x:Name="radioButtonOneOrMore" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="?" Margin="2,10,2,2" Content="Zero or one (?)" Height="21" x:Name="radioButtonZeroOrOne" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="*" Margin="2,10,2,2" Content="{DynamicResource anyNumberButton}" Height="21" x:Name="radioButtonAnyNumber" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="+" Margin="2,10,2,2" Content="{DynamicResource oneOrMoreButton}" Height="21" x:Name="radioButtonOneOrMore" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="?" Margin="2,10,2,2" Content="{DynamicResource zeroOrOneButton}" Height="21" x:Name="radioButtonZeroOrOne" Click="SpecialButton_Click" />
                     <WrapPanel>
-                        <oxtail:SpecialButton x:Name="buttonExactNumberOfMatches" Width="80" Margin="2,10,2,2" Content="Exactly n {n}" HeldTextValue="{}{n}" Click="buttonExactNumberOfMatches_Click"/>
+                            <oxtail:SpecialButton x:Name="buttonExactNumberOfMatches" Width="80" Margin="2,10,2,2" Content="{DynamicResource exactlyNButton}" HeldTextValue="{}{n}" Click="buttonExactNumberOfMatches_Click"/>
                         <oxtail:IntegerTextBox x:Name="textBoxN" Width="70" Height="20" Margin="2,10,2,2" />
-                        <oxtail:SpecialButton x:Name="buttonAtLeastNumberOfMatches" Width="80" Margin="2,10,2,2" Content="At least n {n.}" HeldTextValue="{}{n.}" Click="buttonAtLeastNumberOfMatches_Click" />
+                            <oxtail:SpecialButton x:Name="buttonAtLeastNumberOfMatches" Width="80" Margin="2,10,2,2" Content="{DynamicResource atLeastNButton}" HeldTextValue="{}{n.}" Click="buttonAtLeastNumberOfMatches_Click" />
                         <oxtail:IntegerTextBox x:Name="textBoxM" Width="70" Height="20" Margin="2,10,2,2" />
-                        <oxtail:SpecialButton x:Name="buttonBetweenNandMMatches" Margin="2,10,2,2" Content="Between n and m {n,m}" HeldTextValue="{}{n,m}" Click="buttonBetweenNandMMatches_Click" />
+                            <oxtail:SpecialButton x:Name="buttonBetweenNandMMatches" Margin="2,10,2,2" Content="{DynamicResource betweenNandMButton}" HeldTextValue="{}{n,m}" Click="buttonBetweenNandMMatches_Click" />
                     </WrapPanel>
                 </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="2" Height="Auto" HorizontalAlignment="Left" Name="stackPanel3" VerticalAlignment="Top" Margin="10">
-                    <oxtail:SpecialButton HeldTextValue="\n" Margin="2,10,2,2" Content="New line (\n)" Height="21" x:Name="radioButton1" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="\e" Margin="2,10,2,2" Content="Escape (\e)" Height="21" x:Name="radioButton2" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="\b" Margin="2,10,2,2" Content="Backspace (\b)" Height="21" x:Name="radioButton3" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="\t" Margin="2,10,2,2" Content="Tab (\t)" Height="21" x:Name="radioButton4" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="\n" Margin="2,10,2,2" Content="{DynamicResource newLineButton}" Height="21" x:Name="radioButton1" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="\e" Margin="2,10,2,2" Content="{DynamicResource escapeButton}" Height="21" x:Name="radioButton2" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="\b" Margin="2,10,2,2" Content="{DynamicResource backSpaceButton}" Height="21" x:Name="radioButton3" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="\t" Margin="2,10,2,2" Content="{DynamicResource tabButton}" Height="21" x:Name="radioButton4" Click="SpecialButton_Click" />
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="3" Height="Auto" HorizontalAlignment="Left" Name="stackPanel4" VerticalAlignment="Top" Margin="10">
-                    <oxtail:SpecialButton HeldTextValue="^" Margin="2,10,2,2" Content="Start of line (^)" Height="21" x:Name="radioButton5" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="$" Margin="2,10,2,2" Content="End of line ($)" Height="21" x:Name="radioButton6" Click="SpecialButton_Click" />
-                    <oxtail:SpecialButton HeldTextValue="\f"  Margin="2,10,2,2" Content="Form feed (\f)" Height="21" x:Name="radioButton9" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="^" Margin="2,10,2,2" Content="{DynamicResource startOfLineButton}" Height="21" x:Name="radioButton5" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="$" Margin="2,10,2,2" Content="{DynamicResource endOfLineButton}" Height="21" x:Name="radioButton6" Click="SpecialButton_Click" />
+                        <oxtail:SpecialButton HeldTextValue="\f"  Margin="2,10,2,2" Content="{DynamicResource formFeedButton}" Height="21" x:Name="radioButton9" Click="SpecialButton_Click" />
                 <ComboBox Name="comboBoxSets" SelectionChanged="comboBoxSets_SelectionChanged" Margin="2,10,2,2">
                         <ComboBoxItem Content="a-zA-Z" />
                         <ComboBoxItem Content="a-z" />
@@ -85,11 +85,11 @@
                         <ComboBoxItem Content="aeiou" />
                     </ComboBox>
                 </StackPanel>
-                <Button Grid.Row="1" Grid.Column="2" Name="buttonOk" Content="Ok" Click="buttonOk_Click" Margin="2,2,2,2"/>
-                <Button Grid.Row="1" Grid.Column="3" Name="buttonCancel" Content="Cancel" Click="buttonCancel_Click" Margin="2,2,2,2" />
+                    <Button Grid.Row="1" Grid.Column="2" Name="buttonOk" Content="{DynamicResource okButton}" Click="buttonOk_Click" Margin="2,2,2,2"/>
+                    <Button Grid.Row="1" Grid.Column="3" Name="buttonCancel" Content="{DynamicResource cancelButton}" Click="buttonCancel_Click" Margin="2,2,2,2" />
             </Grid>
             </TabItem>
-            <TabItem Header="Test Area" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+            <TabItem Header="{DynamicResource testAreaTabLabel}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                 <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition></ColumnDefinition>
@@ -101,7 +101,7 @@
                     </Grid.RowDefinitions>
                     <TextBox MinHeight="200" Grid.Column="0" Grid.Row="0" Name="textBoxTextInput" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"></TextBox>
                     <TextBox MinHeight="200" Grid.Column="1" Grid.Row="0" Name="textBoxFoundMatches" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" IsReadOnly="True"></TextBox>
-                    <Button Grid.Column="1" Grid.Row="1" Name="buttonFindMatches" Content="Find Matches" Margin="2" Click="buttonFindMatches_Click"></Button>
+                    <Button Grid.Column="1" Grid.Row="1" Name="buttonFindMatches" Content="{DynamicResource findMatchesButton}" Margin="2" Click="buttonFindMatches_Click"></Button>
                 </Grid>
             </TabItem>
         </TabControl>

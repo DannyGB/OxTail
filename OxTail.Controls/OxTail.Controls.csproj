@@ -51,6 +51,7 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BaseWindow.cs" />
     <Compile Include="CloseableTabItem.cs" />
     <Compile Include="ColorDialog.xaml.cs">
       <DependentUpon>ColorDialog.xaml</DependentUpon>

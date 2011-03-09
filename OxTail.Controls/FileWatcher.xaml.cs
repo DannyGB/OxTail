@@ -269,14 +269,17 @@ namespace OxTail.Controls
                     {
                         this.Lines[lineIndex] = item;
                     }
-                } 
+                }
             }
 
+#if DEBUG
             if (this.Lines.Count > this.StartLine + this.VisibleLines)
             {
+
                 this.Lines[(int)this.StartLine + this.VisibleLines] = new TextBlock(new Run(string.Format("{0}: visible lines = {1}", (int)this.StartLine + this.VisibleLines, this.VisibleLines)));
                 Console.WriteLine("line {0} was the last visible line of {1} apparently ", (int)this.StartLine + this.VisibleLines, this.VisibleLines);
             }
+#endif
 
             // update the status bar
             this.ReportProgress(0, String.Empty, false, System.Windows.Visibility.Hidden);
@@ -381,7 +384,7 @@ namespace OxTail.Controls
                 long offset = 0;
                 if (!this._LineOffsets.TryGetValue(this.StartLine, out offset))
                 {
-                    ReportProgress(0, "Don't know about line #" + this.StartLine.ToString(), true, System.Windows.Visibility.Hidden);
+                    ReportProgress(0, LanguageHelper.GetLocalisedText((Application.Current as IApplication), "lineNumberError") + this.StartLine.ToString(), true, System.Windows.Visibility.Hidden);
                     return;
                 }
 
@@ -405,7 +408,10 @@ namespace OxTail.Controls
                     }
                 } 
             }
+
+#if DEBUG
             Console.WriteLine("Read {2} of {3} Lines {0} - {1}", this.StartLine, this.StartLine + this.VisibleLines, this._readLines.Count, this.VisibleLines);
+#endif
         }
 
         private void PositionFilePointerToOffset(StreamReader streamReader, long target)
@@ -522,7 +528,9 @@ namespace OxTail.Controls
             {
                 lock (this)
                 {
+#if DEBUG
                     Console.WriteLine("Scroll to end");
+#endif
 
                     if (this.ScrollViewer != null)
                     {
@@ -614,9 +622,12 @@ namespace OxTail.Controls
                     }
                 } 
             }
+
+#if DEBUG
             Console.WriteLine("scanned {0} lines - {1} offsets recorded - final offset {2} - current length {3}", this.LinesInFile, this._LineOffsets.Count, offset, this.CurrentLength);
+#endif
             this.Dispatcher.Invoke(DispatcherPriority.Loaded, (Action)(() => { this.PadOutListView(); }));
-            ReportProgress(100, string.Format("counted {0} lines", this.LinesInFile), false, System.Windows.Visibility.Hidden);
+            ReportProgress(100, string.Format(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "lineCount"), this.LinesInFile), false, System.Windows.Visibility.Hidden);
             return true;
         }
 
@@ -645,7 +656,7 @@ namespace OxTail.Controls
             // sleep until the worker has terminated
             while (this._bw.IsBusy)
             {
-                ReportProgress(0, "Waiting for watcher to exit", true, System.Windows.Visibility.Visible);
+                ReportProgress(0, LanguageHelper.GetLocalisedText((Application.Current as IApplication), "waitingForWatcher"), true, System.Windows.Visibility.Visible);
                 Thread.Sleep(100);
             }
             return;
@@ -684,10 +695,15 @@ namespace OxTail.Controls
 
         private void colourfulListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+#if DEBUG
             Console.WriteLine("ScrollChanged: {0} {1}", e.VerticalChange, e.ViewportHeightChange);
+#endif
+
             if (e.VerticalChange != 0)
             {
+#if DEBUG
                 Console.WriteLine("Vertical offset changed {0}", e.VerticalChange);
+#endif
                 this.ShowLines();
             }
             //else if (e.ViewportHeightChange != 0)
@@ -708,7 +724,9 @@ namespace OxTail.Controls
 
         private void colourfulListView_Scroll(object sender, ScrollEventArgs e)
         {
+#if DEBUG
             Console.WriteLine("Scroll: {0}", e.ReflectToString());
+#endif
         }
 
         private void colourfulListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

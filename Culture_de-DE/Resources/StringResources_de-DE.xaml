@@ -1,0 +1,106 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <!-- General -->
+    <system:String x:Key="okButton">Ok</system:String>
+    <system:String x:Key="saveButton">Save</system:String>
+    <system:String x:Key="cancelButton">Cancel</system:String>
+
+
+    <!-- Main form -->
+
+    <system:String x:Key="file">File</system:String>
+    <system:String x:Key="open">Open</system:String>
+    <system:String x:Key="filePattern">File Pattern</system:String>
+    <system:String x:Key="directory">Directory</system:String>
+    <system:String x:Key="closeAll">Close All</system:String>
+    <system:String x:Key="exit">Exit</system:String>
+
+    <system:String x:Key="edit">Edit</system:String>
+    <system:String x:Key="find">Find</system:String>
+    <system:String x:Key="copy">Copy</system:String>
+
+    <system:String x:Key="settings">Settings</system:String>
+    <system:String x:Key="highlighting">Highlighting</system:String>
+
+    <system:String x:Key="tools">Tools</system:String>
+    <system:String x:Key="regExpBuilder">Reg Ex Expression Builder</system:String>
+
+    <system:String x:Key="help">Help</system:String>
+    <system:String x:Key="about">About</system:String>
+
+    <!-- Highlighting form -->
+
+    <system:String x:Key="highlightingWindowTitle">Highlighting</system:String>
+    <system:String x:Key="enterPatternText">Enter Pattern</system:String>
+    <system:String x:Key="foreColourButton">Fore Colour</system:String>
+    <system:String x:Key="backColourButton">Back Colour</system:String>
+    <system:String x:Key="expressionBuilder">Expression Builder</system:String>
+    <system:String x:Key="addButton">Add</system:String>
+    <system:String x:Key="updateButton">Update</system:String>
+    <system:String x:Key="deleteButton">Delete</system:String>
+    <system:String x:Key="patternColHeader">Pattern</system:String>
+    <system:String x:Key="orderColHeader">Order</system:String>
+
+    <!-- About form -->
+
+    <system:String x:Key="aboutWindowTitle">About</system:String>
+    <system:String x:Key="version">Version</system:String>
+    <system:String x:Key="credits">Credits</system:String>
+    <system:String x:Key="license">License</system:String>
+
+    <!-- Colour picker form -->
+
+    <system:String x:Key="colourPickerWindowTitle">Pick Colour</system:String>
+    <system:String x:Key="pickSwatchType">Pick swatch type</system:String>
+    <system:String x:Key="previewColour">Preview</system:String>
+
+    <!-- Expression Builder form -->
+
+    <system:String x:Key="expressionBuilderWindowTitle">Expression Builder</system:String>
+    <system:String x:Key="expressionLabel">Expression:</system:String>
+    <system:String x:Key="savedExpressionLabel">Saved Expressions:</system:String>
+    <system:String x:Key="deleteExpressionButton">Delete Expression</system:String>
+    <system:String x:Key="saveExpressionButton">Save Expression</system:String>
+    <system:String x:Key="builderTabLabel">Builder</system:String>
+    <system:String x:Key="testAreaTabLabel">Test Area</system:String>
+    <system:String x:Key="anyCharacterButton">Any character (.)</system:String>
+    <system:String x:Key="alphaNumericButton">Alphanumeric (\w)</system:String>
+    <system:String x:Key="digitButton">Digit (\d)</system:String>
+    <system:String x:Key="whiteSpaceButton">Whitespace (\s)</system:String>
+    <system:String x:Key="anyNumberButton">Any number (*)</system:String>
+    <system:String x:Key="oneOrMoreButton">One or more (+)</system:String>
+    <system:String x:Key="zeroOrOneButton">Zero or one (?)</system:String>
+    <system:String x:Key="exactlyNButton">Exactly n {n}</system:String>
+    <system:String x:Key="atLeastNButton">At least n {n.}</system:String>
+    <system:String x:Key="betweenNandMButton">Between n and m {n,m}</system:String>
+    <system:String x:Key="newLineButton">New line (\n)</system:String>
+    <system:String x:Key="escapeButton">Escape (\e)</system:String>
+    <system:String x:Key="backSpaceButton">Backspace (\b)</system:String>
+    <system:String x:Key="tabButton">Tab (\t)</system:String>
+    <system:String x:Key="startOfLineButton">Start of line (^)</system:String>
+    <system:String x:Key="endOfLineButton">End of line ($)</system:String>
+    <system:String x:Key="formFeedButton">Form feed (\f)</system:String>
+    <system:String x:Key="findMatchesButton">Find Matches</system:String>
+    <system:String x:Key="chooseItem">Choose Item</system:String>
+    <system:String x:Key="enterExpressionName">Enter Expression Name</system:String>
+
+    <!-- Messages -->
+
+    <system:String x:Key="removeFromRecentFileList">Remove from recent file list?</system:String>
+    <system:String x:Key="fileNotFound">File not found</system:String>
+    <system:String x:Key="fileOpenLimit">Limited to only open a maximum of {0} files</system:String>
+    <system:String x:Key="filePatternText">Filename pattern to open (wildcard only)</system:String>
+    <system:String x:Key="lotOfFilesText">Potentially a lot of files, are you sure?</system:String>
+    <system:String x:Key="question">Question</system:String>
+    <system:String x:Key="lineCount">counted {0} lines</system:String>
+    <system:String x:Key="waitingForWatcher">Waiting for watcher to exit</system:String>
+
+    <!-- Errors -->
+    <system:String x:Key="lineNumberError">Don't know about line #</system:String>
+    <system:String x:Key="invalidValueType">Value was not of the correct type</system:String>
+    <system:String x:Key="noSortingAllowed">No sorting allowed</system:String>
+    <system:String x:Key="parentMustBeMenuItem">Parent must be a MenuItem</system:String>
+
+</ResourceDictionary>

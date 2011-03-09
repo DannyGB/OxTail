@@ -28,6 +28,7 @@ namespace OxTail.Controls
     using System.Text.RegularExpressions;
     using System;
     using System.Reflection;
+    using OxTailHelpers;
 
     /// <summary>
     /// Interaction logic for RegularExpressionBuilder.xaml
@@ -82,7 +83,7 @@ namespace OxTail.Controls
             {
                 this.textBoxExpression.Expression = new Expression();
             }
-            else if (((Expression)e.AddedItems[0]).Name != "Choose Item:")
+            else if (((Expression)e.AddedItems[0]).Name != LanguageHelper.GetLocalisedText((Application.Current as IApplication), "chooseItem"))
             {
                 this.textBoxExpression.Expression = ((Expression)e.AddedItems[0]);
             }
@@ -107,7 +108,7 @@ namespace OxTail.Controls
         private void buttonSaveExpression_Click(object sender, RoutedEventArgs e)
         {
             SaveExpressionMessage msg = new SaveExpressionMessage();
-            msg.labelMessage.Content = "Enter Expression Name:";
+            msg.labelMessage.Content = LanguageHelper.GetLocalisedText((Application.Current as IApplication), "enterExpressionName");
             msg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             msg.ShowDialog();
 
@@ -125,7 +126,7 @@ namespace OxTail.Controls
 
             if (!File.Exists(FILENAME))
             {
-                expr.Add(this.CreateExpression(string.Empty, "Choose Item:"));
+                expr.Add(this.CreateExpression(string.Empty, LanguageHelper.GetLocalisedText((Application.Current as IApplication), "chooseItem")));
                 expr.Add(this.CreateExpression(@"^([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})$", "Email"));
                 expr.Add(this.CreateExpression(@"^([a-zA-Z]{1,2}\w{1,2})+(\d{1}[a-zA-Z]{2})+$", "Postcode"));
             }

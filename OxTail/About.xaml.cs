@@ -30,11 +30,12 @@ namespace OxTail
     using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
     using System.Reflection;
+    using OxTail.Controls;
 
     /// <summary>
     /// Interaction logic for About.xaml
     /// </summary>
-    public partial class About : Window
+    public partial class About : BaseWindow
     {
         public About()
         {
@@ -44,7 +45,8 @@ namespace OxTail
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.textBoxCredits.Text = string.Format("Dan Beavon{0}Dave Wedgbury", System.Environment.NewLine);
-            this.TextBoxVersion.Text += Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
+            this.textBoxCredits.Text += string.Format("{0}Sorting algorithms in use are from here: http://www.codeproject.com/KB/recipes/cssorters.aspx", Environment.NewLine);
+            this.TextBoxVersion.Text += " " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
         }
     }
 }

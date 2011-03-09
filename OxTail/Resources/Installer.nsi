@@ -39,7 +39,7 @@
   
   !insertmacro MUI_PAGE_WELCOME
   
-  !insertmacro MUI_PAGE_LICENSE "COPYING.txt"  
+  !insertmacro MUI_PAGE_LICENSE "..\COPYING.txt"  
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -65,20 +65,34 @@ Section "Core OxTail Files" SecCoreFiles
 
   ;ADD YOUR OWN FILES HERE...
 
-  File "bin\Release\OxTail.exe"
-  File "bin\Release\OxTail.Controls.dll"			  
-  File "bin\Release\OxTailHelpers.dll"			  
-  File "bin\Release\OxTailLogic.dll"	
-  File "bin\Release\NSort.dll"
-  File "bin\Release\SavedExpression.xml"			  
-  File "bin\Release\highlights.xml"
-  File "COPYING.txt"
-  File "bin\Release\OxTail.exe.config"
+  File "..\bin\Release\OxTail.exe"
+  File "..\bin\Release\OxTail.Controls.dll"			  
+  File "..\bin\Release\OxTailHelpers.dll"			  
+  File "..\bin\Release\OxTailLogic.dll"	
+  File "..\bin\Release\NSort.dll"
+  File "..\bin\Release\SavedExpression.xml"			  
+  File "..\bin\Release\highlights.xml"
+  File "..\COPYING.txt"
+  File "..\bin\Release\OxTail.exe.config"
 
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
 
 SectionEnd
+
+; Add in when language packs available
+;SectionGroup "OxTail Language Files" SecLangFiles
+  
+;	Section "German de-DE"
+	  	  
+;	  CreateDirectory "$INSTDIR\Culture"
+;	  SetOutPath "$INSTDIR\Culture"	  
+
+;	  File "..\bin\Release\Culture\Culture_de-DE.dll"	
+
+;	SectionEnd
+
+;SectionGroupEnd
 
 ;--------------------------------
 ;Descriptions
@@ -96,22 +110,21 @@ SectionEnd
 
 Section "Uninstall"
 
-  ;ADD YOUR OWN FILES HERE...
-
   Delete "$INSTDIR\OxTail.exe"
-  Delete "$INSTDIR\OxTail.Controls.dll"			  
-  Delete "$INSTDIR\OxTailHelpers.dll"			  
-  Delete "$INSTDIR\OxTailLogic.dll"	
-  Delete "$INSTDIR\NSort.dll"			  
-  Delete "$INSTDIR\SavedExpression.xml"			  
-  Delete "$INSTDIR\highlights.xml"	
+  Delete "$INSTDIR\*.dll"			  
+  Delete "$INSTDIR\*.xml"
   Delete "$INSTDIR\Uninstall.exe"
   Delete "$INSTDIR\COPYING.txt"
   Delete "$INSTDIR\OxTail.exe.config"
+  
 
   Delete "$SMPROGRAMS\OxTail\Uninstall.lnk"
   Delete "$SMPROGRAMS\OxTail\OxTail.lnk"
 
+  ; Add in when language packs available
+  ;Delete "$INSTDIR\Culture\*.dll"
+  ;RMDir "$INSTDIR\Culture"
+  
   RMDir "$INSTDIR"
   RMDir "$SMPROGRAMS\OxTail"
 
