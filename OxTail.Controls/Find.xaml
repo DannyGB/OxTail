@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="OxTail.Controls.Find"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="123" d:DesignWidth="372" Loaded="UserControl_Loaded">
+    <Grid KeyUp="Grid_KeyUp">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="0"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" ></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="120"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Name="labelSearchCriteria"  Content="{DynamicResource labelFind}" Margin="10" Grid.Column="0" />
+                <TextBox Name="textBoxSearchCriteria" Grid.Column="1" Margin="10" DockPanel.Dock="Left" />
+                <Button Name="buttonExpressionBuilder" Grid.Column="2" Content="{DynamicResource expressionBuilder}" Width="100px" Margin="0 10 0 10" Click="buttonExpressionBuilder_Click" />
+            </Grid>
+        </DockPanel>
+        <Button Name="buttonFind" Content="{DynamicResource findButton}" Grid.Row="2" Width="100px" Margin="10" Click="buttonFind_Click" />
+        <ComboBox Name="comboBox" Grid.Row="1" Margin="10" SelectedIndex="0" Visibility="Hidden">
+            <ComboBoxItem Content="Current document"></ComboBoxItem>
+            <ComboBoxItem Content="All open files"></ComboBoxItem>
+        </ComboBox>
+        
+    </Grid>
+</UserControl>
