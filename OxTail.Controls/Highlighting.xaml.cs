@@ -25,6 +25,7 @@ namespace OxTail.Controls
     using System.Windows.Data;
     using System.Xml;
     using System;
+    using OxTailHelpers;
 
     public enum Direction
     {
@@ -46,7 +47,7 @@ namespace OxTail.Controls
             InitializeComponent();
 
             this.buttonColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
-            this.buttonBackColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;
+            this.buttonBackColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;            
         }
 
         public string Pattern
@@ -122,7 +123,7 @@ namespace OxTail.Controls
             ICollectionView view = CollectionViewSource.GetDefaultView(this.listViewPatterns.DataContext);
             if (view != null && !view.CanSort)
             {
-                MessageBox.Show("No sorting allowed");
+                MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "noSortingAllowed"));
                 return;
             }
 

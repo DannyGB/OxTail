@@ -19,9 +19,9 @@
         <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <custom:ColourfulListView DockPanel.Dock="Bottom" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Stretch" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single" HorizontalAlignment="Stretch">
                 <ListView.View>
-                    <GridView>                        
-                        <GridViewColumn Header="Pattern" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />                            
-                        <GridViewColumn Header="Order" DisplayMemberBinding="{Binding Order}" />
+                    <GridView>
+                        <GridViewColumn Header="{DynamicResource patternColHeader}" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />
+                        <GridViewColumn Header="{DynamicResource orderColHeader}" DisplayMemberBinding="{Binding Order}" />
                         <GridViewColumn Header="">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
@@ -41,17 +41,17 @@
             </custom:ColourfulListView>
         </DockPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center" Name="stackPanel1" VerticalAlignment="Center">
-            <Button Margin="5" Content="Add" Height="23" Name="buttonAdd" Width="65" Click="buttonAdd_Click" />
-            <Button Margin="5" Content="Update" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" />
-            <Button Margin="5" Content="Delete" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" />
+            <Button Margin="5" Content="{DynamicResource addButton}" Height="23" Name="buttonAdd" Width="65" Click="buttonAdd_Click" />
+            <Button Margin="5" Content="{DynamicResource updateButton}" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" />
+            <Button Margin="5" Content="{DynamicResource deleteButton}" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" />
         </StackPanel>
         <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto">
-            <TextBox DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="Enter Pattern" Margin="10,0" />
+            <TextBox DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="{DynamicResource enterPatternText}" Margin="10,0" />
         </DockPanel>
-        <WrapPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Name="stackPanel2" VerticalAlignment="Center">            
-            <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="Fore Colour" Margin="10,2,2,2" />
-            <custom:ColourButton x:Name="buttonBackColour" Click="buttonBackColour_Click" Width="70" Content="Back Colour" Margin="2,2,2,2" />
-            <Button Name="buttonExpressionBuilder" Content="Expression Builder" Click="buttonExpressionBuilder_Click" Margin="2,2,2,2" />
+        <WrapPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Name="stackPanel2" VerticalAlignment="Center">
+            <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="{DynamicResource foreColourButton}" Margin="10,2,2,2" />
+            <custom:ColourButton x:Name="buttonBackColour" Click="buttonBackColour_Click" Width="70" Content="{DynamicResource backColourButton}" Margin="2,2,2,2" />
+            <Button Name="buttonExpressionBuilder" Content="{DynamicResource expressionBuilder}" Click="buttonExpressionBuilder_Click" Margin="2,2,2,2" />
         </WrapPanel>
     </Grid>
 </UserControl>

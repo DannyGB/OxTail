@@ -1,9 +1,10 @@
-﻿<Window x:Class="OxTail.ExpressionBuilder"
+﻿<custom:BaseWindow x:Class="OxTail.ExpressionBuilder"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ExpressionBuilder" Height="462" Width="616"
+        xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"              
+        Title="{DynamicResource expressionBuilderWindowTitle}" Height="462" Width="616"
         xmlns:oxtail="clr-namespace:OxTail.Controls;assembly=OxTail.Controls" WindowStartupLocation="CenterScreen">
     <Grid>
         <oxtail:RegularExpressionBuilder x:Name="regularExpressionBuilder" OkClick="RegularExpressionBuilder_OkClick" CancelClick="RegularExpressionBuilder_CancelClick"></oxtail:RegularExpressionBuilder>
     </Grid>
-</Window>
+</custom:BaseWindow>

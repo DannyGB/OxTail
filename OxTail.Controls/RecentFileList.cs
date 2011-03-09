@@ -27,6 +27,7 @@ namespace OxTail.Controls
     using System.Windows;
     using System.Windows.Controls;
     using OxTailLogic.Persistance;
+    using OxTailHelpers;
 
     public class RecentFileList : Separator
 	{
@@ -78,7 +79,7 @@ namespace OxTail.Controls
 		void HookFileMenu()
 		{
 			MenuItem parent = Parent as MenuItem;
-			if ( parent == null ) throw new ApplicationException( "Parent must be a MenuItem" );
+			if ( parent == null ) throw new ApplicationException(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "parentMustBeMenuItem"));
 
 			if ( FileMenu == parent ) return;
 

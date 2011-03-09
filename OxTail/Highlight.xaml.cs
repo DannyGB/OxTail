@@ -36,7 +36,7 @@ namespace OxTail
     /// <summary>
     /// Interaction logic for Highlight.xaml
     /// </summary>
-    public partial class Highlight : Window
+    public partial class Highlight : BaseWindow
     {
         public Highlight()
         {

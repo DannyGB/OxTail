@@ -1,0 +1,8 @@
+D:\My Dropbox\oxtail\Culture_de-DE\bin\Release\Culture_de-DE.dll
+D:\My Dropbox\oxtail\Culture_de-DE\bin\Release\Culture_de-DE.pdb
+D:\My Dropbox\oxtail\Culture_de-DE\obj\Release\ResolveAssemblyReference.cache
+D:\My Dropbox\oxtail\Culture_de-DE\obj\Release\Resources\StringResources_de-DE.baml
+D:\My Dropbox\oxtail\Culture_de-DE\obj\Release\Culture_de-DE_MarkupCompile.cache
+D:\My Dropbox\oxtail\Culture_de-DE\obj\Release\Culture_de-DE.g.resources
+D:\My Dropbox\oxtail\Culture_de-DE\obj\Release\Culture_de-DE.dll
+D:\My Dropbox\oxtail\Culture_de-DE\obj\Release\Culture_de-DE.pdb

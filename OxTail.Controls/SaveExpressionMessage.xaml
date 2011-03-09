@@ -1,14 +1,15 @@
-﻿<Window x:Class="OxTail.Controls.SaveExpressionMessage"
+﻿<src:BaseWindow x:Class="OxTail.Controls.SaveExpressionMessage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:src="clr-namespace:OxTail.Controls"                
         Title="SaveExpressionMessage" Height="117" Width="312" WindowStyle="ToolWindow"
         Loaded="Window_Loaded">
     <Grid>
         <DockPanel HorizontalAlignment="Left" Margin="3,40,0,0" Name="dockPanel1" VerticalAlignment="Top">
             <TextBox Height="23" Name="textBoxMessage" Width="120" />
-            <Button Content="Save" Height="23" Name="buttonSave" Width="75" Margin="2" Click="buttonSave_Click" />
-            <Button Content="Cancel" Height="23" Name="buttonCancel" Width="75" Margin="2" Click="buttonCancel_Click" />
+            <Button Content="{DynamicResource saveButton}" Height="23" Name="buttonSave" Width="75" Margin="2" Click="buttonSave_Click" />
+            <Button Content="{DynamicResource cancelButton}" Height="23" Name="buttonCancel" Width="75" Margin="2" Click="buttonCancel_Click" />
         </DockPanel>
         <Label FontWeight="Bold" Content="Label" Height="28" HorizontalAlignment="Left" Margin="3,12,0,0" Name="labelMessage" VerticalAlignment="Top" Width="275" />
     </Grid>
-</Window>
+</src:BaseWindow>

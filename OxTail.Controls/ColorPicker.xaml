@@ -43,7 +43,7 @@
         <StackPanel Grid.Row="0" Height="35" 
                     HorizontalAlignment="Stretch" Orientation="Horizontal" 
                     Background="Black">
-            <Label Content="Pick swatch type" Foreground="White" FontWeight="Bold" 
+            <Label Content="{DynamicResource pickSwatchType}" Foreground="White" FontWeight="Bold" 
                    VerticalAlignment="Center"/>
             <Image x:Name="ImgSqaure1" Height="20" Width="20" 
                    Source="Images/ColorSwatchSquare.png" Margin="45,0,0,0" 
@@ -100,7 +100,7 @@
 
             <!-- Preview, Column1-->
             <StackPanel Grid.Column="1" Orientation="Vertical" >
-                <Label Content="Preview" Margin="5,0,0,0" HorizontalAlignment="Left" 
+                <Label Content="{DynamicResource previewColour}" Margin="5,0,0,0" HorizontalAlignment="Left" 
                        Foreground="Black" FontWeight="Bold" VerticalAlignment="Center"/>
       </StackPanel>
 

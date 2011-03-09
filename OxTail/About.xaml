@@ -1,8 +1,8 @@
-﻿<Window x:Class="OxTail.About"
+﻿<custom:BaseWindow x:Class="OxTail.About"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"      
         xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
-    Title="About" Height="400" Width="400" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
+    Title="{DynamicResource aboutWindowTitle}" Height="400" Width="400" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
@@ -11,15 +11,15 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBox Name="TextBoxVersion" Text="Version " Grid.Row="0"/>
+        <TextBox Name="TextBoxVersion" Text="{DynamicResource version}" Grid.Row="0"/>
         <TabControl  Grid.Row="1">
-            <TabItem Header="Credits">
+            <TabItem Header="{DynamicResource credits}">
                 <TextBox Name="textBoxCredits" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto">                    
                 </TextBox>
             </TabItem>
-            <TabItem Header="License">
+            <TabItem Header="{DynamicResource license}">
                 <custom:About Margin="12"></custom:About>
             </TabItem>           
         </TabControl>
     </Grid>    
-</Window>
+</custom:BaseWindow>

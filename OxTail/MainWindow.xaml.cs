@@ -32,13 +32,11 @@ namespace OxTail
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : BaseWindow
     {
-        private bool pageLoad = false;
-
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
 
         public static HighlightCollection<HighlightItem> HighlightItems { get; set; }
@@ -79,7 +77,6 @@ namespace OxTail
             {
                 if (File.Exists(filename))
                 {
-                    pageLoad = true;
                     OxTail.Controls.FileWatcherTabItem newTab = FindTabByFilename(filename);
                     if (newTab == null)
                     {                        
@@ -89,9 +86,8 @@ namespace OxTail
                     }
                     tabControlMain.SelectedItem = newTab;                    
                     RecentFileList.InsertFile(filename);
-                    pageLoad = false;
                 }
-                else if (MessageBox.Show("Remove from recent file list?", "File not found!", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                else if (MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "removeFromRecentFileList"), LanguageHelper.GetLocalisedText((Application.Current as IApplication), "fileNotFound"), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     RecentFileList.RemoveFile(filename);
                 }
@@ -145,7 +141,7 @@ namespace OxTail
 
         private List<FileInfo> OpenDirectory()
         {
-            MessageBox.Show(string.Format("Limited to only open a maximum of {0} files!", Settings.Default.MaxFilesToOpen), Application.Current.MainWindow.GetType().Assembly.GetName().Name);
+            MessageBox.Show(string.Format(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "fileOpenLimit"), Settings.Default.MaxFilesToOpen), Application.Current.MainWindow.GetType().Assembly.GetName().Name);
 
             List<FileInfo> fileInfoList = new List<FileInfo>();
 
@@ -174,12 +170,13 @@ namespace OxTail
             // Started to look at inheriting from OpenFileDialog but it's a sealed class so this is the 
             // short term "get it working" code and will look at creating an OpenFilePatternDialog
             // latter
-            string filename = FileHelper.ShowOpenFileDialog();
+            //string filename = FileHelper.ShowOpenFileDialog();
+            string filename = FileHelper.ShowOpenDirectory();
             List<FileInfo> fileInfos = new List<FileInfo>();
 
             SaveExpressionMessage msg = new SaveExpressionMessage();
-            msg.Label = "Add pattern (wildcard only)";
-            msg.Message = Path.GetFileName(filename);
+            msg.Label = LanguageHelper.GetLocalisedText((Application.Current as IApplication), "filePatternText");
+            msg.Message = "*.log";
             msg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
             if (!string.IsNullOrEmpty(filename) && !string.IsNullOrWhiteSpace(filename))
@@ -187,7 +184,13 @@ namespace OxTail
                 bool? result = msg.ShowDialog();
                 if (result.HasValue && result.Value)
                 {
-                    fileInfos = FileHelper.GetFiles(Path.GetDirectoryName(filename), msg.Message);
+                    if (msg.Message == "*.*")
+                    {
+                        if (MessageBoxResult.Yes == MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "lotOfFilesText"), LanguageHelper.GetLocalisedText((Application.Current as IApplication), "question"), MessageBoxButton.YesNo))
+                        {
+                            fileInfos = FileHelper.GetFiles(filename, msg.Message);
+                        }
+                    }
                 }
             }
 

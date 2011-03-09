@@ -31,6 +31,18 @@ namespace OxTail.Helpers
 
     public class FileHelper
     {
+        public static string ShowOpenDirectory()
+        {
+            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
+            System.Windows.Forms.DialogResult res = dialog.ShowDialog();
+            if (res == System.Windows.Forms.DialogResult.OK)
+            {
+                return dialog.SelectedPath;
+            }
+
+            return string.Empty;
+        }
+
         public static string ShowOpenFileDialog()
         {
             OpenFileDialog dialog = new OpenFileDialog();

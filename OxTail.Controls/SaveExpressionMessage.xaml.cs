@@ -33,7 +33,7 @@ namespace OxTail.Controls
     /// <summary>
     /// Interaction logic for SaveExpressionMessage.xaml
     /// </summary>
-    public partial class SaveExpressionMessage : Window
+    public partial class SaveExpressionMessage : BaseWindow
     {
         public SaveExpressionMessage()
         {
