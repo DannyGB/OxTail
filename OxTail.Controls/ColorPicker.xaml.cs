@@ -142,7 +142,7 @@ namespace OxTail.Controls
                 {
                     cb.CopyPixels(pixels, 4, 0);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     //Ooops
                 }
@@ -153,7 +153,7 @@ namespace OxTail.Controls
                 CanvImage.InvalidateVisual();
                 SelectedColor = Color.FromArgb((byte)AlphaSlider.Value, pixels[2], pixels[1], pixels[0]);
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 //not much we can do
             }

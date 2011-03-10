@@ -143,7 +143,7 @@ namespace OxTail.Controls
             }
         }
 
-        public void Clear()
+        public new void Clear()
         {
             base.Clear();
         }
@@ -184,13 +184,13 @@ namespace OxTail.Controls
             //OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
         }
 
-        public void RemoveAt(int index)
+        public new void RemoveAt(int index)
         {
             base.RemoveAt(index);
             OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
         }
 
-        public object this[int index]
+        public new object this[int index]
         {
             get
             {
@@ -207,7 +207,7 @@ namespace OxTail.Controls
             return;   
         }
 
-        public int Count
+        public new int Count
         {
             get { return base.Count; }
         }
@@ -222,7 +222,7 @@ namespace OxTail.Controls
             get { return this._syncRoot; }
         }
 
-        public System.Collections.IEnumerator GetEnumerator()
+        public new System.Collections.IEnumerator GetEnumerator()
         {
             return base.GetEnumerator();
         }

@@ -63,7 +63,7 @@ namespace OxTail.Helpers
                 stream.Position = 0;
                 return stream;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

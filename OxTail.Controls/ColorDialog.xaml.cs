@@ -19,8 +19,6 @@ namespace OxTail.Controls
     /// </summary>
     public partial class ColorDialog : Window
     {
-        private Color color;
-
         #region Ctor
         public ColorDialog()
         {
