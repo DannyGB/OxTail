@@ -76,6 +76,8 @@ namespace OxTail.Controls
                 this._backColour = value;
             }
         }
+
+        public Color BorderColour { get; set; }
         
         public override string ToString()
         {

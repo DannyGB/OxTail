@@ -99,6 +99,7 @@ namespace OxTail.Controls
             ((HighlightItem)this.listViewPatterns.SelectedItem).Pattern = this.textBoxPattern.Text;
             ((HighlightItem)this.listViewPatterns.SelectedItem).ForeColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
             ((HighlightItem)this.listViewPatterns.SelectedItem).BackColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;
+            this.Patterns.FireListChanged((HighlightItem)this.listViewPatterns.SelectedItem);
 
             this.listViewPatterns.DataContext = null;
             this.listViewPatterns.DataContext = Patterns;

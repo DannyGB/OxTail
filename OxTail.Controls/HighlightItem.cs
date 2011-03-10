@@ -95,6 +95,8 @@ namespace OxTail.Controls
             }
         }
 
+        public Color BorderColour { get; set; }
+
         public int Order
         {
             get
