@@ -282,5 +282,19 @@ namespace OxTail
         {
             System.Diagnostics.Process.Start(Settings.Default.WebsiteUrl);
         }
+
+        private void BaseWindow_Closing(object sender, CancelEventArgs e)
+        {
+            CloseAllOpenWindowsWhenMainWindowClosed();
+        }
+
+        private void CloseAllOpenWindowsWhenMainWindowClosed()
+        {
+            for (int i = this.OpenWindows.Count - 1; i >= 0; i--)
+            {
+                Window w = this.OpenWindows[i];
+                w.Close();
+            }
+        }
     }
 }

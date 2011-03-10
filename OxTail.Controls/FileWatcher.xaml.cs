@@ -58,6 +58,21 @@ namespace OxTail.Controls
         private int _linesInFile = 0;
         public List<HighlightedItem> SelectedItem { get; private set; }
         private string SearchText { get; set; }
+        private int LastSearchIndex { get; set; }
+
+        private bool IsSeaching
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(this.SearchText))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+
 
         public long CurrentLength
         {
@@ -114,14 +129,16 @@ namespace OxTail.Controls
 
         public long StartLine
         {
-            get
-            {
-                ScrollViewer vw = this.ScrollViewer;
-                if (vw != null)
-                    return (long)this.ScrollViewer.VerticalOffset + this.HorizontalScrollbarVisibilityOffset;
-                else
-                    return 0;
-            }
+            get;
+            set;
+            //get
+            //{
+            //    ScrollViewer vw = this.ScrollViewer;
+            //    if (vw != null)
+            //        return (long)this.ScrollViewer.VerticalOffset + this.HorizontalScrollbarVisibilityOffset;
+            //    else
+            //        return 0;
+            //}
         }
 
         private int HorizontalScrollbarVisibilityOffset
@@ -185,13 +202,13 @@ namespace OxTail.Controls
                     this.AutoDetectNewLineCharacters();
                     break;
                 case NewlineDetectionMode.Windows:
-                    this._newlineCharacters = "\r\n";
+                    this._newlineCharacters = Constants.WINDOWS_NEWLINE;
                     break;
                 case NewlineDetectionMode.Unix:
-                    this._newlineCharacters = "\n";
+                    this._newlineCharacters = Constants.UNIX_NEWLINE;
                     break;
                 case NewlineDetectionMode.Mac:
-                    this._newlineCharacters = "\r";
+                    this._newlineCharacters = Constants.MAC_NEWLINE;
                     break;
                 default:
                     break;
@@ -216,7 +233,7 @@ namespace OxTail.Controls
                     streamReader.Read(chars, 0, 2);
                     this._newlineCharacters = new string(chars);
                     // if the second character is not line feed ("\n") then it must have been a single character newline - either unix ("\n") or mac ("\r")
-                    if (this._newlineCharacters.Substring(1, 1) != "\n")
+                    if (this._newlineCharacters.Substring(1, 1) != Constants.UNIX_NEWLINE)
                     {
                         this._newlineCharacters = this._newlineCharacters.Substring(0, 1);
                     }
@@ -249,6 +266,16 @@ namespace OxTail.Controls
             set { this._followTail = value; }
         }
 
+        private bool CanHighlightLine(int lineIndex)
+        {
+            return lineIndex == this.LastSearchIndex && !string.IsNullOrEmpty(this.SearchText);
+        }
+
+        private string CreateHighlightItemString(int lineIndex, int index)
+        {
+            return lineIndex.ToString() + Constants.LINE_NUMBER_DIVIDER + this._readLines[index];
+        }
+
         /// <summary>
         /// Updates the current display
         /// </summary>
@@ -261,7 +288,23 @@ namespace OxTail.Controls
                 {
                     HighlightedItem item = null;
                     int lineIndex = i + (int)this.StartLine;
-                    item = this.Highlight(lineIndex.ToString() + ": " + this._readLines[i]);
+
+                    if (this.IsSeaching)
+                    {
+                        if (this.CanHighlightLine(lineIndex))
+                        {
+                            item = this.Highlight(this.CreateHighlightItemString(lineIndex, i));
+                        }
+                        else
+                        {
+                            item = new HighlightedItem(this.CreateHighlightItemString(lineIndex, i), Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
+                        }
+                    }
+                    else
+                    {
+                        item = this.Highlight(this.CreateHighlightItemString(lineIndex, i));
+                    }
+
                     if (this.Lines.Count <= i)
                     {
                         this.Lines.Add(item);
@@ -316,24 +359,34 @@ namespace OxTail.Controls
 
         public IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
         {
-            // Special Search item
-            HighlightItem special = new HighlightItem(this.SearchText, Colors.White, Colors.Black);
-            if (!string.IsNullOrEmpty(special.Pattern) && !string.IsNullOrEmpty(text))
+            if (this.IsSeaching)
             {
-                if (text == special.Pattern || _patternMatching.MatchPattern(text, special.Pattern))
+                // "Special" Search item
+                HighlightItem special = new HighlightItem(this.SearchText, Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
+                special.BorderColour = Constants.DEFAULT_BORDERCOLOUR;
+
+                if (!string.IsNullOrEmpty(special.Pattern) && !string.IsNullOrEmpty(text))
                 {
-                    yield return special;
+                    if (text == special.Pattern || _patternMatching.MatchPattern(text, special.Pattern))
+                    {
+                        yield return special;
+                    }
+
+                    // if a search is in progress, disable all other highlighting
+                    yield break;
                 }
             }
-
-            foreach (HighlightItem item in coll)
+            else
             {
-                // Empty pattern should not exist (a blank line should be a "special" Highlight item?
-                if (!string.IsNullOrEmpty(item.Pattern) && !string.IsNullOrEmpty(text))
+                foreach (HighlightItem item in coll)
                 {
-                    if (text == item.Pattern || _patternMatching.MatchPattern(text, item.Pattern))
+                    // Empty pattern should not exist (a blank line should be a "special" Highlight item?
+                    if (!string.IsNullOrEmpty(item.Pattern) && !string.IsNullOrEmpty(text))
                     {
-                        yield return item;
+                        if (text == item.Pattern || _patternMatching.MatchPattern(text, item.Pattern))
+                        {
+                            yield return item;
+                        }
                     }
                 }
             }
@@ -344,14 +397,24 @@ namespace OxTail.Controls
             HighlightedItem highlighted = new HighlightedItem();
             highlighted.Text = text;
 
-            // todo: make configurable?
-            highlighted.ForeColour = Colors.Black;
-            highlighted.BackColour = Colors.White;
+            highlighted.ForeColour = Constants.DEFAULT_FORECOLOUR;
+            highlighted.BackColour = Constants.DEFAULT_BACKCOLOUR;
 
             foreach (HighlightItem highlight in FindFirstHighlightByText(this.Patterns, text))
             {
-                highlighted.ForeColour = highlight.ForeColour;
-                highlighted.BackColour = highlight.BackColour;
+                if (highlight.BorderColour != Constants.DEFAULT_NULL_COLOUR)
+                {
+                    highlighted.ForeColour = Constants.DEFAULT_FORECOLOUR;
+                    highlighted.BackColour = Constants.DEFAULT_BACKCOLOUR;
+                    highlighted.BorderColour = highlight.BorderColour;
+                }
+                else
+                {
+                    highlighted.ForeColour = highlight.ForeColour;
+                    highlighted.BackColour = highlight.BackColour;
+                    highlighted.BorderColour = Constants.DEFAULT_NULL_COLOUR;
+                }
+                
                 break; // use the first one we come across in the list - items at the top are most important
             }
 
@@ -413,7 +476,7 @@ namespace OxTail.Controls
                         }
                         if (!string.IsNullOrEmpty(line))
                         {
-                            line = line.TrimEnd('\0').Replace("\r", "<cr>").Replace("\n", "<lf>"); // in case of incorrectly selected line end;
+                            line = line.TrimEnd(Constants.NULL_TERMINATOR).Replace(Constants.MAC_NEWLINE, Constants.CARRIAGE_RETURN).Replace(Constants.UNIX_NEWLINE, Constants.LINE_FEED); // in case of incorrectly selected line end;
                         }
                         this._readLines.Add(line);
                     }
@@ -589,7 +652,7 @@ namespace OxTail.Controls
                         this._LineOffsets = new Dictionary<long, long>();
                         this.LinesInFile = 0;
                     }
-                    if (this._newlineCharacters != "\r\n" && this._newlineCharacters != "\n" && this._newlineCharacters != "\r")
+                    if (this._newlineCharacters != Constants.WINDOWS_NEWLINE && this._newlineCharacters != Constants.UNIX_NEWLINE && this._newlineCharacters != Constants.MAC_NEWLINE)
                     {
                         this.SetNewlineCharacters();
                     }
@@ -697,15 +760,12 @@ namespace OxTail.Controls
                 this._patterns = value;
                 this.Patterns.ListChanged += new ListChangedEventHandler(Patterns_ListChanged);
             }
-        }
-
-        void Patterns_ListChanged(object sender, ListChangedEventArgs e)
-        {
-            this.Update();
-        }      
+        }    
 
         private void colourfulListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            this.StartLine = (long)this.ScrollViewer.VerticalOffset + this.HorizontalScrollbarVisibilityOffset;
+
 #if DEBUG
             Console.WriteLine("ScrollChanged: {0} {1}", e.VerticalChange, e.ViewportHeightChange);
 #endif
@@ -750,9 +810,20 @@ namespace OxTail.Controls
             }
         }
 
+        void Patterns_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            this.Update();
+            this.ShowLines();
+            this.ScrollViewer.ScrollToVerticalOffset(this.StartLine);
+        }  
+
         internal double Find(string searchCriteria, double lastFindOffset)
         {
-            return FindText(searchCriteria, lastFindOffset);
+            double d = FindText(searchCriteria, lastFindOffset);
+            this.ShowLines();
+            this.ScrollViewer.ScrollToVerticalOffset(d);
+
+            return d;
         }
 
         private double FindText(string text, double lastFindOffset)
@@ -778,7 +849,7 @@ namespace OxTail.Controls
 
                         if (_patternMatching.MatchPattern(line, text))
                         {
-                            this.ScrollViewer.ScrollToVerticalOffset(Convert.ToDouble(i));
+                            this.StartLine = (long)i;
                             break;
                         }
                     }
@@ -791,6 +862,8 @@ namespace OxTail.Controls
                 {
                     i = 0;
                 }
+
+                LastSearchIndex = i;
 
             }
             finally

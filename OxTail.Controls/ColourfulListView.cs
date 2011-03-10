@@ -23,6 +23,9 @@ namespace OxTail.Controls
     using System.Text;
     using System.Windows.Controls;
     using System.Windows.Media;
+    using System.Windows;
+    using OxTailHelpers;
+    
 
     public class ColourfulListView : ListView
     {
@@ -36,8 +39,16 @@ namespace OxTail.Controls
             IColourfulItem p = lvi.Content as IColourfulItem;
             if (p != null)
             {
-                lvi.Background = new SolidColorBrush(p.BackColour);
-                lvi.Foreground = new SolidColorBrush(p.ForeColour);
+                if (p.BorderColour != Constants.DEFAULT_NULL_COLOUR)
+                {
+                    lvi.BorderBrush = Constants.DEFAULT_BORDER_BRUSH;
+                    lvi.BorderThickness = new Thickness(Constants.DEFAULT_FOUND_RESULT_BORDER_SIZE);
+                }
+                else
+                {
+                    lvi.Background = new SolidColorBrush(p.BackColour);
+                    lvi.Foreground = new SolidColorBrush(p.ForeColour);
+                }
             }
         }
 

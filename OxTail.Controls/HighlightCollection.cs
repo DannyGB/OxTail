@@ -28,6 +28,14 @@ namespace OxTail.Controls
             }
         }
 
+        public void FireListChanged(T item)
+        {
+            if(this.Contains(item))
+            {
+                this.OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, this.IndexOf(item)));
+            }
+        }
+
         #region IBindingList
 
         public void AddIndex(PropertyDescriptor property)

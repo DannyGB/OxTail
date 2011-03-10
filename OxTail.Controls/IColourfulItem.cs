@@ -19,5 +19,11 @@ namespace OxTail.Controls
             get;
             set;
         }
+
+        Color BorderColour
+        {
+            get;
+            set;
+        }
     }
 }
