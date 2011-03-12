@@ -60,7 +60,9 @@ namespace OxTail.Controls
 
         private void buttonAdd_Click(object sender, RoutedEventArgs e)
         {
-            Patterns.Add(new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.buttonBackColour.SelectedColour));
+            HighlightItem item = new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.buttonBackColour.SelectedColour);
+            item.Order = Patterns.Add(item);
+            
             this.Sort(SORT_HEADER, ListSortDirection.Descending);
         }
 

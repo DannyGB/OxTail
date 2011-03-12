@@ -130,6 +130,7 @@ namespace OxTail
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             HighlightItems = HighlightItem.LoadHighlights(Settings.Default.HighlightFileLocations);
+            HighlightItems.ApplySort(null, ListSortDirection.Descending);
         }
 
         private void MenuOpenDirectory_Click(object sender, RoutedEventArgs e)
