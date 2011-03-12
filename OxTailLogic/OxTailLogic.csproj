@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compare\GenericComparer.cs" />
     <Compile Include="PatternMatching\Find.cs" />
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />
     <Compile Include="PatternMatching\PatternToMatchWasNullException.cs" />

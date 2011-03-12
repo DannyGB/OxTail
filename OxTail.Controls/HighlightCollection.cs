@@ -7,17 +7,27 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Collections;
-using NSort;
+using OxTailLogic.Compare;
 
 namespace OxTail.Controls
 {
     [Serializable]
-    public class HighlightCollection<T> : Collection<T>, IBindingList where T : HighlightItem
+    public class HighlightCollection<T> : List<T>, IBindingList where T : HighlightItem
     {
         private object _syncRoot = new object();
         private bool _isSorted = false;
         private ListSortDirection _sortDirection;
         private PropertyDescriptor _sortProperty;
+
+        public HighlightCollection()
+            : base()
+        {
+        }
+
+        public HighlightCollection(int capacity)
+            : base(capacity)
+        {
+        }
 
         protected virtual void OnListChanged(ListChangedEventArgs e)
         {
@@ -64,27 +74,15 @@ namespace OxTail.Controls
         }
 
         public void ApplySort(PropertyDescriptor property, ListSortDirection direction)
-        {           
-            ISorter sorter = new QuickSorter();            
-            sorter.Sort(this);
-
+        {
             if (direction == ListSortDirection.Ascending)
             {
-                List<T> list = new List<T>();
-                list.AddRange(this);
-                list.Reverse();
-
-                this.Clear();
-
-                foreach (T item in list)
-                {
-                    this.Add(item);
-                }
+                this.Sort(new GenericComparer<T>("Order", ListSortDirection.Ascending));
             }
-
-            _isSorted = true;
-            _sortDirection = direction;
-            _sortProperty = property;
+            else
+            {
+                this.Sort(new GenericComparer<T>("Order", ListSortDirection.Descending));
+            }
         }
 
         public int Find(PropertyDescriptor property, object key)
@@ -185,17 +183,17 @@ namespace OxTail.Controls
         public void Remove(object value)
         {
             int index = base.IndexOf(value as T);
-            base.RemoveItem(index);
+            base.RemoveAt(index);
+
+            for (int i = this.Count - 1; i >= 0; i--)
+            {
+                T item = (T)this[i];
+                item.Order = i;
+            }
 
             // Keep getting exceptions when using the Event on a delete
             // Will handle it by refreshing the datasource in the control
             //OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
-        }
-
-        public new void RemoveAt(int index)
-        {
-            base.RemoveAt(index);
-            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
         }
 
         public new object this[int index]
@@ -237,32 +235,33 @@ namespace OxTail.Controls
 
         #endregion IBindingList
 
-        #region Collection<T>
+        //#region Collection<T>
 
-        protected override void ClearItems()
-        {
-            base.ClearItems();
-            OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
-        }
+        //protected override void ClearItems()
+        //{
+        //    base.ClearItems();
+        //    OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+        //}
 
-        protected override void InsertItem(int index, T item)
-        {
-            base.InsertItem(index, item);
-            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
-        }
+        //protected override void InsertItem(int index, T item)
+        //{
+        //    base.InsertItem(index, item);
+        //    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemAdded, index));
+        //}
 
-        protected override void SetItem(int index, T item)
-        {
-            base.SetItem(index, item);
-            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
-        }
+        //protected override void SetItem(int index, T item)
+        //{
+        //    base.SetItem(index, item);
+        //    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemChanged, index));
+        //}
 
-        protected override void RemoveItem(int index)
-        {
-            base.RemoveItem(index);
-            OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
-        }        
+        //protected override void RemoveItem(int index)
+        //{
+        //    base.RemoveItem(index);
+        //    OnListChanged(new ListChangedEventArgs(ListChangedType.ItemDeleted, index));
+        //}        
 
-        #endregion Collection<T>       
+        //#endregion Collection<T>              
+    
     }
 }

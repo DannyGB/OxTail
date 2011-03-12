@@ -20,8 +20,7 @@
             <custom:ColourfulListView DockPanel.Dock="Bottom" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Stretch" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single" HorizontalAlignment="Stretch">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="{DynamicResource patternColHeader}" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />
-                        <GridViewColumn Header="{DynamicResource orderColHeader}" DisplayMemberBinding="{Binding Order}" />
+                        <GridViewColumn Header="{DynamicResource patternColHeader}" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />                        
                         <GridViewColumn Header="">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
