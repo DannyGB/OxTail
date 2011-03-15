@@ -14,6 +14,8 @@
     <system:String x:Key="open">Open</system:String>
     <system:String x:Key="filePattern">File Pattern</system:String>
     <system:String x:Key="directory">Directory</system:String>
+    <system:String x:Key="openLastWritten">Last written to file in directory</system:String>
+    
     <system:String x:Key="closeAll">Close All</system:String>
     <system:String x:Key="exit">Exit</system:String>
     
@@ -30,7 +32,7 @@
     <system:String x:Key="help">Help</system:String>
     <system:String x:Key="about">About</system:String>
     <system:String x:Key="onWeb">Visit Website</system:String>
-    <system:String x:Key="opensWebBrowser">Opens in web browser</system:String>
+    <system:String x:Key="opensWebBrowser">Opens in web browser</system:String>    
 
     <!-- Highlighting form -->
 
@@ -44,7 +46,17 @@
     <system:String x:Key="deleteButton">Delete</system:String>
     <system:String x:Key="patternColHeader">Pattern</system:String>
     <system:String x:Key="orderColHeader">Order</system:String>
-
+    
+    <system:String x:Key="OrderUpToolTip">Click to move highlight item up in priority</system:String>
+    <system:String x:Key="OrderDownToolTip">Click to move highlight item down in priority</system:String>
+    <system:String x:Key="enterPatternTextToolTip">Enter regular expression pattern</system:String>
+    <system:String x:Key="foreColourToolTip">Click to set the fore colour of the text</system:String>
+    <system:String x:Key="backColourToolTip">Click to set the back colour of the text</system:String>
+    <system:String x:Key="addButtonToolTip">Click to add this regular expression to the list</system:String>
+    <system:String x:Key="updateButtonToolTip">Click to update the regular expression</system:String>
+    <system:String x:Key="deleteButtonToolTip">Click to delete the regular expression</system:String>
+    <system:String x:Key="expressionBuilderButtonToolTip">Click to open the Expression Builder window</system:String>
+    
     <!-- About form -->
 
     <system:String x:Key="aboutWindowTitle">About</system:String>

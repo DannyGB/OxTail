@@ -18,23 +18,25 @@
 * along with OxTail.  If not, see <http://www.gnu.org/licenses/>.
 * ********************************************************************/
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-namespace OxTailLogic.PatternMatching
+namespace OxTail.Helpers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
     [Serializable]
-    public class PatternToMatchWasNullException : Exception
+    public class File
     {
-        public PatternToMatchWasNullException() { }
-        public PatternToMatchWasNullException(string message) : base(message) { }
-        public PatternToMatchWasNullException(string message, Exception inner) : base(message, inner) { }
-        protected PatternToMatchWasNullException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context)
-            : base(info, context) { }
-    }    
+        public string Filename { get; set; }
+
+        public File()
+        { 
+        }
+
+        public File(string filename)
+        {
+            this.Filename = filename;
+        }
+    }
 }

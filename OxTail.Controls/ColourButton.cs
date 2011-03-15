@@ -1,12 +1,15 @@
 ﻿/*****************************************************************
-* This file is part of OxTail.
 *
-* OxTail is free software: you can redistribute it and/or modify
+* Copyright 2011 Dan Beavon
+*
+* This file is part of OXTail.
+*
+* OXTail is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
-* OxTail is distributed in the hope that it will be useful,
+* OXTail is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -39,16 +42,16 @@ namespace OxTail.Controls
 
         public bool? ShowColourSelectDialog()
         {
-            ColorDialog colorDialog = new ColorDialog();
-            colorDialog.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            colorDialog.SelectedColor = this.SelectedColour;
-            bool retVal = (bool)colorDialog.ShowDialog().Value;
-            if (retVal)
+            System.Windows.Forms.ColorDialog dialog = new System.Windows.Forms.ColorDialog();
+            if (DialogResult.OK == dialog.ShowDialog())
             {
-                SelectedColour = new SolidColorBrush(colorDialog.SelectedColor).Color;
+                SelectedColour = new SolidColorBrush(Color.FromArgb(dialog.Color.A, dialog.Color.R, dialog.Color.G, dialog.Color.B)).Color;
+
+                return true;
             }
 
-            return retVal;
+            return false;
+            
         }
     }
 }

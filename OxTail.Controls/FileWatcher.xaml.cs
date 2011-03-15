@@ -1,4 +1,7 @@
 ﻿/*****************************************************************
+*
+* Copyright 2011 Dan Beavon
+*
 * This file is part of OXTail.
 *
 * OXTail is free software: you can redistribute it and/or modify

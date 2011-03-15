@@ -13,10 +13,12 @@
                     <MenuItem Name="MenuOpenFile" Header="{DynamicResource file}" Click="MenuOpen_Click" />
                     <MenuItem Name="MenuOpenFilePattern" Header="{DynamicResource filePattern}" Click="MenuOpenFilePattern_Click" />
                     <MenuItem Name="MenuOpenDirectory" Header="{DynamicResource directory}" Click="MenuOpenDirectory_Click" />
+                    <MenuItem Name="MenuOpenLastWritten" Header="{DynamicResource openLastWritten}" Click="MenuOpenLastWritten_Click" />
                 </MenuItem>                
                 <Separator></Separator>
-                <MenuItem Name="MenuItemCloseAll" Header="{DynamicResource closeAll}" Click="MenuItemCloseAll_Click" />
-                <oxtail:RecentFileList x:Name="RecentFileList" MenuClick="RecentFileList_MenuClick"/>
+                <oxtail:RecentFileList x:Name="recentFileList" SubMenuClick="recentFileList_SubMenuClick" />
+                <Separator></Separator>
+                <MenuItem Name="MenuItemCloseAll" Header="{DynamicResource closeAll}" Click="MenuItemCloseAll_Click" />                
                 <MenuItem Name="MenuExit" Header="{DynamicResource exit}" Click="MenuExitClick" />
             </MenuItem>
             <MenuItem Name="MenuEdit" Header="{DynamicResource edit}">

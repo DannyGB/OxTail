@@ -1,12 +1,15 @@
 ﻿/*****************************************************************
-* This file is part of OxTail.
 *
-* OxTail is free software: you can redistribute it and/or modify
+* Copyright 2011 Dan Beavon
+*
+* This file is part of OXTail.
+*
+* OXTail is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
-* OxTail is distributed in the hope that it will be useful,
+* OXTail is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -26,12 +29,6 @@ namespace OxTail.Controls
     using System.Xml;
     using System;
     using OxTailHelpers;
-
-    public enum Direction
-    {
-        Up,
-        Down
-    }
 
     /// <summary>
     /// Interaction logic for Highlighting.xaml
@@ -175,21 +172,23 @@ namespace OxTail.Controls
 
         private void buttonOrderDown_Click(object sender, RoutedEventArgs e)
         {
-            this.SortItems((HighlightItem)((Button)sender).DataContext, Direction.Down);
+            HighlightItem item = (HighlightItem)this.listViewPatterns.SelectedItem;
+            this.SortItems(item, ListSortDirection.Descending);
         }
 
         private void buttonOrderUp_Click(object sender, RoutedEventArgs e)
         {
-            this.SortItems((HighlightItem)((Button)sender).DataContext, Direction.Up);
+            HighlightItem item = (HighlightItem)this.listViewPatterns.SelectedItem;
+            this.SortItems(item, ListSortDirection.Ascending);
         }
 
-        private void SortItems(HighlightItem item, Direction dir)
+        private void SortItems(HighlightItem item, ListSortDirection dir)
         {
             int? i = null;
             int? tmp = null;
             switch (dir)
             {
-                case Direction.Up:
+                case ListSortDirection.Ascending:
                     i = ((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).IndexOf(item);
                     if (i != null && i > 0 && i < ((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).Count)
                     {
@@ -198,7 +197,7 @@ namespace OxTail.Controls
                         ((HighlightItem)((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext)[i.Value - 1]).Order = tmp.Value;
                     }
                     break;
-                case Direction.Down:
+                case ListSortDirection.Descending:
                     i = ((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).IndexOf(item);
                     if (i != null && i >= 0 && i < (((HighlightCollection<HighlightItem>)this.listViewPatterns.DataContext).Count - 1))
                     {
