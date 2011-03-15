@@ -1,4 +1,7 @@
 ﻿/*****************************************************************
+*
+* Copyright 2011 Dan Beavon
+*
 * This file is part of OXTail.
 *
 * OXTail is free software: you can redistribute it and/or modify
@@ -27,7 +30,10 @@ namespace OxTail
     using OxTail.Properties;
     using System.Collections.Generic;
     using System.Text;
-    using OxTailHelpers;    
+    using OxTailHelpers;
+    using OxTailLogic.Compare;
+    using OxTailLogic;
+    using System.Windows.Controls;    
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -78,7 +84,7 @@ namespace OxTail
         {
             if (filename != string.Empty)
             {
-                if (File.Exists(filename))
+                if (System.IO.File.Exists(filename))
                 {
                     OxTail.Controls.FileWatcherTabItem newTab = FindTabByFilename(filename);
                     if (newTab == null)
@@ -88,11 +94,11 @@ namespace OxTail
                         tabControlMain.Items.Add(newTab);                        
                     }
                     tabControlMain.SelectedItem = newTab;                    
-                    RecentFileList.InsertFile(filename);
+                    recentFileList.InsertFile(filename);
                 }
                 else if (MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "removeFromRecentFileList"), LanguageHelper.GetLocalisedText((Application.Current as IApplication), "fileNotFound"), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
-                    RecentFileList.RemoveFile(filename);
+                    recentFileList.RemoveFile(filename);
                 }
             }
         }
@@ -122,11 +128,6 @@ namespace OxTail
             }
         }
 
-        private void RecentFileList_MenuClick(object sender, RecentFileList.MenuClickEventArgs e)
-        {
-            this.OpenFile(e.Filepath);
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             HighlightItems = HighlightItem.LoadHighlights(Settings.Default.HighlightFileLocations);
@@ -135,7 +136,7 @@ namespace OxTail
 
         private void MenuOpenDirectory_Click(object sender, RoutedEventArgs e)
         {
-            List<FileInfo> files = OpenDirectory();
+            List<FileInfo> files = this.OpenDirectory(true);
 
             foreach (FileInfo item in files)
             {
@@ -143,63 +144,29 @@ namespace OxTail
             }
         }
 
-        private List<FileInfo> OpenDirectory()
+        private List<FileInfo> OpenDirectory(bool showFileLimitMessage)
         {
-            MessageBox.Show(string.Format(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "fileOpenLimit"), Settings.Default.MaxFilesToOpen), Application.Current.MainWindow.GetType().Assembly.GetName().Name);
-
-            List<FileInfo> fileInfoList = new List<FileInfo>();
-
-            System.Windows.Forms.FolderBrowserDialog folderDialog = new System.Windows.Forms.FolderBrowserDialog();
-            if (folderDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                fileInfoList = FileHelper.GetFiles(folderDialog.SelectedPath, "*", Settings.Default.MaxFilesToOpen);
-            }
-
-            return fileInfoList;
+            return FileOpenLogic.OpenDirectory(showFileLimitMessage, (Application.Current as IApplication), Settings.Default.MaxFilesToOpen);
         }
+
+        private void MenuOpenLastWritten_Click(object sender, RoutedEventArgs e)
+        {
+            List<FileInfo> files = FileOpenLogic.OpenLastWrittenToFile();
+
+            if (files.Count > 0)
+            {
+                OpenFile(files[0].FullName);
+            }
+        }        
 
         private void MenuOpenFilePattern_Click(object sender, RoutedEventArgs e)
         {
-            List<FileInfo> fileInfos = OpenFilePattern();
+            List<FileInfo> fileInfos = FileOpenLogic.OpenFilePattern((new SaveExpressionMessage() as ISaveExpressionMessage));
             foreach (FileInfo item in fileInfos)
             {
                 this.OpenFile(item.FullName);
             }
-        }
-
-        private static List<FileInfo> OpenFilePattern()
-        {
-            // Currently using the OpenFileDialog box and then hacking the return value.
-            // 
-            // Started to look at inheriting from OpenFileDialog but it's a sealed class so this is the 
-            // short term "get it working" code and will look at creating an OpenFilePatternDialog
-            // latter
-            //string filename = FileHelper.ShowOpenFileDialog();
-            string filename = FileHelper.ShowOpenDirectory();
-            List<FileInfo> fileInfos = new List<FileInfo>();
-
-            SaveExpressionMessage msg = new SaveExpressionMessage();
-            msg.Label = LanguageHelper.GetLocalisedText((Application.Current as IApplication), "filePatternText");
-            msg.Message = "*.log";
-            msg.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-
-            if (!string.IsNullOrEmpty(filename) && !string.IsNullOrWhiteSpace(filename))
-            {
-                bool? result = msg.ShowDialog();
-                if (result.HasValue && result.Value)
-                {
-                    if (msg.Message == "*.*")
-                    {
-                        if (MessageBoxResult.Yes == MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "lotOfFilesText"), LanguageHelper.GetLocalisedText((Application.Current as IApplication), "question"), MessageBoxButton.YesNo))
-                        {
-                            fileInfos = FileHelper.GetFiles(filename, msg.Message);
-                        }
-                    }
-                }
-            }
-
-            return fileInfos;
-        }
+        }        
 
         private void MenuItemCloseAll_Click(object sender, RoutedEventArgs e)
         {
@@ -296,6 +263,20 @@ namespace OxTail
                 Window w = this.OpenWindows[i];
                 w.Close();
             }
+        }
+
+        private void recentFileList_SubMenuClick(object sender, EventArgs e)
+        {
+            MenuItem item = (MenuItem)sender;
+            string filename = (string)item.Header;
+
+            if (string.IsNullOrEmpty(filename) || !System.IO.File.Exists(filename))
+            {
+                return;
+            }
+
+            this.OpenFile(filename);
+
         }
     }
 }

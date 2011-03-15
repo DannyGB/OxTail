@@ -1,12 +1,15 @@
 ﻿/*****************************************************************
-* This file is part of OxTail.
 *
-* OxTail is free software: you can redistribute it and/or modify
+* Copyright 2011 Dan Beavon
+*
+* This file is part of OXTail.
+*
+* OXTail is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
-* OxTail is distributed in the hope that it will be useful,
+* OXTail is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -59,7 +62,7 @@ namespace OxTail.Helpers
         {
             try
             {
-                FileStream stream = File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                FileStream stream = System.IO.File.Open(filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 stream.Position = 0;
                 return stream;
             }
@@ -156,6 +159,21 @@ namespace OxTail.Helpers
             }
 
             return fileInfos;
-        }        
+        }
+
+        public static void MruSave(List<OxTail.Helpers.File> files, string saveToFilename)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<OxTail.Helpers.File>), new Type[] { typeof(OxTail.Helpers.File) });
+            FileHelper.SerializeToExecutableDirectory(saveToFilename, serializer, files);
+        }
+
+        public static List<OxTail.Helpers.File> MruLoad(string openFromFilename)
+        {
+            List<OxTail.Helpers.File> files = new List<File>();
+            XmlSerializer serializer = new XmlSerializer(typeof(List<OxTail.Helpers.File>), new Type[] { typeof(OxTail.Helpers.File) });
+            files = (List<OxTail.Helpers.File>)FileHelper.DeserializeFromExecutableDirectory(openFromFilename, serializer);
+
+            return files;
+        }
     }
 }

@@ -8,7 +8,8 @@
              d:DesignHeight="331" d:DesignWidth="491" Unloaded="UserControl_Unloaded">
     <Grid Width="Auto" Height="Auto">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>            
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="50"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="220" />
@@ -20,37 +21,36 @@
             <custom:ColourfulListView DockPanel.Dock="Bottom" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Stretch" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single" HorizontalAlignment="Stretch">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="{DynamicResource patternColHeader}" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />                        
-                        <GridViewColumn Header="">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Name="buttonOrderUp" Content="^" Width="50"  Click="buttonOrderUp_Click"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Button Name="buttonOrderDown" Content="v" Width="50" Click="buttonOrderDown_Click" />
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>                        
+                        <GridViewColumn Header="{DynamicResource patternColHeader}" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />
                     </GridView>
                 </ListView.View>
             </custom:ColourfulListView>
         </DockPanel>
+        <DockPanel Grid.Column="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Grid.Row="0" Name="buttonOrderUp" Content="^" Width="30" Height="30"  Click="buttonOrderUp_Click" Margin="0,70,0,0" ToolTip="{DynamicResource OrderUpToolTip}"/>
+                <Button Grid.Column="0" Grid.Row="1" Name="buttonOrderDown" Content="v" Width="30" Height="30" Click="buttonOrderDown_Click" Margin="0,0,0,70"  ToolTip="{DynamicResource OrderDownToolTip}" />
+            </Grid>
+        </DockPanel>
         <StackPanel Orientation="Horizontal" Grid.Row="3" HorizontalAlignment="Center" Name="stackPanel1" VerticalAlignment="Center">
-            <Button Margin="5" Content="{DynamicResource addButton}" Height="23" Name="buttonAdd" Width="65" Click="buttonAdd_Click" />
-            <Button Margin="5" Content="{DynamicResource updateButton}" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" />
-            <Button Margin="5" Content="{DynamicResource deleteButton}" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" />
+            <Button Margin="5" Content="{DynamicResource addButton}" Height="23" Name="buttonAdd" Width="65" Click="buttonAdd_Click" ToolTip="{DynamicResource addButtonToolTip}" />
+            <Button Margin="5" Content="{DynamicResource updateButton}" Height="23" Name="buttonSave" Width="65" Click="buttonSave_Click" ToolTip="{DynamicResource updateButtonToolTip}" />
+            <Button Margin="5" Content="{DynamicResource deleteButton}" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" ToolTip="{DynamicResource deleteButtonToolTip}" />
         </StackPanel>
         <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto">
-            <TextBox DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="{DynamicResource enterPatternText}" Margin="10,0" />
+            <TextBox DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="{DynamicResource enterPatternText}" Margin="10,0" ToolTip="{DynamicResource enterPatternTextToolTip}" />
         </DockPanel>
         <WrapPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Name="stackPanel2" VerticalAlignment="Center">
-            <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="{DynamicResource foreColourButton}" Margin="10,2,2,2" />
-            <custom:ColourButton x:Name="buttonBackColour" Click="buttonBackColour_Click" Width="70" Content="{DynamicResource backColourButton}" Margin="2,2,2,2" />
-            <Button Name="buttonExpressionBuilder" Content="{DynamicResource expressionBuilder}" Click="buttonExpressionBuilder_Click" Margin="2,2,2,2" />
+            <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="{DynamicResource foreColourButton}" Margin="10,2,2,2" ToolTip="{DynamicResource foreColourToolTip}" />
+            <custom:ColourButton x:Name="buttonBackColour" Click="buttonBackColour_Click" Width="70" Content="{DynamicResource backColourButton}" Margin="2,2,2,2" ToolTip="{DynamicResource backColourToolTip}" />
+            <Button Name="buttonExpressionBuilder" Content="{DynamicResource expressionBuilder}" Click="buttonExpressionBuilder_Click" Margin="2,2,2,2" ToolTip="{DynamicResource expressionBuilderButtonToolTip}" />
         </WrapPanel>
     </Grid>
 </UserControl>

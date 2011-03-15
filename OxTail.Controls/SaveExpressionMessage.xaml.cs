@@ -1,12 +1,15 @@
 ﻿/*****************************************************************
-* This file is part of OxTail.
 *
-* OxTail is free software: you can redistribute it and/or modify
+* Copyright 2011 Dan Beavon
+*
+* This file is part of OXTail.
+*
+* OXTail is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
 *
-* OxTail is distributed in the hope that it will be useful,
+* OXTail is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
@@ -29,11 +32,12 @@ namespace OxTail.Controls
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
+    using OxTailHelpers;
 
     /// <summary>
     /// Interaction logic for SaveExpressionMessage.xaml
     /// </summary>
-    public partial class SaveExpressionMessage : BaseWindow
+    public partial class SaveExpressionMessage : BaseWindow, ISaveExpressionMessage
     {
         public SaveExpressionMessage()
         {
