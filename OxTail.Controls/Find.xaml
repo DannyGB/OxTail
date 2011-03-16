@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="123" d:DesignWidth="372" Loaded="UserControl_Loaded">
-    <Grid KeyUp="Grid_KeyUp">
+             d:DesignHeight="129" d:DesignWidth="373" Loaded="UserControl_Loaded">
+    <Grid KeyUp="Grid_KeyUp" Height="120" Width="367">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="0"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0">
@@ -24,9 +24,9 @@
             </Grid>
         </DockPanel>
         <Button Name="buttonFind" Content="{DynamicResource findButton}" Grid.Row="2" Width="100px" Margin="10" Click="buttonFind_Click" />
-        <ComboBox Name="comboBox" Grid.Row="1" Margin="10" SelectedIndex="0" Visibility="Hidden">
-            <ComboBoxItem Content="Current document"></ComboBoxItem>
-            <ComboBoxItem Content="All open files"></ComboBoxItem>
+        <ComboBox Name="comboBox" Grid.Row="1" Margin="10" SelectedIndex="0" Visibility="Visible">
+            <ComboBoxItem Content="{DynamicResource comboBoxItemCurrentDocument}"></ComboBoxItem>
+            <ComboBoxItem Content="{DynamicResource comboBoxItemAllOpenDocuments}"></ComboBoxItem>
         </ComboBox>
         
     </Grid>

@@ -56,7 +56,7 @@ namespace OxTailHelpers
 
             if (!File.Exists(culturePath))
             {
-                MessageBox.Show(@"Your language is not available, defaulting to English (Why not write a translation: https://sourceforge.net/projects/oxtail/)", "Warning", MessageBoxButton.OK);
+                MessageBox.Show(@"Your language is not available, defaulting to English (Why not write a translation? Visit: https://sourceforge.net/projects/oxtail/)", "Warning", MessageBoxButton.OK);
 
                 return null;
             }

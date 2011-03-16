@@ -31,6 +31,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OxTailHelpers;
 
 namespace OxTail.Controls
 {
@@ -83,8 +84,18 @@ namespace OxTail.Controls
         {
             if (FindButtonClick != null && !string.IsNullOrEmpty(this.textBoxSearchCriteria.Text))
             {
-                //TODO: Options not yet implemented
-                FindButtonClick(this, new FindEventArgs(this.textBoxSearchCriteria.Text, OxTailLogic.PatternMatching.FindOptions.CurrentDocument));
+                if (((ComboBoxItem)this.comboBox.SelectedValue).Content.ToString() == (string)ResourceHelper.GetStringFromStringResourceFile(Constants.COMBO_CURRENT_DOCUMENT))
+                {
+                    FindButtonClick(this, new FindEventArgs(this.textBoxSearchCriteria.Text, OxTailLogic.PatternMatching.FindOptions.CurrentDocument));
+                }
+                else if (((ComboBoxItem)this.comboBox.SelectedValue).Content.ToString() == (string)ResourceHelper.GetStringFromStringResourceFile(Constants.COMBO_ALL_DOCUMENTS))
+                {
+                    FindButtonClick(this, new FindEventArgs(this.textBoxSearchCriteria.Text, OxTailLogic.PatternMatching.FindOptions.AllOpenDocuments));
+                }
+                else
+                {
+                    throw new UnknownSearchOptionException();
+                }
             }
         }
 

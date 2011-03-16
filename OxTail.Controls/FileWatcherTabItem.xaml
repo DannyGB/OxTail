@@ -1,4 +1,4 @@
-﻿<local:CloseableTabItem x:Class="OxTail.Controls.FileWatcherTabItem"
+﻿<TabItem x:Class="OxTail.Controls.FileWatcherTabItem"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -10,4 +10,4 @@
     <Grid x:Name="gridContent">
       <local:FileWatcher x:Name="fileWatcher" FileChanged="fileWatcher_FileChanged"/>
     </Grid>
-</local:CloseableTabItem>
+</TabItem>

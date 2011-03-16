@@ -40,7 +40,6 @@ namespace OxTail.Controls
     {
         public event RoutedEventHandler OkClick;
         public event RoutedEventHandler CancelClick;
-        public const string FILENAME = "SavedExpression.xml";
 
         public RegularExpressionBuilder()
         {
@@ -53,7 +52,7 @@ namespace OxTail.Controls
             {
                 if (this.textBoxExpression.Expression == null)
                 {
-                    return new Expression(this.textBoxExpression.Text, "UN-NAMED");
+                    return new Expression(this.textBoxExpression.Text, Constants.UNAMED);
                 }
                 else
                 {
@@ -86,7 +85,7 @@ namespace OxTail.Controls
             {
                 this.textBoxExpression.Expression = new Expression();
             }
-            else if (((Expression)e.AddedItems[0]).Name != LanguageHelper.GetLocalisedText((Application.Current as IApplication), "chooseItem"))
+            else if (((Expression)e.AddedItems[0]).Name != LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.CHOOSE_ITEM))
             {
                 this.textBoxExpression.Expression = ((Expression)e.AddedItems[0]);
             }
@@ -111,7 +110,7 @@ namespace OxTail.Controls
         private void buttonSaveExpression_Click(object sender, RoutedEventArgs e)
         {
             SaveExpressionMessage msg = new SaveExpressionMessage();
-            msg.labelMessage.Content = LanguageHelper.GetLocalisedText((Application.Current as IApplication), "enterExpressionName");
+            msg.labelMessage.Content = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.ENTER_EXPRESSION_NAME);
             msg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             msg.ShowDialog();
 
@@ -127,16 +126,16 @@ namespace OxTail.Controls
         {
             ObservableCollection<Expression> expr = new ObservableCollection<Expression>();
 
-            if (!System.IO.File.Exists(FILENAME))
+            if (!System.IO.File.Exists(Constants.SAVED_EXPRESSION_FILE_NAME))
             {
-                expr.Add(this.CreateExpression(string.Empty, LanguageHelper.GetLocalisedText((Application.Current as IApplication), "chooseItem")));
+                expr.Add(this.CreateExpression(string.Empty, LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.CHOOSE_ITEM)));
                 expr.Add(this.CreateExpression(@"^([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})$", "Email"));
                 expr.Add(this.CreateExpression(@"^([a-zA-Z]{1,2}\w{1,2})+(\d{1}[a-zA-Z]{2})+$", "Postcode"));
             }
             else
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Expression>));
-                expr = (ObservableCollection<Expression>)FileHelper.DeserializeFromExecutableDirectory(FILENAME, serializer);
+                expr = (ObservableCollection<Expression>)FileHelper.DeserializeFromExecutableDirectory(Constants.SAVED_EXPRESSION_FILE_NAME, serializer);
             }
 
             this.comboBoxSavedExpressions.DataContext = expr;
@@ -146,7 +145,7 @@ namespace OxTail.Controls
 
         private void FillExampleRegExData()
         {
-            Stream s = FileHelper.GetResourceStream(Assembly.GetExecutingAssembly(), "OxTail.Controls.ExampleRegexData.txt");
+            Stream s = FileHelper.GetResourceStream(Assembly.GetExecutingAssembly(), Constants.EXAMPLE_REGEX_DATA_FILENAME);
 
             if (s != null)
             {
@@ -159,7 +158,7 @@ namespace OxTail.Controls
             ObservableCollection<Expression> list = (ObservableCollection<Expression>)this.comboBoxSavedExpressions.DataContext;
 
             XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Expression>));
-            FileHelper.SerializeToExecutableDirectory(FILENAME, serializer, list);
+            FileHelper.SerializeToExecutableDirectory(Constants.SAVED_EXPRESSION_FILE_NAME, serializer, list);
         }
 
         private Expression CreateExpression(string text, string content)

@@ -45,7 +45,7 @@
             <Button Margin="5" Content="{DynamicResource deleteButton}" Height="23" Name="buttonDelete" Width="65" Click="buttonDelete_Click" ToolTip="{DynamicResource deleteButtonToolTip}" />
         </StackPanel>
         <DockPanel Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto">
-            <TextBox DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="{DynamicResource enterPatternText}" Margin="10,0" ToolTip="{DynamicResource enterPatternTextToolTip}" />
+            <custom:DisappearingTextTextBox ResourceFileKey="enterPatternText" DockPanel.Dock="Right" Height="23" x:Name="textBoxPattern" Text="{DynamicResource enterPatternText}" Margin="10,0" ToolTip="{DynamicResource enterPatternTextToolTip}"  />
         </DockPanel>
         <WrapPanel Orientation="Horizontal" Grid.Row="2" HorizontalAlignment="Center" Name="stackPanel2" VerticalAlignment="Center">
             <custom:ColourButton x:Name="buttonColour" Click="buttonColour_Click" Width="70" Content="{DynamicResource foreColourButton}" Margin="10,2,2,2" ToolTip="{DynamicResource foreColourToolTip}" />

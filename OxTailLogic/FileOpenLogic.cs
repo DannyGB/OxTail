@@ -35,18 +35,12 @@ namespace OxTailLogic
     {
         public static List<FileInfo> OpenFilePattern(ISaveExpressionMessage saveExpression)
         {
-            // Currently using the OpenFileDialog box and then hacking the return value.
-            // 
-            // Started to look at inheriting from OpenFileDialog but it's a sealed class so this is the 
-            // short term "get it working" code and will look at creating an OpenFilePatternDialog
-            // latter
-            //string filename = FileHelper.ShowOpenFileDialog();
             string filename = FileHelper.ShowOpenDirectory();
 
             List<FileInfo> fileInfos = new List<FileInfo>();
 
-            saveExpression.Label = LanguageHelper.GetLocalisedText((Application.Current as IApplication), "filePatternText");
-            saveExpression.Message = "*.log";
+            saveExpression.Label = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.FILE_TEXT_PATTERN);
+            saveExpression.Message = Constants.DEFAULT_FILE_OPEN_PATTERN;
             saveExpression.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
             if (!string.IsNullOrEmpty(filename) && !string.IsNullOrWhiteSpace(filename))
@@ -54,9 +48,9 @@ namespace OxTailLogic
                 bool? result = saveExpression.ShowDialog();
                 if (result.HasValue && result.Value)
                 {
-                    if (saveExpression.Message == "*.*")
+                    if (saveExpression.Message == Constants.ALL_FILES_PATTERN)
                     {
-                        if (MessageBoxResult.Yes == MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "lotOfFilesText"), LanguageHelper.GetLocalisedText((Application.Current as IApplication), "question"), MessageBoxButton.YesNo))
+                        if (MessageBoxResult.Yes == MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.LOTS_OF_FILES_TEXT), LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.QUESTION), MessageBoxButton.YesNo))
                         {
                             fileInfos = FileHelper.GetFiles(filename, saveExpression.Message);
                         }
@@ -75,7 +69,7 @@ namespace OxTailLogic
         {
             if (showFileLimitMessage)
             {
-                MessageBox.Show(string.Format(LanguageHelper.GetLocalisedText(application, "fileOpenLimit"), maxOpenFiles), "OxTail"); //TODO: Remove hardcoding
+                MessageBox.Show(string.Format(LanguageHelper.GetLocalisedText(application, Constants.FILE_OPEN_LIMIT), maxOpenFiles), Constants.APPLICATION_NAME);
             }
 
             List<FileInfo> fileInfoList = new List<FileInfo>();
@@ -102,7 +96,7 @@ namespace OxTailLogic
 
             if (files.Count > 0)
             {
-                files.Sort(new GenericComparer<FileInfo>("LastWriteTime", ListSortDirection.Descending));
+                files.Sort(new GenericComparer<FileInfo>(Constants.LAST_WRITE_TIME_SORT_HEADER, ListSortDirection.Descending));
             }
 
             return files;
