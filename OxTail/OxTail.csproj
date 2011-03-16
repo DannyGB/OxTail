@@ -53,7 +53,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>OxTail.ico</ApplicationIcon>
+    <ApplicationIcon>OxTail2.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationFramework.Aero">
@@ -212,6 +212,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="OxTail.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="OxTail2.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
