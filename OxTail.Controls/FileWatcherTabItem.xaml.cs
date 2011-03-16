@@ -28,12 +28,15 @@ namespace OxTail.Controls
     using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.Collections.Generic;
+    using OxTailHelpers;
 
     /// <summary>
     /// An extension of the CloseableTabItem control that views a file.
     /// </summary>
-    public partial class FileWatcherTabItem : CloseableTabItem, IDisposable
+    public partial class FileWatcherTabItem : TabItem, IDisposable
     {
+        public event EventHandler<EventArgs> FindFinished;
+
         private Image _image = null;
         private double LastFindOffset { get; set; }
 
@@ -62,8 +65,8 @@ namespace OxTail.Controls
             this.Visibility = System.Windows.Visibility.Visible;
             this.fileWatcher.Patterns = patterns;
             this.GotFocus += new RoutedEventHandler(OxTailFileViewer_GotFocus);
-        }
-
+            this.fileWatcher.FindFinished += new EventHandler<EventArgs>(fileWatcher_FindFinished);
+        }        
 
         void fileWatcher_FileChanged(object sender, RoutedEventArgs e)
         {
@@ -75,11 +78,11 @@ namespace OxTail.Controls
             ShowImage(System.Windows.Visibility.Hidden);
         }
 
-        public override void closeButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.fileWatcher.Stop();
-            base.closeButton_Click(sender, e);
-        }
+        //public override void closeButton_Click(object sender, RoutedEventArgs e)
+        //{
+        //    this.fileWatcher.Stop();
+        //    base.closeButton_Click(sender, e);
+        //}
 
         // Create a custom routed event by first registering a RoutedEventID
         // This event uses the bubbling routing strategy
@@ -108,7 +111,7 @@ namespace OxTail.Controls
         {
             if (this._image == null)
             {
-                this._image = base.GetTemplateChild("PART_Icon") as Image;
+                this._image = base.GetTemplateChild(Constants.PART_ICON) as Image;
             }
             if (this._image != null)
             {
@@ -142,6 +145,19 @@ namespace OxTail.Controls
         public void ResetSearchCriteria()
         {
             this.fileWatcher.ResetSearchCriteria();
+        }
+
+        private void ThrowFindFinished()
+        {
+            if (this.FindFinished != null)
+            {
+                this.FindFinished(this, new EventArgs());
+            }
+        }
+
+        void fileWatcher_FindFinished(object sender, EventArgs e)
+        {
+            this.ThrowFindFinished();
         }
     }
 }

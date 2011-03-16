@@ -37,7 +37,6 @@ namespace OxTail.Controls
     {
         public event RoutedEventHandler OpenExpressionBuilder;
         public HighlightCollection<HighlightItem> Patterns { get; set; }
-        private const string SORT_HEADER = "Order";
 
         public Highlighting()
         {
@@ -60,7 +59,7 @@ namespace OxTail.Controls
             HighlightItem item = new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.buttonBackColour.SelectedColour);
             item.Order = Patterns.Add(item);
             
-            this.Sort(SORT_HEADER, ListSortDirection.Descending);
+            this.Sort(Constants.HIGHLIGHT_ITEM_SORT_HEADER, ListSortDirection.Descending);
         }
 
         private void buttonColour_Click(object sender, RoutedEventArgs e)
@@ -123,12 +122,12 @@ namespace OxTail.Controls
             ICollectionView view = CollectionViewSource.GetDefaultView(this.listViewPatterns.DataContext);
             if (view != null && !view.CanSort)
             {
-                MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "noSortingAllowed"));
+                MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.NO_SORTING_ALLOWED));
                 return;
             }
 
             view.SortDescriptions.Clear();
-            view.SortDescriptions.Add(new SortDescription("Order", ListSortDirection.Descending));
+            view.SortDescriptions.Add(new SortDescription(Constants.HIGHLIGHT_ITEM_SORT_HEADER, ListSortDirection.Descending));
             view.Refresh();
         }
 
@@ -210,7 +209,7 @@ namespace OxTail.Controls
                     break;
             }
 
-            this.Sort(SORT_HEADER, ListSortDirection.Descending);
+            this.Sort(Constants.HIGHLIGHT_ITEM_SORT_HEADER, ListSortDirection.Descending);
         }
     }
 }

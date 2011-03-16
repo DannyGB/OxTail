@@ -18,7 +18,9 @@
                 <Separator></Separator>
                 <oxtail:RecentFileList x:Name="recentFileList" SubMenuClick="recentFileList_SubMenuClick" />
                 <Separator></Separator>
-                <MenuItem Name="MenuItemCloseAll" Header="{DynamicResource closeAll}" Click="MenuItemCloseAll_Click" />                
+                <MenuItem Name="MenuItemClose" Header="{DynamicResource close}" Click="MenuItemClose_Click" />
+                <MenuItem Name="MenuItemCloseAll" Header="{DynamicResource closeAll}" Click="MenuItemCloseAll_Click" />
+                <Separator></Separator>
                 <MenuItem Name="MenuExit" Header="{DynamicResource exit}" Click="MenuExitClick" />
             </MenuItem>
             <MenuItem Name="MenuEdit" Header="{DynamicResource edit}">

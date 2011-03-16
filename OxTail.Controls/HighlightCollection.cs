@@ -28,6 +28,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Collections;
 using OxTailLogic.Compare;
+using OxTailHelpers;
 
 namespace OxTail.Controls
 {
@@ -97,11 +98,11 @@ namespace OxTail.Controls
         {
             if (direction == ListSortDirection.Ascending)
             {
-                this.Sort(new GenericComparer<T>("Order", ListSortDirection.Ascending));
+                this.Sort(new GenericComparer<T>(Constants.HIGHLIGHT_ITEM_SORT_HEADER, ListSortDirection.Ascending));
             }
             else
             {
-                this.Sort(new GenericComparer<T>("Order", ListSortDirection.Descending));
+                this.Sort(new GenericComparer<T>(Constants.HIGHLIGHT_ITEM_SORT_HEADER, ListSortDirection.Descending));
             }
         }
 
@@ -165,7 +166,7 @@ namespace OxTail.Controls
 
             else
             {
-                throw new ArgumentException("Value was not of the correct type", "value");
+                throw new ArgumentException(LanguageHelper.GetLocalisedText((System.Windows.Application.Current as IApplication), "valueNotCorrectType"), "value");
             }
         }
 

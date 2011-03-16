@@ -33,9 +33,9 @@ namespace OxTailHelpers
         delegate Visual ReturnVisual();
 
         /// <summary>
-        /// 
+        /// Gets the visual children of the control
         /// </summary>
-        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="T">The type</typeparam>
         /// <param name="referenceVisual"></param>
         /// <returns></returns>
         public static List<T> GetVisualChildren<T>(this Visual referenceVisual) where T : Visual

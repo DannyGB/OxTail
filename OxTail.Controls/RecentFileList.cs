@@ -65,8 +65,8 @@ namespace OxTail.Controls
 
         public RecentFileList()
         {
-            this.Filename = "RecentFileList.xml";
-            this.Header = "Recent Files";
+            this.Filename = Constants.RECENT_FILE_LIST_NAME;
+            this.Header = Constants.RECENT_FILES_MENUITEM_HEADER;
             this.Loaded += (s, e) => GetParentItem();
         }
 

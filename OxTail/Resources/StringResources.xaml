@@ -17,6 +17,7 @@
     <system:String x:Key="openLastWritten">Last written to file in directory</system:String>
     
     <system:String x:Key="closeAll">Close All</system:String>
+    <system:String x:Key="close">Close</system:String>
     <system:String x:Key="exit">Exit</system:String>
     
     <system:String x:Key="edit">Edit</system:String>
@@ -74,6 +75,8 @@
 
     <system:String x:Key="labelFind">Find</system:String>
     <system:String x:Key="findButton">Find</system:String>
+    <system:String x:Key="comboBoxItemCurrentDocument">Current document</system:String>
+    <system:String x:Key="comboBoxItemAllOpenDocuments">All open documents</system:String>
 
     <!-- Expression Builder form -->
 
@@ -121,6 +124,13 @@
     <system:String x:Key="invalidValueType">Value was not of the correct type</system:String>
     <system:String x:Key="noSortingAllowed">No sorting allowed</system:String>
     <system:String x:Key="parentMustBeMenuItem">Parent must be a MenuItem</system:String>
-    <system:String x:Key="fileNoLongerExistsOnDisk">File no longer exists on disk</system:String>    
+    <system:String x:Key="fileNoLongerExistsOnDisk">File no longer exists on disk</system:String>
+    <system:String x:Key="cantAccessClipboard">Can't access clipboard</system:String>
+    
+    
+    <!-- Exceptions -->
+    <system:String x:Key="unknownSearchOption">Unknown Search Option</system:String>
+    <system:String x:Key="valueNotCorrectType">Value was not of the correct type</system:String>
+    <system:String x:Key="resourceFileKeyNotSet">ResourceFileKey must be set</system:String>
 
 </ResourceDictionary>

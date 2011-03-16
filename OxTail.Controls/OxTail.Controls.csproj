@@ -50,9 +50,9 @@
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
     <Compile Include="BaseWindow.cs" />
-    <Compile Include="CloseableTabItem.cs" />
     <Compile Include="ColourButton.cs" />
     <Compile Include="ColourfulListView.cs" />
+    <Compile Include="DisappearingTextTextBox.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="ExpressionTextBox.cs" />
     <Compile Include="Find.xaml.cs">
@@ -86,6 +86,7 @@
       <DependentUpon>SaveExpressionMessage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SpecialRadioButton.cs" />
+    <Compile Include="UnknownSearchOptionException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\ColorSwatchCircle.png" />

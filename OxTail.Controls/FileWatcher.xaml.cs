@@ -41,8 +41,9 @@ namespace OxTail.Controls
     /// </summary>
     public partial class FileWatcher : UserControl, IDisposable
     {
+        public event EventHandler<EventArgs> FindFinished;
+
         private BackgroundWorker _bw = null;
-        //private object _lock = new object();
         private Encoding _tailEncoding = Encoding.Default;
         private DateTime _dateLastTime = DateTime.MinValue;
         private int _chunkSize = 16384;
@@ -75,7 +76,6 @@ namespace OxTail.Controls
                 return false;
             }
         }
-
 
         public long CurrentLength
         {
@@ -133,20 +133,12 @@ namespace OxTail.Controls
         public long StartLine
         {
             get;
-            set;
-            //get
-            //{
-            //    ScrollViewer vw = this.ScrollViewer;
-            //    if (vw != null)
-            //        return (long)this.ScrollViewer.VerticalOffset + this.HorizontalScrollbarVisibilityOffset;
-            //    else
-            //        return 0;
-            //}
+            set;           
         }
 
         private int HorizontalScrollbarVisibilityOffset
         {
-            get { return 0; } // (this.ScrollViewer.ScrollableWidth == 0 ? 0 : 1); }
+            get { return 0; }
         }
 
         public ScrollViewer ScrollViewer
@@ -461,7 +453,7 @@ namespace OxTail.Controls
                 long offset = 0;
                 if (!this._LineOffsets.TryGetValue(this.StartLine, out offset))
                 {
-                    ReportProgress(0, LanguageHelper.GetLocalisedText((Application.Current as IApplication), "lineNumberError") + this.StartLine.ToString(), true, System.Windows.Visibility.Hidden);
+                    ReportProgress(0, LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.LINE_NUMBER_ERROR) + this.StartLine.ToString(), true, System.Windows.Visibility.Hidden);
                     return;
                 }
 
@@ -835,7 +827,7 @@ namespace OxTail.Controls
 
             if(!File.Exists(this._filename))
             {
-                throw new Exception(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "fileNoLongerExistsOnDisk"));
+                throw new Exception(LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.FILE_NO_LONGER_EXISTS));
             }
 
             FileStream fs = File.Open(this._filename, FileMode.Open, FileAccess.Read);
@@ -864,6 +856,7 @@ namespace OxTail.Controls
                 if (read.EndOfStream)
                 {
                     i = 0;
+                    this.ThrowFindFinished();
                 }
 
                 LastSearchIndex = i;
@@ -878,6 +871,14 @@ namespace OxTail.Controls
             }
 
             return i;
+        }
+
+        private void ThrowFindFinished()
+        {
+            if (this.FindFinished != null)
+            {
+                this.FindFinished(this, new EventArgs());
+            }
         }
 
         internal void ResetSearchCriteria()

@@ -48,7 +48,7 @@ namespace OxTailHelpers
                 }
                 catch (System.Runtime.InteropServices.COMException)
                 {
-                    MessageBox.Show("Can't Access Clipboard");
+                    MessageBox.Show(LanguageHelper.GetLocalisedText((System.Windows.Application.Current as IApplication), Constants.CANT_ACCESS_CLIPBOARD));
                 } 
             }
         }

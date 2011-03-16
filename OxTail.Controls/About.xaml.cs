@@ -37,6 +37,7 @@ namespace OxTail.Controls
     using System.Reflection;
     using System.Diagnostics;
     using OxTail.Helpers;
+    using OxTailHelpers;
 
     /// <summary>
     /// Interaction logic for About.xaml
@@ -51,7 +52,7 @@ namespace OxTail.Controls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             Assembly assembly = Assembly.GetExecutingAssembly();
-            Stream s = FileHelper.GetResourceStream(assembly, "OxTail.Controls.AboutPageGplText.rtf");
+            Stream s = FileHelper.GetResourceStream(assembly, Constants.ABOUT_PAGE_GPL_TEXT_RTF);
 
             if (s != null)
             {

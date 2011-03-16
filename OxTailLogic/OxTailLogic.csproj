@@ -91,10 +91,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Persistance\" />
-    <Folder Include="ValueConverters\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\OxTailHelpers\OxTail.Helpers.csproj">
       <Project>{58383B31-C051-4C54-82A3-0D0DF514AFC7}</Project>

@@ -41,14 +41,18 @@ namespace OxTail
     public partial class MainWindow : BaseWindow
     {        
         private List<Window> OpenWindows { get; set; }
+        private FileWatcherTabItem FileToSearch { get; set; }
+        private bool StopFileSwitchOnSearch { get; set; }
+        public static HighlightCollection<HighlightItem> HighlightItems { get; set; }
  
+        /// <summary>
+        /// Initialise MainWindow
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
             this.OpenWindows = new List<Window>();
         }
-
-        public static HighlightCollection<HighlightItem> HighlightItems { get; set; }
 
         private void MenuAboutClick(object sender, RoutedEventArgs e)
         {
@@ -90,13 +94,14 @@ namespace OxTail
                     if (newTab == null)
                     {                        
                         newTab = new OxTail.Controls.FileWatcherTabItem(filename, MainWindow.HighlightItems);
-                        newTab.CloseTab += new RoutedEventHandler(newTab_CloseTab);
+                        //newTab.CloseTab += new RoutedEventHandler(newTab_CloseTab);
+                        newTab.FindFinished += new EventHandler<EventArgs>(MainWindow_FindFinished);
                         tabControlMain.Items.Add(newTab);                        
                     }
-                    tabControlMain.SelectedItem = newTab;                    
+                    tabControlMain.SelectedItem = newTab;   
                     recentFileList.InsertFile(filename);
                 }
-                else if (MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), "removeFromRecentFileList"), LanguageHelper.GetLocalisedText((Application.Current as IApplication), "fileNotFound"), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                else if (MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.REMOVE_FROM_RECENT_FILE_LIST), LanguageHelper.GetLocalisedText((Application.Current as IApplication), "fileNotFound"), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
                 {
                     recentFileList.RemoveFile(filename);
                 }
@@ -115,18 +120,7 @@ namespace OxTail
                 }
             }
             return foundTab;
-        }
-
-        void newTab_CloseTab(object sender, RoutedEventArgs e)
-        {
-            if (e.Source is OxTail.Controls.FileWatcherTabItem)
-            {
-                OxTail.Controls.FileWatcherTabItem closeTab = e.Source as OxTail.Controls.FileWatcherTabItem;
-                tabControlMain.Items.Remove(closeTab);
-                
-                closeTab.Dispose();
-            }
-        }
+        }       
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -173,8 +167,19 @@ namespace OxTail
             tabControlMain.Items.Clear();
         }
 
+        private void MenuItemClose_Click(object sender, RoutedEventArgs e)
+        {
+            FileWatcherTabItem closeTab = (FileWatcherTabItem)this.tabControlMain.SelectedItem;
+            tabControlMain.Items.Remove(closeTab);
+            closeTab.Dispose();
+        }
+
         private void tabControlMain_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {          
+        {
+            if (e.AddedItems.Count > 0)
+            {
+                this.FileToSearch = (FileWatcherTabItem)e.AddedItems[0];
+            }
         }
 
         private void MenuCopy_Click(object sender, RoutedEventArgs e)
@@ -226,7 +231,7 @@ namespace OxTail
                     ((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).ResetSearchCriteria();
                 }
             }
-        }
+        }        
 
         void find_FindCriteria(object sender, FindEventArgs e)
         {
@@ -234,14 +239,30 @@ namespace OxTail
             {
                 if (e.Options == OxTailLogic.PatternMatching.FindOptions.AllOpenDocuments)
                 {
-                    //foreach (FileWatcherTabItem item in tabControlMain.Items)
-                    //{
-                    //    item.Find(e.FindCriteria);
-                    //}
+                    StopFileSwitchOnSearch = false;
+                    FileToSearch.Find(e.FindCriteria);
                 }
                 else if (e.Options == OxTailLogic.PatternMatching.FindOptions.CurrentDocument)
                 {
+                    StopFileSwitchOnSearch = true;
                     ((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).Find(e.FindCriteria);
+                }
+            }
+        }
+
+        void MainWindow_FindFinished(object sender, EventArgs e)
+        {
+            if (!this.StopFileSwitchOnSearch)
+            {
+                int index = tabControlMain.Items.IndexOf(this.FileToSearch);
+
+                if (index >= 0 && index < (tabControlMain.Items.Count - 1))
+                {
+                    tabControlMain.SelectedIndex = (index + 1);
+                }
+                else
+                {
+                    tabControlMain.SelectedIndex = 0;
                 }
             }
         }
