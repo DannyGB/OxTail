@@ -18,7 +18,7 @@
 ;General
 
   ;Name and file
-  Name "OxTail"
+  Name "OxTail Version 1.0"
   OutFile "OxTail.exe"
 
   ;Default installation folder
@@ -68,8 +68,7 @@ Section "Core OxTail Files" SecCoreFiles
   File "..\bin\Release\OxTail.exe"
   File "..\bin\Release\OxTail.Controls.dll"			  
   File "..\bin\Release\OxTailHelpers.dll"			  
-  File "..\bin\Release\OxTailLogic.dll"	
-  File "..\bin\Release\NSort.dll"
+  File "..\bin\Release\OxTailLogic.dll"	  
   File "..\bin\Release\SavedExpression.xml"			  
   File "..\bin\Release\highlights.xml"
   File "..\COPYING.txt"

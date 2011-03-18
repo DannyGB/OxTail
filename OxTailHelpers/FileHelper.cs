@@ -34,6 +34,10 @@ namespace OxTail.Helpers
 
     public class FileHelper
     {
+        /// <summary>
+        /// Shows the OpenDirectory dialog
+        /// </summary>
+        /// <returns></returns>
         public static string ShowOpenDirectory()
         {
             System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
@@ -46,6 +50,10 @@ namespace OxTail.Helpers
             return string.Empty;
         }
 
+        /// <summary>
+        /// Shows the OpenFileDialog
+        /// </summary>
+        /// <returns></returns>
         public static string ShowOpenFileDialog()
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -58,6 +66,11 @@ namespace OxTail.Helpers
             return string.Empty;
         }
 
+        /// <summary>
+        /// Opens a the file identified by <paramref name="filename"/> to a <see cref="Stream"/>
+        /// </summary>
+        /// <param name="filename">The name of the file to open (fully qualified)</param>
+        /// <returns>A <see cref="Stream"/> containing the file contents</returns>
         public static Stream OpenFile(string filename)
         {
             try
@@ -72,6 +85,11 @@ namespace OxTail.Helpers
             }
         }
 
+        /// <summary>
+        /// Creates a flow document from the <paramref name="content"/>
+        /// </summary>
+        /// <param name="content">The content of the stream to be added to the <see cref="FlowDocument"/></param>
+        /// <returns>A <see cref="FlowDocument"/></returns>
         public static FlowDocument CreateFlowDocument(Stream content)
         {
             FlowDocument fd = new FlowDocument();
@@ -81,6 +99,12 @@ namespace OxTail.Helpers
             return fd;
         }
 
+        /// <summary>
+        /// Returns a <see cref="Stream"/> containing the contents of the file identified by <paramref name="assembly"/> and <paramref name="resourceName"/>
+        /// </summary>
+        /// <param name="assembly">The <see cref="Assembly"/></param>
+        /// <param name="resourceName">The resource name</param>
+        /// <returns>A <see cref="Stream"/> containing the resource contents</returns>
         public static Stream GetResourceStream(Assembly assembly, string resourceName)
         {
             Stream s = assembly.GetManifestResourceStream(resourceName);
@@ -88,6 +112,12 @@ namespace OxTail.Helpers
             return s;
         }
 
+        /// <summary>
+        /// Serializes the <paramref name="list"/> to the <paramref name="filename"/> using the <paramref name="serializer"/>
+        /// </summary>
+        /// <param name="filename">The filename to save to</param>
+        /// <param name="serializer">The serializer</param>
+        /// <param name="list">The object to searilize</param>
         public static void SerializeToExecutableDirectory(string filename, XmlSerializer serializer, object list)
         {
             if (string.IsNullOrEmpty(filename) || string.IsNullOrWhiteSpace(filename))
@@ -113,6 +143,12 @@ namespace OxTail.Helpers
             return filename;
         }
 
+        /// <summary>
+        /// Deserializes from the <paramref name="filename"/> using the <paramref name="serializer"/>
+        /// </summary>
+        /// <param name="filename">The filename to save to</param>
+        /// <param name="serializer">The serializer</param>
+        /// <returns>An object containing the data</returns>
         public static object DeserializeFromExecutableDirectory(string filename, XmlSerializer serializer)
         {
             if (string.IsNullOrEmpty(filename) || string.IsNullOrWhiteSpace(filename))
@@ -129,12 +165,23 @@ namespace OxTail.Helpers
             }
         }
 
+        /// <summary>
+        /// Gets a <see cref="String"/> representation of the given <see cref="Stream"/>
+        /// </summary>
+        /// <param name="s">The <see cref="Stream"/></param>
+        /// <returns>The <see cref="String"/> representation of the <see cref="Stream"/></returns>
         public static string GetStringFromStream(Stream s)
         {
             StreamReader reader = new StreamReader(s);
             return reader.ReadToEnd();
         }
 
+        /// <summary>
+        /// Gets files from the <paramref name="path"/> using the <paramref name="searchPattern"/>
+        /// </summary>
+        /// <param name="path">The path to the files</param>
+        /// <param name="searchPattern">The search pattern to look for</param>
+        /// <returns>A <see cref="List<T>"/> if <see cref="FileInfo"/></returns>
         public static List<FileInfo> GetFiles(string path, string searchPattern)
         {
             string[] files = Directory.GetFiles(path, searchPattern);
@@ -148,6 +195,13 @@ namespace OxTail.Helpers
             return fileInfos;
         }
 
+        /// <summary>
+        /// Gets files from the <paramref name="path"/> using the <paramref name="searchPattern"/>
+        /// </summary>
+        /// <param name="path">The path to the files</param>
+        /// <param name="searchPattern">The search pattern to look for</param>
+        /// <param name="maxFiles">The maximum files to open</param>
+        /// <returns>A <see cref="List<T>"/> if <see cref="FileInfo"/></returns>
         public static List<FileInfo> GetFiles(string path, string searchPattern, int maxFiles)
         {
             List<FileInfo> fileInfos = GetFiles(path, searchPattern);
@@ -161,12 +215,22 @@ namespace OxTail.Helpers
             return fileInfos;
         }
 
+        /// <summary>
+        /// Saves the most recent file list
+        /// </summary>
+        /// <param name="files">The files</param>
+        /// <param name="saveToFilename">The filename to save to</param>
         public static void MruSave(List<OxTail.Helpers.File> files, string saveToFilename)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(List<OxTail.Helpers.File>), new Type[] { typeof(OxTail.Helpers.File) });
             FileHelper.SerializeToExecutableDirectory(saveToFilename, serializer, files);
         }
 
+        /// <summary>
+        /// Loads the most recent file list
+        /// </summary>
+        /// <param name="openFromFilename">The filename to open</param>
+        /// <returns>A <see cref="List<T>"/> of <see cref="OxTail.Helpers.File"/></returns>
         public static List<OxTail.Helpers.File> MruLoad(string openFromFilename)
         {
             List<OxTail.Helpers.File> files = new List<File>();

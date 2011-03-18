@@ -25,16 +25,20 @@ using System.Text;
 using System.Windows.Controls;
 using OxTail.Helpers;
 using OxTailHelpers;
+using System.Windows;
 
 namespace OxTail.Controls
 {
     public class RecentFileList : MenuItem
     {
+        /// <summary>
+        /// A Sub menu item has been clicked
+        /// </summary>
         public event EventHandler<EventArgs> SubMenuClick;
 
         private List<OxTail.Helpers.File> Files { get; set; }
 
-        private string _filename;
+        private string _filename = string.Empty;
         private string Filename 
         {
             get
@@ -63,10 +67,13 @@ namespace OxTail.Controls
             }
         }
 
+        /// <summary>
+        /// Initialise instance
+        /// </summary>
         public RecentFileList()
         {
             this.Filename = Constants.RECENT_FILE_LIST_NAME;
-            this.Header = Constants.RECENT_FILES_MENUITEM_HEADER;
+            this.Header = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.RECENT_FILES_MENUITEM_HEADER);
             this.Loaded += (s, e) => GetParentItem();
         }
 
@@ -93,6 +100,10 @@ namespace OxTail.Controls
             if (MenuClick != null) MenuClick(item, new EventArgs());
         }
 
+        /// <summary>
+        /// Insert <paramref name="filename"/> into the MRU
+        /// </summary>
+        /// <param name="filename"></param>
         public void InsertFile(string filename)
         {
             bool found = false;
@@ -120,6 +131,10 @@ namespace OxTail.Controls
 
         }
 
+        /// <summary>
+        /// Remove <paramref name="filename"/> from the MRU
+        /// </summary>
+        /// <param name="filename"></param>
         public void RemoveFile(string filename)
         {
             for (int i = Files.Count; i >= 0; i--)

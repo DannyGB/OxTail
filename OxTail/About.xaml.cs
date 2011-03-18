@@ -49,7 +49,9 @@ namespace OxTail
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.textBoxCredits.Text = string.Format(Constants.CREDITS_AUTHORS, System.Environment.NewLine);
-            this.TextBoxVersion.Content += " " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
+            this.textBoxCredits.Text += string.Format("{0}{1}", System.Environment.NewLine, Constants.ICON_CREDITS);
+            this.labelVersion.Content += " " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
+            this.labelApplicationName.Content = Constants.APPLICATION_NAME;
         }
     }
 }

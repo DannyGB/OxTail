@@ -3,48 +3,50 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <!-- General -->
-    <system:String x:Key="okButton">Ok</system:String>
-    <system:String x:Key="saveButton">Save</system:String>
-    <system:String x:Key="cancelButton">Cancel</system:String>
+    <system:String x:Key="okButton">_Ok</system:String>
+    <system:String x:Key="saveButton">_Save</system:String>
+    <system:String x:Key="cancelButton">_Cancel</system:String>
     
     
     <!-- Main form -->
     
-    <system:String x:Key="file">File</system:String>
-    <system:String x:Key="open">Open</system:String>
-    <system:String x:Key="filePattern">File Pattern</system:String>
-    <system:String x:Key="directory">Directory</system:String>
-    <system:String x:Key="openLastWritten">Last written to file in directory</system:String>
+    <system:String x:Key="file">_File</system:String>
+    <system:String x:Key="open">_Open</system:String>
+    <system:String x:Key="filePattern">_File Pattern</system:String>
+    <system:String x:Key="directory">_Directory</system:String>
+    <system:String x:Key="openLastWritten">_Last written to file in directory</system:String>
+    <system:String x:Key="openLastWrittenPatterns">_Last written to files (by pattern)</system:String>
+    <system:String x:Key="recentFilesMenuItemText">_Recent files</system:String>
     
-    <system:String x:Key="closeAll">Close All</system:String>
-    <system:String x:Key="close">Close</system:String>
-    <system:String x:Key="exit">Exit</system:String>
+    <system:String x:Key="closeAll">Close _All</system:String>
+    <system:String x:Key="close">_Close</system:String>
+    <system:String x:Key="exit">E_xit</system:String>
     
-    <system:String x:Key="edit">Edit</system:String>
-    <system:String x:Key="find">Find</system:String>
-    <system:String x:Key="copy">Copy</system:String>
+    <system:String x:Key="edit">_Edit</system:String>
+    <system:String x:Key="find">_Find</system:String>
+    <system:String x:Key="copy">_Copy</system:String>
     
-    <system:String x:Key="settings">Settings</system:String>
-    <system:String x:Key="highlighting">Highlighting</system:String>
+    <system:String x:Key="settings">_Settings</system:String>
+    <system:String x:Key="highlighting">_Highlighting</system:String>
     
-    <system:String x:Key="tools">Tools</system:String>
-    <system:String x:Key="regExpBuilder">Reg Ex Expression Builder</system:String>
+    <system:String x:Key="tools">_Tools</system:String>
+    <system:String x:Key="regExpBuilder">_Expression Builder</system:String>
 
-    <system:String x:Key="help">Help</system:String>
-    <system:String x:Key="about">About</system:String>
-    <system:String x:Key="onWeb">Visit Website</system:String>
+    <system:String x:Key="help">_Help</system:String>
+    <system:String x:Key="about">_About</system:String>
+    <system:String x:Key="onWeb">Visit _Website</system:String>
     <system:String x:Key="opensWebBrowser">Opens in web browser</system:String>    
 
     <!-- Highlighting form -->
 
     <system:String x:Key="highlightingWindowTitle">Highlighting</system:String>
     <system:String x:Key="enterPatternText">Enter Pattern</system:String>
-    <system:String x:Key="foreColourButton">Fore Colour</system:String>
-    <system:String x:Key="backColourButton">Back Colour</system:String>
-    <system:String x:Key="expressionBuilder">Expression Builder</system:String>
-    <system:String x:Key="addButton">Add</system:String>
-    <system:String x:Key="updateButton">Update</system:String>
-    <system:String x:Key="deleteButton">Delete</system:String>
+    <system:String x:Key="foreColourButton">_Fore Colour</system:String>
+    <system:String x:Key="backColourButton">_Back Colour</system:String>
+    <system:String x:Key="expressionBuilder">_Expression Builder</system:String>
+    <system:String x:Key="addButton">_Add</system:String>
+    <system:String x:Key="updateButton">_Update</system:String>
+    <system:String x:Key="deleteButton">_Delete</system:String>
     <system:String x:Key="patternColHeader">Pattern</system:String>
     <system:String x:Key="orderColHeader">Order</system:String>
     
@@ -74,7 +76,7 @@
     <!-- Find form -->
 
     <system:String x:Key="labelFind">Find</system:String>
-    <system:String x:Key="findButton">Find</system:String>
+    <system:String x:Key="findButton">_Find</system:String>
     <system:String x:Key="comboBoxItemCurrentDocument">Current document</system:String>
     <system:String x:Key="comboBoxItemAllOpenDocuments">All open documents</system:String>
 
@@ -83,8 +85,8 @@
     <system:String x:Key="expressionBuilderWindowTitle">Expression Builder</system:String>
     <system:String x:Key="expressionLabel">Expression:</system:String>
     <system:String x:Key="savedExpressionLabel">Saved Expressions:</system:String>
-    <system:String x:Key="deleteExpressionButton">Delete Expression</system:String>
-    <system:String x:Key="saveExpressionButton">Save Expression</system:String>
+    <system:String x:Key="deleteExpressionButton">_Delete Expression</system:String>
+    <system:String x:Key="saveExpressionButton">_Save Expression</system:String>
     <system:String x:Key="builderTabLabel">Builder</system:String>
     <system:String x:Key="testAreaTabLabel">Test Area</system:String>
     <system:String x:Key="anyCharacterButton">Any character (.)</system:String>
@@ -107,15 +109,28 @@
     <system:String x:Key="findMatchesButton">Find Matches</system:String>
     <system:String x:Key="chooseItem">Choose Item</system:String>
     <system:String x:Key="enterExpressionName">Enter Expression Name</system:String>
+
+    <!-- FileWatcher -->
     
+    <system:String x:Key="followTail">Follow tail</system:String>
+    <system:String x:Key="lineEnds">Line ends</system:String>
+    <system:String x:Key="encoding">Encoding</system:String>
+    <system:String x:Key="refresh">Refresh</system:String>
+    <system:String x:Key="startLine">Start line</system:String>
+    <system:String x:Key="visibleLines">Visible lines</system:String>
+    <system:String x:Key="linesInFile">Lines in file</system:String>
+    <system:String x:Key="ready">Ready</system:String>
+
     <!-- Messages -->
 
     <system:String x:Key="removeFromRecentFileList">Remove from recent file list?</system:String>
     <system:String x:Key="fileNotFound">File not found</system:String>
     <system:String x:Key="fileOpenLimit">Limited to only open a maximum of {0} files</system:String>
     <system:String x:Key="filePatternText">Filename pattern to open (wildcard only)</system:String>
+    <system:String x:Key="multipleFilePatternText">Filename wildcard pattern, seperate with a comma (,)</system:String>
     <system:String x:Key="lotOfFilesText">Potentially a lot of files, are you sure?</system:String>
     <system:String x:Key="question">Question</system:String>
+    <system:String x:Key="warning">Warning</system:String>
     <system:String x:Key="lineCount">counted {0} lines</system:String>
     <system:String x:Key="waitingForWatcher">Waiting for watcher to exit</system:String>    
     

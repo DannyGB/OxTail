@@ -33,6 +33,12 @@ namespace OxTailHelpers
     {
         private static System.Globalization.CultureInfo currentCulture = System.Globalization.CultureInfo.CurrentCulture;
 
+        /// <summary>
+        /// Gets the localised text for the given <paramref name="key"/>
+        /// </summary>
+        /// <param name="app">The current application as a <see cref="IApplication"/></param>
+        /// <param name="key">The key to the text in the resource file</param>
+        /// <returns>A <see cref="String"/> containing the text identified by the <paramref name="key"/></returns>
         public static string GetLocalisedText(IApplication app, string key)
         {
             return app.LanguageDictionary[0][key].ToString();
@@ -47,24 +53,24 @@ namespace OxTailHelpers
         /// that contains the culture resources</param>
         public static Uri LoadAssemblyAndGetResourceCultureFile()
         {
-            if (currentCulture.Name.Substring(0, currentCulture.Name.IndexOf('-')) == "en")
+            if (currentCulture.Name.Substring(0, currentCulture.Name.IndexOf('-')) == Constants.DEFAULT_LANGUAGE)
             {
                 return null;
             }
 
-            string culturePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, string.Format(@"Culture\Culture_{0}.dll", currentCulture.Name));
+            string culturePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, string.Format(Constants.CULTURE_PATH, currentCulture.Name));
 
             if (!File.Exists(culturePath))
             {
-                MessageBox.Show(@"Your language is not available, defaulting to English (Why not write a translation? Visit: https://sourceforge.net/projects/oxtail/)", "Warning", MessageBoxButton.OK);
+                MessageBox.Show(Constants.NO_LANGUAGE, LanguageHelper.GetLocalisedText((System.Windows.Application.Current as IApplication), Constants.WARNING), MessageBoxButton.OK);
 
                 return null;
             }
 
             Assembly ass = Assembly.LoadFile(culturePath);
-            string assName = string.Format("Culture_{0}", currentCulture.Name);
+            string assName = string.Format(Constants.CULTURE_TEMPLATE, currentCulture.Name);
 
-            return GetResourceFromDll(assName, string.Format("StringResources_{0}.xaml", currentCulture.Name));
+            return GetResourceFromDll(assName, string.Format(Constants.STRING_RESOURCES_FILENAME, currentCulture.Name));
         }
 
         /// <summary>
@@ -77,7 +83,7 @@ namespace OxTailHelpers
         /// resourceFileName parameters</returns>
         private static Uri GetResourceFromDll(string assemblyName, string resourceFileName)
         {
-            string packUri = String.Format(@"/{0};component/Resources/{1}", assemblyName, resourceFileName);
+            string packUri = String.Format(Constants.RESOURCES_URI_TEMPLATE, assemblyName, resourceFileName);
             return new Uri(packUri, UriKind.Relative);
         }
     }

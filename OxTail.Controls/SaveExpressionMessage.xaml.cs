@@ -39,13 +39,29 @@ namespace OxTail.Controls
     /// </summary>
     public partial class SaveExpressionMessage : BaseWindow, ISaveExpressionMessage
     {
+        /// <summary>
+        /// Initializes the instance
+        /// </summary>
         public SaveExpressionMessage()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// The label to display on the dialog
+        /// </summary>
         public string Label
         {
+            get
+            {
+                if (this.labelMessage.Content == null)
+                {
+                    return string.Empty;
+                }
+
+                return this.labelMessage.Content.ToString();
+            }
+
             set
             {
                 this.labelMessage.Content = value;
@@ -53,6 +69,9 @@ namespace OxTail.Controls
             }
         }
 
+        /// <summary>
+        /// The message to display in the Textbox
+        /// </summary>
         public string Message
         {
             get

@@ -29,6 +29,9 @@ namespace OxTailHelpers
 {
     public interface IApplication
     {
+        /// <summary>
+        /// The <see cref="Collection<ResourceDictionary>"/> of the application
+        /// </summary>
         Collection<ResourceDictionary> LanguageDictionary
         {
             get;

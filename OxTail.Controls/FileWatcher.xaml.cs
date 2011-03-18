@@ -41,6 +41,9 @@ namespace OxTail.Controls
     /// </summary>
     public partial class FileWatcher : UserControl, IDisposable
     {
+        /// <summary>
+        /// The find operation has reached the end of the file
+        /// </summary>
         public event EventHandler<EventArgs> FindFinished;
 
         private BackgroundWorker _bw = null;
@@ -77,7 +80,7 @@ namespace OxTail.Controls
             }
         }
 
-        public long CurrentLength
+        private long CurrentLength
         {
             get
             {
@@ -96,7 +99,7 @@ namespace OxTail.Controls
             }
         }
 
-        public long PreviousLength
+        private long PreviousLength
         {
             get {
                 lock (this)
@@ -112,7 +115,7 @@ namespace OxTail.Controls
             }
         }
 
-        public int LinesInFile
+        private int LinesInFile
         {
             get
             {
@@ -130,7 +133,7 @@ namespace OxTail.Controls
             }
         }
 
-        public long StartLine
+        private long StartLine
         {
             get;
             set;           
@@ -141,7 +144,7 @@ namespace OxTail.Controls
             get { return 0; }
         }
 
-        public ScrollViewer ScrollViewer
+        private ScrollViewer ScrollViewer
         {
             get
             {
@@ -237,7 +240,7 @@ namespace OxTail.Controls
         }
 
         // Gets a value that indicates the number of visible lines 
-        public int VisibleLines
+        private int VisibleLines
         {
             get
             {
@@ -249,12 +252,14 @@ namespace OxTail.Controls
             }
         }
 
-        public ItemCollection Lines
+        private ItemCollection Lines
         {
             get { return this.colourfulListView.Items; }
         }
 
-        // Determines whether this file watcher follows the tail
+        /// <summary>
+        /// Determines whether this file watcher follows the tail
+        /// </summary>
         public bool IsFollowTail
         {
             get { return this._followTail; }
@@ -352,7 +357,7 @@ namespace OxTail.Controls
             }
         }
 
-        public IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
+        private IEnumerable<HighlightItem> FindFirstHighlightByText(IEnumerable<HighlightItem> coll, string text)
         {
             if (this.IsSeaching)
             {
@@ -491,7 +496,7 @@ namespace OxTail.Controls
             streamReader.BaseStream.Seek(smallestOffset, seekOrigin);
         }
 
-        int Interval
+        private int Interval
         {
             get { return this._interval; }
             set { this._interval = value; }
@@ -609,11 +614,15 @@ namespace OxTail.Controls
             })); // this will change the vertical offset which will induce an update
         }
 
-        // Create a custom routed event by first registering a RoutedEventID
-        // This event uses the bubbling routing strategy
+        /// <summary>
+        /// Create a custom routed event by first registering a RoutedEventID
+        /// This event uses the bubbling routing strategy
+        /// </summary>
         public static readonly RoutedEvent FileChangedEvent = EventManager.RegisterRoutedEvent("FileChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FileWatcher));
 
-        // Provide CLR accessors for the event
+        /// <summary>
+        /// Provide CLR accessors for the event
+        /// </summary>
         public event RoutedEventHandler FileChanged
         {
             add { AddHandler(FileChangedEvent, value); }
@@ -765,7 +774,7 @@ namespace OxTail.Controls
             Console.WriteLine("ScrollChanged: {0} {1}", e.VerticalChange, e.ViewportHeightChange);
 #endif
 
-            if (e.VerticalChange != 0)
+            if (e.VerticalChange != 0 && this.IsFollowTail)
             {
 #if DEBUG
                 Console.WriteLine("Vertical offset changed {0}", e.VerticalChange);

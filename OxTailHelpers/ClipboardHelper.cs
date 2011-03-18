@@ -34,22 +34,13 @@ namespace OxTailHelpers
         /// <param name="text">The text to add to the clipboard</param>
         public static void AddTextToClipboard(string text)
         {
-            // See for try/catch explaination: http://www.switchonthecode.com/tutorials/wpf-tutorial-using-the-clipboard
             try
             {
                 Clipboard.SetData(DataFormats.Text, text);
             }
             catch (System.Runtime.InteropServices.COMException)
             {
-                System.Threading.Thread.Sleep(0);
-                try
-                {
-                    Clipboard.SetData(DataFormats.Text, text);
-                }
-                catch (System.Runtime.InteropServices.COMException)
-                {
-                    MessageBox.Show(LanguageHelper.GetLocalisedText((System.Windows.Application.Current as IApplication), Constants.CANT_ACCESS_CLIPBOARD));
-                } 
+                MessageBox.Show(LanguageHelper.GetLocalisedText((System.Windows.Application.Current as IApplication), Constants.CANT_ACCESS_CLIPBOARD));
             }
         }
     }

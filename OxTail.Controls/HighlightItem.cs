@@ -35,6 +35,9 @@ namespace OxTail.Controls
     using System.Runtime.Serialization;
     using System.Security.Permissions;
 
+    /// <summary>
+    /// Highlight item
+    /// </summary>
     [Serializable]
     [XmlInclude(typeof(HighlightItem))]
     public class HighlightItem : INotifyPropertyChanged, IColourfulItem, IComparable
@@ -43,11 +46,20 @@ namespace OxTail.Controls
         private Color _colour;
         private Color _backColour;
         private int _order;
-
+        
+        /// <summary>
+        /// Initialise instance
+        /// </summary>
         public HighlightItem()
         {
         }
 
+        /// <summary>
+        /// Initialise instance
+        /// </summary>
+        /// <param name="pattern">The regular expression pattern</param>
+        /// <param name="colour">The fore color of the item</param>
+        /// <param name="backColour">The back color of the item</param>
         public HighlightItem(string pattern, Color colour, Color backColour)
         {
             Pattern = pattern;
@@ -55,6 +67,9 @@ namespace OxTail.Controls
             BackColour = backColour;
         }
 
+        /// <summary>
+        /// The regular expression pattern
+        /// </summary>
         public string Pattern
         {
             get
@@ -70,6 +85,9 @@ namespace OxTail.Controls
             }
         }
 
+        /// <summary>
+        /// The fore color of the item
+        /// </summary>
         public Color ForeColour
         {
             get
@@ -84,6 +102,9 @@ namespace OxTail.Controls
             }
         }    
 
+        /// <summary>
+        /// The back color of the item
+        /// </summary>
         public Color BackColour
         {
             get
@@ -98,8 +119,14 @@ namespace OxTail.Controls
             }
         }
 
+        /// <summary>
+        /// The border color of the item
+        /// </summary>
         public Color BorderColour { get; set; }
 
+        /// <summary>
+        /// The order of importance of the item
+        /// </summary>
         public int Order
         {
             get
@@ -113,6 +140,9 @@ namespace OxTail.Controls
             }
         }
 
+        /// <summary>
+        /// Property changed event
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string info)
@@ -124,6 +154,10 @@ namespace OxTail.Controls
             }
         }
 
+        /// <summary>
+        /// Override ToString
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -132,12 +166,22 @@ namespace OxTail.Controls
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Saves the highlight collection
+        /// </summary>
+        /// <param name="patterns">The collection of patterns</param>
+        /// <param name="filename">The filename to save to</param>
         public static void SaveHighlights(HighlightCollection<HighlightItem> patterns, string filename)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(HighlightCollection<HighlightItem>), new Type[] { typeof(HighlightItem) });
             FileHelper.SerializeToExecutableDirectory(filename, serializer, patterns);
         }
 
+        /// <summary>
+        /// Load the collection of highlights
+        /// </summary>
+        /// <param name="filename">The filename to open</param>
+        /// <returns>The highlight collection</returns>
         public static HighlightCollection<HighlightItem> LoadHighlights(string filename)
         {
             if (!System.IO.File.Exists(filename))
@@ -152,6 +196,11 @@ namespace OxTail.Controls
  
          #region IComparable
 
+        /// <summary>
+        /// Compare this to the <paramref name="obj"/>
+        /// </summary>
+        /// <param name="obj">THe item to compare to</param>
+        /// <returns>Comparision result</returns>
         public int CompareTo(object obj)
         {
             if (((HighlightItem)obj).Order == this.Order)

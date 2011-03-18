@@ -26,6 +26,9 @@ using System.IO;
 
 namespace OxTailLogic.PatternMatching
 {
+    /// <summary>
+    /// Find options
+    /// </summary>
     public enum FindOptions
     {
         CurrentDocument,

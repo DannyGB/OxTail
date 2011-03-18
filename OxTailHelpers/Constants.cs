@@ -66,8 +66,10 @@ namespace OxTailHelpers
         public const string FILE_NO_LONGER_EXISTS = "fileNoLongerExistsOnDisk";
         public const string REMOVE_FROM_RECENT_FILE_LIST = "removeFromRecentFileList";
         public const string FILE_TEXT_PATTERN = "filePatternText";
+        public const string MULTIPLE_FILE_TEXT_PATTERN = "multipleFilePatternText";
         public const string LOTS_OF_FILES_TEXT = "lotOfFilesText";
         public const string QUESTION = "question";
+        public const string WARNING = "warning";
         public const string FILE_OPEN_LIMIT = "fileOpenLimit";
         public const string CANT_ACCESS_CLIPBOARD = "cantAccessClipboard";
         public const string CHOOSE_ITEM = "chooseItem";
@@ -80,6 +82,7 @@ namespace OxTailHelpers
 
         public const string PART_ICON = "PART_Icon";
         public const string DEFAULT_FILE_OPEN_PATTERN = "*.log";
+        public const string DEFAULT_MULTIPLE_FILE_OPEN_PATTERN = "*.log,*.txt";
         public const string ALL_FILES_PATTERN = "*.*";
         public const string APPLICATION_NAME = "OxTail";
         public const string LAST_WRITE_TIME_SORT_HEADER = "LastWriteTime";
@@ -88,9 +91,16 @@ namespace OxTailHelpers
         public const string UNAMED = "UNNAMED";
         public const string EXAMPLE_REGEX_DATA_FILENAME = "OxTail.Controls.ExampleRegexData.txt";
         public const string RECENT_FILE_LIST_NAME = "RecentFileList.xml";
-        public const string RECENT_FILES_MENUITEM_HEADER = "Recent Files";
+        public const string RECENT_FILES_MENUITEM_HEADER = "recentFilesMenuItemText";
         public const string HIGHLIGHT_ITEM_SORT_HEADER = "Order";        
         public const string ABOUT_PAGE_GPL_TEXT_RTF = "OxTail.Controls.AboutPageGplText.rtf";
         public const string CREDITS_AUTHORS = "Dan Beavon{0}Dave Wedgbury";
+        public const string ICON_CREDITS = "GPL Icon set by Joachim Karsch from here: http://ubuntu-art.org/content/show.php/Slipper+Icon+Theme?content=111489";
+        public const string NO_LANGUAGE = "Your language is not available, defaulting to English (Why not write a translation? Visit: https://sourceforge.net/projects/oxtail/)";
+        public const string CULTURE_PATH = @"Culture\Culture_{0}.dll";
+        public const string STRING_RESOURCES_FILENAME = "StringResources_{0}.xaml";
+        public const string RESOURCES_URI_TEMPLATE = @"/{0};component/Resources/{1}";
+        public const string CULTURE_TEMPLATE = "Culture_{0}";
+        public const string DEFAULT_LANGUAGE = "en";
     }
 }

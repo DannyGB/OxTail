@@ -28,6 +28,12 @@ namespace OxTailHelpers
 {
     public static class ResourceHelper
     {
+        /// <summary>
+        /// Gets the <see cref="String"/> associated with the <paramref name="key"/> from the <see cref="ResourceDictionary"/>
+        /// Specified in <see cref="Constants.STRING_RESOURCE_URI"/>
+        /// </summary>
+        /// <param name="key">The key of the text in the resource file</param>
+        /// <returns>The corresponding <see cref="String"/> for the <paramref name="Key"/></returns>
         public static string GetStringFromStringResourceFile(string key)
         {
             ResourceDictionary myresourcedictionary;

@@ -33,14 +33,29 @@ namespace OxTailLogic
 {
     public class FileOpenLogic
     {
-        public static List<FileInfo> OpenFilePattern(ISaveExpressionMessage saveExpression)
+        /// <summary>
+        /// Opens the Directory open dialog and uses the passed in <paramref name="saveExpression"/> <see cref="ISaveExpressionMessage"/> instance
+        /// to get user input of file pattern.
+        /// If the <see cref="ISaveExpressionMessage"/> Label and Message properties are string.Empty they are defaulted
+        /// </summary>
+        /// <param name="saveExpression">An <see cref="ISaveExpressionMessage"/> instance</param>
+        /// <returns>A <see cref="List<T>"/> of <see cref="List<T>"/> so that multiple patterns can be searched for and opened</returns>
+        public static List<List<FileInfo>> OpenFilePattern(ISaveExpressionMessage saveExpression)
         {
             string filename = FileHelper.ShowOpenDirectory();
 
-            List<FileInfo> fileInfos = new List<FileInfo>();
+            List<List<FileInfo>> fileInfos = new List<List<FileInfo>>();
 
-            saveExpression.Label = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.FILE_TEXT_PATTERN);
-            saveExpression.Message = Constants.DEFAULT_FILE_OPEN_PATTERN;
+            if (string.IsNullOrEmpty(saveExpression.Label))
+            {
+                saveExpression.Label = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.FILE_TEXT_PATTERN);
+            }
+
+            if (string.IsNullOrEmpty(saveExpression.Message))
+            {
+                saveExpression.Message = Constants.DEFAULT_FILE_OPEN_PATTERN;
+            }
+
             saveExpression.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
 
             if (!string.IsNullOrEmpty(filename) && !string.IsNullOrWhiteSpace(filename))
@@ -48,16 +63,16 @@ namespace OxTailLogic
                 bool? result = saveExpression.ShowDialog();
                 if (result.HasValue && result.Value)
                 {
-                    if (saveExpression.Message == Constants.ALL_FILES_PATTERN)
+                    if (saveExpression.Message.Contains(Constants.ALL_FILES_PATTERN))
                     {
                         if (MessageBoxResult.Yes == MessageBox.Show(LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.LOTS_OF_FILES_TEXT), LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.QUESTION), MessageBoxButton.YesNo))
                         {
-                            fileInfos = FileHelper.GetFiles(filename, saveExpression.Message);
+                            SplitFileInputPatternAndGetFiles(saveExpression, filename, fileInfos);
                         }
                     }
                     else
                     {
-                        fileInfos = FileHelper.GetFiles(filename, saveExpression.Message);
+                        SplitFileInputPatternAndGetFiles(saveExpression, filename, fileInfos);
                     }
                 }
             }
@@ -65,6 +80,23 @@ namespace OxTailLogic
             return fileInfos;
         }
 
+        private static void SplitFileInputPatternAndGetFiles(ISaveExpressionMessage saveExpression, string filename, List<List<FileInfo>> fileInfos)
+        {
+            string[] split = saveExpression.Message.Split(',');
+            foreach (string s in split)
+            {
+                fileInfos.Add(new List<FileInfo>(FileHelper.GetFiles(filename, s)));
+            }
+        }        
+
+        /// <summary>
+        /// Shows the OpenDirectory dialog and optionally shows a file open limit message dependant on <paramref name="showFileLimitMessage"/>
+        /// <paramref name="maxOpenFiles"/> controls how many files to open, this is only used if <paramref name="showFileLimitMessage"/> is true
+        /// </summary>
+        /// <param name="showFileLimitMessage">Show a message box explaining that only the <paramref name="maxOpenFiles"/> will be opened</param>
+        /// <param name="application">The current application as a <see cref="IApplication"/></param>
+        /// <param name="maxOpenFiles">The maximum files to open</param>
+        /// <returns>A <see cref="List<T>"/></returns>
         public static List<FileInfo> OpenDirectory(bool showFileLimitMessage, IApplication application, int maxOpenFiles)
         {
             if (showFileLimitMessage)
@@ -90,16 +122,35 @@ namespace OxTailLogic
             return fileInfoList;
         }
 
-        public static List<FileInfo> OpenLastWrittenToFile()
+        /// <summary>
+        /// Opens the last written to file in the directory
+        /// In all fairness all this does is Sort them into LastWrite order descending
+        /// </summary>
+        /// <returns>A <see cref="List<T>"/> of <see cref="List<T>"/></returns>
+        public static List<List<FileInfo>> OpenLastWrittenToFile()
         {
-            List<FileInfo> files = OpenDirectory(false, (Application.Current as IApplication), 0);
+            List<List<FileInfo>> fileList = new List<List<FileInfo>>();
+            fileList.Add(new List<FileInfo>(OpenDirectory(false, (Application.Current as IApplication), 0)));
 
-            if (files.Count > 0)
+            return OpenLastWrittenToFile(fileList);
+        }
+
+        /// <summary>
+        /// Opens all the last written to files in the directory
+        /// In all fairness all this does is Sort them into LastWrite order descending
+        /// </summary>
+        /// <returns>A <see cref="List<T>"/> of <see cref="List<T>"/></returns>
+        public static List<List<FileInfo>> OpenLastWrittenToFile(List<List<FileInfo>> fileList)
+        {
+            foreach (List<FileInfo> files in fileList)
             {
-                files.Sort(new GenericComparer<FileInfo>(Constants.LAST_WRITE_TIME_SORT_HEADER, ListSortDirection.Descending));
+                if (files.Count > 0)
+                {
+                    files.Sort(new GenericComparer<FileInfo>(Constants.LAST_WRITE_TIME_SORT_HEADER, ListSortDirection.Descending));
+                }
             }
 
-            return files;
+            return fileList;
         }
     }
 }

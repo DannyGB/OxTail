@@ -50,7 +50,9 @@
     <Compile Include="File.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="IApplication.cs" />
+    <Compile Include="IMainWindowKeyPressMethods.cs" />
     <Compile Include="ISaveExpressionMessage.cs" />
+    <Compile Include="KeyboardHelper.cs" />
     <Compile Include="LanguageHelper.cs" />
     <Compile Include="ObjectHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

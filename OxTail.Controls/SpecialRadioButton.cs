@@ -28,6 +28,9 @@ namespace OxTail.Controls
 
     public class SpecialButton : Button
     {
+        /// <summary>
+        /// The held textual value of the button
+        /// </summary>
         public string HeldTextValue { get; set; }
     }
 }
