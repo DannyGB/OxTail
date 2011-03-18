@@ -46,6 +46,9 @@ namespace OxTail.Controls
             this.buttonBackColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;            
         }
 
+        /// <summary>
+        /// The reg ex pattern
+        /// </summary>
         public string Pattern
         {
             set
@@ -115,6 +118,9 @@ namespace OxTail.Controls
         {
         }
 
+        /// <summary>
+        /// Bind the control
+        /// </summary>
         public void Bind()
         {
             this.listViewPatterns.DataContext = Patterns;

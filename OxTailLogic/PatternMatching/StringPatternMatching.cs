@@ -76,6 +76,12 @@ namespace OxTailLogic.PatternMatching
             return regEx.IsMatch(text);
         }
 
+        /// <summary>
+        /// Matches the passed in <paramref name="text"/> against the <paramref name="pattern"/> using <see cref="Regex"/>
+        /// </summary>
+        /// <param name="text">The text</param>
+        /// <param name="pattern">The pattern to find in the text</param>
+        /// <returns>A <see cref="MatchCollection"/></returns>
         public MatchCollection MatchPattern(string text, StringBuilder pattern)
         {
             Regex regEx = new Regex(pattern.ToString());

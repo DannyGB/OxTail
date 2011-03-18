@@ -32,9 +32,20 @@ namespace OxTail.Controls
 {
     public class BaseWindow : Window
     {
+        protected bool OverrideEscapeKeyClose { get;  set; }
+
         public BaseWindow()
+        {            
+        }
+
+        protected override void OnKeyUp(System.Windows.Input.KeyEventArgs e)
         {
-            
-        }       
+            base.OnKeyUp(e);
+
+            if (e.Key == System.Windows.Input.Key.Escape && !OverrideEscapeKeyClose)
+            {
+                this.Close();
+            }
+        }
     }
 }

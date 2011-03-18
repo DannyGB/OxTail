@@ -28,12 +28,22 @@ namespace OxTail.Helpers
     [Serializable]
     public class File
     {
+        /// <summary>
+        /// The filename of the file
+        /// </summary>
         public string Filename { get; set; }
 
+        /// <summary>
+        /// Initialise this instance
+        /// </summary>
         public File()
         { 
         }
 
+        /// <summary>
+        /// Initialises this instances
+        /// </summary>
+        /// <param name="filename">The filename of the file.</param>
         public File(string filename)
         {
             this.Filename = filename;

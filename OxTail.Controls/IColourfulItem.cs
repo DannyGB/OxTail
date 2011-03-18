@@ -28,18 +28,27 @@ namespace OxTail.Controls
 {
     public interface IColourfulItem
     {
+        /// <summary>
+        /// The backcolor of the item
+        /// </summary>
         Color BackColour
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// The fore color of the item
+        /// </summary>
         Color ForeColour
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// The border color of the item
+        /// </summary>
         Color BorderColour
         {
             get;

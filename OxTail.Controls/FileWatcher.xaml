@@ -63,20 +63,20 @@
       </StatusBar.ItemsPanel>
 
       <StatusBarItem Grid.Column="0">
-        <TextBlock Name="textBlockMainStatus">Ready</TextBlock>
+                <TextBlock Name="textBlockMainStatus" Text="{DynamicResource ready}"></TextBlock>
       </StatusBarItem>
       <Separator Grid.Column="1"/>
       <StatusBarItem Grid.Column="2">
-        <CheckBox Name="checkBoxFollowTail" ToolTip="Follow tail"/>
+                <CheckBox Name="checkBoxFollowTail" ToolTip="{DynamicResource followTail}"/>
       </StatusBarItem>
       <StatusBarItem Grid.Column="3">
-        <ComboBox Name="comboBoxNewlineDetection" Width="70" ToolTip="Line ends"/>
+                <ComboBox Name="comboBoxNewlineDetection" Width="70" ToolTip="{DynamicResource lineEnds}"/>
       </StatusBarItem>
       <StatusBarItem Grid.Column="4">
-        <ComboBox Name="comboBoxEncoding" Width="100" ToolTip="Encoding"/>
+        <ComboBox Name="comboBoxEncoding" Width="100" ToolTip="{DynamicResource encoding}"/>
       </StatusBarItem>
       <StatusBarItem Grid.Column="5">
-        <Button x:Name="buttonRefresh" Height="18" ButtonBase.Click="buttonRefresh_Click" ToolTip="Refresh">
+                <Button x:Name="buttonRefresh" Height="18" ButtonBase.Click="buttonRefresh_Click" ToolTip="{DynamicResource refresh}">
           <Image Source="/OxTail.Controls;component/Images/refresh.png"></Image>
         </Button>
       </StatusBarItem>
@@ -86,19 +86,28 @@
       </StatusBarItem>
       <Separator Grid.Column="8"/>
       <StatusBarItem Grid.Column="9">
-        <TextBlock Name="textBlockStartLine" ToolTip="Start line">Start line</TextBlock>
+                <TextBlock Name="textBlockStartLine" ToolTip="{DynamicResource startLine}" Text="{DynamicResource startLine}"></TextBlock>
       </StatusBarItem>
       <Separator Grid.Column="10"/>
       <StatusBarItem Grid.Column="11">
-        <TextBlock Name="textBlockVisibleLines" ToolTip="Visible lines">Visible lines</TextBlock>
+                <TextBlock Name="textBlockVisibleLines" ToolTip="{DynamicResource visibleLines}" Text="{DynamicResource visibleLines}"></TextBlock>
       </StatusBarItem>
       <Separator Grid.Column="12"/>
       <StatusBarItem Grid.Column="13">
-        <TextBlock Name="textBlockLinesInFile" ToolTip="Lines in file">Lines in file</TextBlock>
+                <TextBlock Name="textBlockLinesInFile" ToolTip="{DynamicResource linesInFile}" Text="{DynamicResource linesInFile}"></TextBlock>
       </StatusBarItem>
     </StatusBar>
     <DockPanel Grid.Row="0" Grid.Column="0">
-      <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left" SelectionChanged="colourfulListView_SelectionChanged" />
-    </DockPanel>
+            <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left" SelectionChanged="colourfulListView_SelectionChanged">
+                <my:ColourfulListView.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Style.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="White"/>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="White"/>
+                        </Style.Resources>
+                    </Style>
+                </my:ColourfulListView.ItemContainerStyle>
+            </my:ColourfulListView>
+        </DockPanel>
   </Grid>
 </UserControl>

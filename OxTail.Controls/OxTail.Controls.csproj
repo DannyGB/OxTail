@@ -49,9 +49,12 @@
     <Compile Include="About.xaml.cs">
       <DependentUpon>About.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BaseMainWindow.cs" />
     <Compile Include="BaseWindow.cs" />
     <Compile Include="ColourButton.cs" />
-    <Compile Include="ColourfulListView.cs" />
+    <Compile Include="ColourfullListView.xaml.cs">
+      <DependentUpon>ColourfullListView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DisappearingTextTextBox.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="ExpressionTextBox.cs" />
@@ -101,6 +104,10 @@
     <Page Include="About.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ColourfullListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FileWatcherTabItem.xaml">
       <SubType>Designer</SubType>

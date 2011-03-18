@@ -1,11 +1,11 @@
-﻿<custom:BaseWindow x:Class="OxTail.MainWindow"
+﻿<custom:BaseMainWindow x:Class="OxTail.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"                
     xmlns:oxtail="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
     ResizeMode="CanResizeWithGrip"
-    Icon="/OxTail2.ico"
-    Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="BaseWindow_Closing">
+    Icon="/OxTail.ico"
+    Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="BaseWindow_Closing" KeyUp="BaseWindow_KeyUp">
     <DockPanel Name="dockPanelMain" LastChildFill="True">
         <Menu Name="menu1" DockPanel.Dock="Top" >
             <MenuItem  Header="{DynamicResource file}">
@@ -14,6 +14,7 @@
                     <MenuItem Name="MenuOpenFilePattern" Header="{DynamicResource filePattern}" Click="MenuOpenFilePattern_Click" />
                     <MenuItem Name="MenuOpenDirectory" Header="{DynamicResource directory}" Click="MenuOpenDirectory_Click" />
                     <MenuItem Name="MenuOpenLastWritten" Header="{DynamicResource openLastWritten}" Click="MenuOpenLastWritten_Click" />
+                    <MenuItem Name="MenuOpenLastWrittenPatterns" Header="{DynamicResource openLastWrittenPatterns}" Click="MenuOpenLastWrittenPatterns_Click" />
                 </MenuItem>                
                 <Separator></Separator>
                 <oxtail:RecentFileList x:Name="recentFileList" SubMenuClick="recentFileList_SubMenuClick" />
@@ -40,4 +41,4 @@
         </Menu>
         <TabControl Name="tabControlMain" SelectionChanged="tabControlMain_SelectionChanged"></TabControl>
     </DockPanel>
-</custom:BaseWindow>
+</custom:BaseMainWindow>

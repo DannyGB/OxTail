@@ -38,14 +38,27 @@ namespace OxTail.Controls
     /// </summary>
     public partial class RegularExpressionBuilder : UserControl
     {
+        /// <summary>
+        /// Ok button clicked
+        /// </summary>
         public event RoutedEventHandler OkClick;
+
+        /// <summary>
+        /// Cancel button clicked
+        /// </summary>
         public event RoutedEventHandler CancelClick;
 
+        /// <summary>
+        /// Initialises instance
+        /// </summary>
         public RegularExpressionBuilder()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// The entered regular expression
+        /// </summary>
         public Expression Expression
         {
             get

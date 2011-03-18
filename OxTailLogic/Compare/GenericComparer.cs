@@ -31,7 +31,14 @@ namespace OxTailLogic.Compare
     /// <typeparam name="T">The type of object</typeparam>
     public class GenericComparer<T> : IComparer<T>
     {
+        /// <summary>
+        /// The column to sort the collection by
+        /// </summary>
         public string SortColumn {get; private set;}
+
+        /// <summary>
+        /// The direction to sort the collection by
+        /// </summary>
         public ListSortDirection SortDirection {get; private set;}
         
         /// <summary>

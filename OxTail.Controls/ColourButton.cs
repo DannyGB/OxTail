@@ -43,6 +43,14 @@ namespace OxTail.Controls
         public bool? ShowColourSelectDialog()
         {
             System.Windows.Forms.ColorDialog dialog = new System.Windows.Forms.ColorDialog();
+
+            if (this.SelectedColour != null)
+            {
+                dialog.Color = System.Drawing.Color.FromArgb(this.SelectedColour.A, this.SelectedColour.R, this.SelectedColour.G, this.SelectedColour.B);
+            }
+
+            dialog.FullOpen = true;
+            
             if (DialogResult.OK == dialog.ShowDialog())
             {
                 SelectedColour = new SolidColorBrush(Color.FromArgb(dialog.Color.A, dialog.Color.R, dialog.Color.G, dialog.Color.B)).Color;

@@ -28,14 +28,24 @@ namespace OxTail.Controls
     using System.Windows.Media;
     using System.Windows;
     using OxTailHelpers;
-    
 
     public class ColourfulListView : ListView
     {
-        protected override void PrepareContainerForItemOverride(System.Windows.DependencyObject element, object item)
-        {            
-            base.PrepareContainerForItemOverride(element, item);
+        protected override void OnSelectionChanged(SelectionChangedEventArgs e)
+        {
+            base.OnSelectionChanged(e);
             
+            //foreach (IColourfulItem item in e.AddedItems)
+            //{
+            //    int i = this.Items.IndexOf(item);
+            //    //item.BorderBrush = Constants.DEFAULT_BORDER_BRUSH;
+            //    //item.BorderThickness = new Thickness(Constants.DEFAULT_FOUND_RESULT_BORDER_SIZE);
+            //}
+        }
+        protected override void PrepareContainerForItemOverride(System.Windows.DependencyObject element, object item)
+        {
+            base.PrepareContainerForItemOverride(element, item);
+
             int index = ItemContainerGenerator.IndexFromContainer(element);
             ListViewItem lvi = element as ListViewItem;
 
@@ -63,6 +73,6 @@ namespace OxTail.Controls
         protected override System.Windows.Size MeasureOverride(System.Windows.Size constraint)
         {
             return base.MeasureOverride(constraint);
-        }     
+        }
     }
 }
