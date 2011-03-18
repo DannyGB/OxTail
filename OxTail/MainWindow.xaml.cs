@@ -318,7 +318,14 @@ namespace OxTail
 
         private void MenuOnWeb_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start(Settings.Default.WebsiteUrl);
+            try
+            {
+                System.Diagnostics.Process.Start(Settings.Default.WebsiteUrl);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, Constants.APPLICATION_NAME, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void BaseWindow_Closing(object sender, CancelEventArgs e)
