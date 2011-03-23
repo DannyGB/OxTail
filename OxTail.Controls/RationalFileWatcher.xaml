@@ -1,0 +1,113 @@
+﻿<UserControl x:Class="OxTail.Controls.RationalFileWatcher"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="277" d:DesignWidth="595" xmlns:my="clr-namespace:OxTail.Controls">
+    <UserControl.Resources>
+        <!-- style used on text in status bar to show elipses (...) when text is cut off -->
+        <Style TargetType="TextBlock" x:Key="StatusBarTextBlock">
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Padding" Value="2,0" />
+        </Style>
+
+        <!-- since we are using a Seperator, but not as an immediate child of the StatusBar, we will make use of that style manually -->
+        <!-- thanks to WineNCheese for this one - http://tinyurl.com/byh9ac -->
+        <Style TargetType="Separator" BasedOn="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}">
+            <Setter Property="Margin" Value="2,0" />
+            <Setter Property="Width" Value="1" />
+        </Style>
+
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="276*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StatusBar x:Name="statusBar" Grid.Row="1">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <!-- status -->
+                            <ColumnDefinition Width="*"/>
+                            <!-- Follow Tail -->
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <!-- Line end -->
+                            <ColumnDefinition Width="Auto"/>
+                            <!-- encoding -->
+                            <ColumnDefinition Width="Auto"/>
+                            <!-- refresh button -->
+                            <ColumnDefinition Width="Auto"/>
+                            <!-- progress bar -->
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <!-- start line -->
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                            <!-- visible lines -->
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="30"/>
+                            <!-- lines in file -->
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="60"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <StatusBarItem Grid.Column="0">
+                <TextBlock Name="textBlockMainStatus" Text="{DynamicResource ready}"></TextBlock>
+            </StatusBarItem>
+            <Separator Grid.Column="1"/>
+            <StatusBarItem Grid.Column="2">
+                <CheckBox Name="checkBoxFollowTail" ToolTip="{DynamicResource followTail}"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="3">
+                <ComboBox Name="comboBoxNewlineDetection" Width="70" ToolTip="{DynamicResource lineEnds}" Visibility="Hidden"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="4">
+                <ComboBox Name="comboBoxEncoding" Width="100" ToolTip="{DynamicResource encoding}"/>
+            </StatusBarItem>
+            <StatusBarItem Grid.Column="5">
+                <Button x:Name="buttonRefresh" Height="18" ButtonBase.Click="buttonRefresh_Click" ToolTip="{DynamicResource refresh}">
+                    <Image Source="/OxTail.Controls;component/Images/refresh.png"></Image>
+                </Button>
+            </StatusBarItem>
+            <Separator Grid.Column="6"/>
+            <StatusBarItem Grid.Column="7">
+                <ProgressBar Name="progressBarStatus" Width="50" Height="18"/>
+            </StatusBarItem>
+            <Separator Grid.Column="8"/>
+            <StatusBarItem Grid.Column="9">
+                <TextBlock Name="textBlockStartLine" ToolTip="{DynamicResource startLine}" Text="{DynamicResource startLine}"></TextBlock>
+            </StatusBarItem>
+            <Separator Grid.Column="10"/>
+            <StatusBarItem Grid.Column="11">
+                <TextBlock Name="textBlockVisibleLines" ToolTip="{DynamicResource visibleLines}" Text="{DynamicResource visibleLines}"></TextBlock>
+            </StatusBarItem>
+            <Separator Grid.Column="12"/>
+            <StatusBarItem Grid.Column="13">
+                <TextBlock Name="textBlockLinesInFile" ToolTip="{DynamicResource linesInFile}" Text="{DynamicResource linesInFile}"></TextBlock>
+            </StatusBarItem>
+        </StatusBar>
+        <DockPanel Grid.Row="0" Grid.Column="0">
+            <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left" SelectionChanged="colourfulListView_SelectionChanged">
+                <my:ColourfulListView.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Style.Resources>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="White"/>
+                            <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="White"/>
+                        </Style.Resources>
+                    </Style>
+                </my:ColourfulListView.ItemContainerStyle>
+            </my:ColourfulListView>
+        </DockPanel>
+    </Grid>
+</UserControl>

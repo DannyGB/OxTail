@@ -38,13 +38,21 @@ namespace OxTail.Controls
         public event EventHandler<EventArgs> FindFinished;
 
         private Image _image = null;
-        private double LastFindOffset { get; set; }
+        private int LastFindOffset { get; set; }
 
         public List<HighlightedItem> SelectedItem 
         {
             get
             {
                 return this.fileWatcher.SelectedItem;
+            }
+        }
+
+        public FindDetails FindDetails
+        {
+            set
+            {
+                this.fileWatcher.FindDetails = value;
             }
         }
 
@@ -77,13 +85,7 @@ namespace OxTail.Controls
         {
             ShowImage(System.Windows.Visibility.Hidden);
         }
-
-        //public override void closeButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    this.fileWatcher.Stop();
-        //    base.closeButton_Click(sender, e);
-        //}
-
+        
         // Create a custom routed event by first registering a RoutedEventID
         // This event uses the bubbling routing strategy
         public static readonly RoutedEvent FileChangedEvent = EventManager.RegisterRoutedEvent("FileChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FileWatcherTabItem));
@@ -101,8 +103,8 @@ namespace OxTail.Controls
             ShowImage(System.Windows.Visibility.Visible);
             Dispatcher.Invoke((Action)(() =>
             {
-                RoutedEventArgs newEventArgs = new RoutedEventArgs(FileWatcher.FileChangedEvent);
-                this.RaiseEvent(new RoutedEventArgs(FileWatcher.FileChangedEvent, this));
+                RoutedEventArgs newEventArgs = new RoutedEventArgs(RationalFileWatcher.FileChangedEvent);
+                this.RaiseEvent(new RoutedEventArgs(RationalFileWatcher.FileChangedEvent, this));
             }
              ));
         }

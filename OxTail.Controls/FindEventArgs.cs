@@ -28,13 +28,11 @@ namespace OxTail.Controls
 {
     public class FindEventArgs : EventArgs
     {
-        public string FindCriteria { get; private set; }
-        public FindOptions Options { get; private set; }
+        public FindDetails FindDetails { get; private set; }
 
-        public FindEventArgs(string findCriteria, FindOptions options)
+        public FindEventArgs(FindDetails findDetails)
         {
-            this.FindCriteria = findCriteria;
-            this.Options = options;
+            this.FindDetails = findDetails;
         }
     }
 }

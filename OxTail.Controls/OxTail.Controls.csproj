@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>OxTail.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -61,6 +67,7 @@
     <Compile Include="Find.xaml.cs">
       <DependentUpon>Find.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FindDetails.cs" />
     <Compile Include="FindEventArgs.cs" />
     <Compile Include="HighlightCollection.cs" />
     <Compile Include="HighlightedItem.cs" />
@@ -78,6 +85,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileWatcher.xaml.cs">
       <DependentUpon>FileWatcher.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RationalFileWatcher.xaml.cs">
+      <DependentUpon>RationalFileWatcher.xaml</DependentUpon>
     </Compile>
     <Compile Include="RecentFileList.cs">
       <SubType>Code</SubType>
@@ -125,6 +135,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="RationalFileWatcher.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="RegularExpressionBuilder.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -159,6 +173,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ExampleRegexData.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="OxTail.pfx" />
+    <None Include="OxTail.snk.pfx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
