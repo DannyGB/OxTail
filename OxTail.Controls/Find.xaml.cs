@@ -77,7 +77,7 @@ namespace OxTail.Controls
 
         private void buttonFind_Click(object sender, RoutedEventArgs e)
         {
-            CallFindButtonClickEvent();
+           CallFindButtonClickEvent();
         }
 
         private void CallFindButtonClickEvent()
@@ -86,11 +86,11 @@ namespace OxTail.Controls
             {
                 if (((ComboBoxItem)this.comboBox.SelectedValue).Content.ToString() == (string)ResourceHelper.GetStringFromStringResourceFile(Constants.COMBO_CURRENT_DOCUMENT))
                 {
-                    FindButtonClick(this, new FindEventArgs(this.textBoxSearchCriteria.Text, OxTailLogic.PatternMatching.FindOptions.CurrentDocument));
+                    FindButtonClick(this, new FindEventArgs(new FindDetails(this.textBoxSearchCriteria.Text, FindOptions.CurrentDocument)));
                 }
                 else if (((ComboBoxItem)this.comboBox.SelectedValue).Content.ToString() == (string)ResourceHelper.GetStringFromStringResourceFile(Constants.COMBO_ALL_DOCUMENTS))
                 {
-                    FindButtonClick(this, new FindEventArgs(this.textBoxSearchCriteria.Text, OxTailLogic.PatternMatching.FindOptions.AllOpenDocuments));
+                    FindButtonClick(this, new FindEventArgs(new FindDetails(this.textBoxSearchCriteria.Text, FindOptions.AllOpenDocuments)));
                 }
                 else
                 {

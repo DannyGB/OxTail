@@ -34,6 +34,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>OxTail.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -62,7 +68,6 @@
   <ItemGroup>
     <Compile Include="Compare\GenericComparer.cs" />
     <Compile Include="FileOpenLogic.cs" />
-    <Compile Include="PatternMatching\Find.cs" />
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />
     <Compile Include="PatternMatching\PatternToMatchWasNullException.cs" />
     <Compile Include="PatternMatching\StringPatternMatching.cs" />
@@ -91,7 +96,10 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="OxTail.pfx" />
+    <None Include="OxTail.snk.pfx" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OxTailHelpers\OxTail.Helpers.csproj">
       <Project>{58383B31-C051-4C54-82A3-0D0DF514AFC7}</Project>

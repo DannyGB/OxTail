@@ -286,15 +286,19 @@ namespace OxTail
         {
             if (tabControlMain.Items.Count > 0)
             {
-                if (e.Options == OxTailLogic.PatternMatching.FindOptions.AllOpenDocuments)
+                if (e.FindDetails.Options == FindOptions.AllOpenDocuments)
                 {
                     StopFileSwitchOnSearch = false;
-                    FileToSearch.Find(e.FindCriteria);
+                    FileToSearch.FindDetails = e.FindDetails;
+                    e.FindDetails.InitiateSearch();
+                    //FileToSearch.Find(e.FindDetails.FindCriteria);
                 }
-                else if (e.Options == OxTailLogic.PatternMatching.FindOptions.CurrentDocument)
+                else if (e.FindDetails.Options == FindOptions.CurrentDocument)
                 {
                     StopFileSwitchOnSearch = true;
-                    ((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).Find(e.FindCriteria);
+                    ((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).FindDetails = e.FindDetails;
+                    e.FindDetails.InitiateSearch();
+                    //((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).Find(e.FindDetails.FindCriteria);
                 }
             }
         }

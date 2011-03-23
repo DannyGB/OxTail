@@ -8,6 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid x:Name="gridContent">
-      <local:FileWatcher x:Name="fileWatcher" FileChanged="fileWatcher_FileChanged"/>
+      <local:RationalFileWatcher x:Name="fileWatcher" FileChanged="fileWatcher_FileChanged"/>
     </Grid>
 </TabItem>

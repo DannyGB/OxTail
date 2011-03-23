@@ -33,15 +33,9 @@ namespace OxTail.Controls
     {
         protected override void OnSelectionChanged(SelectionChangedEventArgs e)
         {
-            base.OnSelectionChanged(e);
-            
-            //foreach (IColourfulItem item in e.AddedItems)
-            //{
-            //    int i = this.Items.IndexOf(item);
-            //    //item.BorderBrush = Constants.DEFAULT_BORDER_BRUSH;
-            //    //item.BorderThickness = new Thickness(Constants.DEFAULT_FOUND_RESULT_BORDER_SIZE);
-            //}
+            base.OnSelectionChanged(e);                       
         }
+
         protected override void PrepareContainerForItemOverride(System.Windows.DependencyObject element, object item)
         {
             base.PrepareContainerForItemOverride(element, item);

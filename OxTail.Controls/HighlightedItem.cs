@@ -81,7 +81,7 @@ namespace OxTail.Controls
         }
 
         public Color BorderColour { get; set; }
-        
+
         public override string ToString()
         {
             return this.Text;
