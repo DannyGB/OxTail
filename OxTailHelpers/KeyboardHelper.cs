@@ -35,7 +35,7 @@ namespace OxTailHelpers
             {
                 IDictionary<Key, KeyboardHelper.Action> dict = new Dictionary<Key, KeyboardHelper.Action>(4);
                 dict.Add(Key.C, mainWindow.CopyText);
-                dict.Add(Key.H, mainWindow.OpenFindScreen);
+                dict.Add(Key.F, mainWindow.OpenFindScreen);
                 dict.Add(Key.O, mainWindow.OpenFile);
                 dict.Add(Key.I, mainWindow.OpenHightlightScreen);
 

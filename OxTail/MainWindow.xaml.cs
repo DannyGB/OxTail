@@ -298,7 +298,6 @@ namespace OxTail
                     StopFileSwitchOnSearch = true;
                     ((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).FindDetails = e.FindDetails;
                     e.FindDetails.InitiateSearch();
-                    //((FileWatcherTabItem)tabControlMain.Items[tabControlMain.SelectedIndex]).Find(e.FindDetails.FindCriteria);
                 }
             }
         }
@@ -364,12 +363,6 @@ namespace OxTail
         {
             if (KeyboardHelper.IsLeftControlDown())
             {
-                IDictionary<Key, KeyboardHelper.Action> dict = new Dictionary<Key, KeyboardHelper.Action>(4);
-                dict.Add(Key.C, CopyText);
-                dict.Add(Key.H, OpenFindScreen);
-                dict.Add(Key.O, OpenFile);
-                dict.Add(Key.I, OpenHightlightScreen);
-
                 KeyboardHelper.StandardControlKeyCombinationPressed(e.Key, (this as IMainWindowKeyPressMethods));
             }            
         }

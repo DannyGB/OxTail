@@ -34,15 +34,17 @@ namespace OxTailHelpers
 
         public static readonly Color DEFAULT_BACKCOLOUR = Colors.White;
         public static readonly Color DEFAULT_FORECOLOUR = Colors.Black;
-        public static readonly Color DEFAULT_BORDERCOLOUR = Colors.Violet;
+        public static readonly Color DEFAULT_BORDERCOLOUR = Colors.Black;
         public static readonly Color DEFAULT_NULL_COLOUR = Color.FromArgb(0, 0, 0, 0);
 
         /// <summary>
         /// A SolidColorBrush that uses the DEFAULT_BORDERCOLOUR constant
         /// </summary>
         public static readonly Brush DEFAULT_BORDER_BRUSH = new SolidColorBrush(Constants.DEFAULT_BORDERCOLOUR);
+        public static readonly Brush DEFAULT_NOT_FOUND_BORDER_BRUSH = new SolidColorBrush(Constants.DEFAULT_NULL_COLOUR);
 
         public const int DEFAULT_FOUND_RESULT_BORDER_SIZE = 2;
+        public const int DEFAULT_BORDER_SIZE = 0;
 
         public const string WINDOWS_NEWLINE = "\r\n";
         public const string UNIX_NEWLINE = "\n";
