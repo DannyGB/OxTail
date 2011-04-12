@@ -73,10 +73,29 @@ namespace OxTail.Controls
         private int _chunkSize = 16384;
         private ScrollViewer _scrollViewer;
         private FindDetails _findDetails;
+        private List<int> previouslySelectedItems;       
 
         #endregion data members
 
         #region properties
+
+        private List<int> PreviouslySelectedItems
+        {
+            get
+            {
+                if (this.previouslySelectedItems == null)
+                {
+                    this.previouslySelectedItems = new List<int>();
+                }
+
+                return previouslySelectedItems;
+            }
+
+            set
+            {
+                previouslySelectedItems = value;
+            }
+        }
 
         public List<HighlightedItem> SelectedItem { get; private set; }
         private string SearchText { get; set; }
@@ -663,17 +682,16 @@ namespace OxTail.Controls
                     this.colourfulListView.Items[i] = item;
                 }
             }));
-        }
+        }        
 
         private void UpdateFindHighlighting(string text)
         {
             this.Dispatcher.Invoke((Action)(() =>
                         {
-
-                            for (int i = 0; i < LastSearchIndex; i++)
+                            foreach (int i in this.PreviouslySelectedItems)
                             {
                                 this.colourfulListView.Items[i] = new HighlightedItem(((HighlightedItem)this.colourfulListView.Items[i]).Text, Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
-                                //((HighlightedItem)this.colourfulListView.Items[i]).BorderColour = Constants.DEFAULT_BORDERCOLOUR;
+                                ((HighlightedItem)this.colourfulListView.Items[i]).BorderColour = Constants.DEFAULT_NULL_COLOUR;
                             }
 
                             for (int i = LastSearchIndex; i < this.colourfulListView.Items.Count; i++)
@@ -688,39 +706,41 @@ namespace OxTail.Controls
                                     }
 
                                     LastSearchIndex = i + 1;
-                                    break;
+
+                                    this.previouslySelectedItems = new List<int>();
+                                    this.previouslySelectedItems.Add(i);
+
+                                    return;
                                 }
                                 else
                                 {
-                                    this.colourfulListView.Items[i] = item;
+                                    //HACK: need to ensure that blank lines are not null!
+                                    if (item != null)
+                                    {
+                                        this.colourfulListView.Items[i] = new HighlightedItem(item.Text, Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
+                                    }
                                 }
                             }
+
+                            
+                            // We've not found anything, since the last find
+                            LastSearchIndex = 0;
+                            ThrowFindFinished();
+
                         }));
         }
 
         void _findDetails_Initiated(object sender, FindEventArgs e)
         {
-            //this.Find(e.FindDetails.FindCriteria, e.FindDetails.LastFindIndex);
+            if (this.SearchText != e.FindDetails.FindCriteria)
+            {
+                this.LastSearchIndex = 0;
+            }
+
             this.SearchText = e.FindDetails.FindCriteria;
             this.UpdateFindHighlighting(e.FindDetails.FindCriteria);
         }
 
-        internal int Find(string searchCriteria, int lastFindOffset)
-        {
-            //this.SearchText = searchCriteria;
-
-            //this.UpdateFindHighlighting(SearchText);
-
-            //if (lastIndex == 0)
-            //{
-            //    ThrowFindFinished();
-            //}
-
-            //return lastIndex;
-
-            return 0;
-        }
-       
         private void ThrowFindFinished()
         {
             if (this.FindFinished != null)

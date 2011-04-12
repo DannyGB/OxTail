@@ -55,6 +55,8 @@ namespace OxTail.Controls
                 {
                     lvi.Background = new SolidColorBrush(p.BackColour);
                     lvi.Foreground = new SolidColorBrush(p.ForeColour);
+                    lvi.BorderThickness = new Thickness(Constants.DEFAULT_BORDER_SIZE);
+                    lvi.BorderBrush = Constants.DEFAULT_NOT_FOUND_BORDER_BRUSH;
                 }
             }
         }

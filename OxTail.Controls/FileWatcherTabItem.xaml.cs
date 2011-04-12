@@ -127,7 +127,6 @@ namespace OxTail.Controls
         {
             if (this.fileWatcher != null)
             {
-                //this.fileWatcher.Stop();
                 this.fileWatcher.Dispose();
             }
         }
@@ -137,11 +136,6 @@ namespace OxTail.Controls
         private void CloseableTabItem_Loaded(object sender, RoutedEventArgs e)
         {
             this.fileWatcher.Start(this.Uid);
-        }
-
-        public void Find(string searchCriteria)
-        {
-            LastFindOffset = this.fileWatcher.Find(searchCriteria, LastFindOffset);
         }
 
         public void ResetSearchCriteria()
