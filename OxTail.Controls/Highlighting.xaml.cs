@@ -179,12 +179,14 @@ namespace OxTail.Controls
         {
             HighlightItem item = (HighlightItem)this.listViewPatterns.SelectedItem;
             this.SortItems(item, ListSortDirection.Descending);
+            this.Patterns.FireListChanged(item);
         }
 
         private void buttonOrderUp_Click(object sender, RoutedEventArgs e)
         {
             HighlightItem item = (HighlightItem)this.listViewPatterns.SelectedItem;
             this.SortItems(item, ListSortDirection.Ascending);
+            this.Patterns.FireListChanged(item);
         }
 
         private void SortItems(HighlightItem item, ListSortDirection dir)

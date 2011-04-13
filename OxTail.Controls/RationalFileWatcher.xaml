@@ -98,15 +98,7 @@
             </StatusBarItem>
         </StatusBar>
         <DockPanel Grid.Row="0" Grid.Column="0">
-            <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left" SelectionChanged="colourfulListView_SelectionChanged">
-                <my:ColourfulListView.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Style.Resources>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="White"/>
-                            <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="White"/>
-                        </Style.Resources>
-                    </Style>
-                </my:ColourfulListView.ItemContainerStyle>
+            <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left" SelectionChanged="colourfulListView_SelectionChanged">                
             </my:ColourfulListView>
         </DockPanel>
     </Grid>
