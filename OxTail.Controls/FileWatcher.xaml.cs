@@ -894,6 +894,6 @@ namespace OxTail.Controls
         {
             this.SearchText = string.Empty;
             this.Update();
-        }
+        }      
     }
 }
