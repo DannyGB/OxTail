@@ -35,6 +35,7 @@ namespace OxTail
     using System.Reflection;
     using OxTail.Controls;
     using OxTailHelpers;
+    using System.IO;
 
     /// <summary>
     /// Interaction logic for About.xaml
@@ -51,7 +52,9 @@ namespace OxTail
             this.textBoxCredits.Text = string.Format(Constants.CREDITS_AUTHORS, System.Environment.NewLine);
             this.textBoxCredits.Text += string.Format("{0}{1}", System.Environment.NewLine, Constants.ICON_CREDITS);
             this.labelVersion.Content += " " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
-            this.labelApplicationName.Content = Constants.APPLICATION_NAME;
+            this.labelApplicationName.Content += " " + Constants.APPLICATION_NAME;
+            this.labelBuildDate.Content += " " + new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime.ToString();
+
         }
     }
 }

@@ -18,7 +18,7 @@
 ;General
 
   ;Name and file
-  Name "OxTail Version 1.0"
+  Name "OxTail Version 1.0 BETA"
   OutFile "OxTail.exe"
 
   ;Default installation folder

@@ -67,7 +67,7 @@
             </StatusBarItem>
             <Separator Grid.Column="1"/>
             <StatusBarItem Grid.Column="2">
-                <CheckBox Name="checkBoxFollowTail" ToolTip="{DynamicResource followTail}"/>
+                <CheckBox Name="checkBoxFollowTail" ToolTip="{DynamicResource followTail}" Content="{DynamicResource followTail}"/>
             </StatusBarItem>
             <StatusBarItem Grid.Column="3">
                 <ComboBox Name="comboBoxNewlineDetection" Width="70" ToolTip="{DynamicResource lineEnds}" Visibility="Hidden"/>
@@ -86,20 +86,57 @@
             </StatusBarItem>
             <Separator Grid.Column="8"/>
             <StatusBarItem Grid.Column="9">
-                <TextBlock Name="textBlockStartLine" ToolTip="{DynamicResource startLine}" Text="{DynamicResource startLine}"></TextBlock>
+                <TextBlock Name="textBlockStartLine" ToolTip="{DynamicResource startLine}" Text="{DynamicResource startLine}" Visibility="Hidden"></TextBlock>
             </StatusBarItem>
             <Separator Grid.Column="10"/>
             <StatusBarItem Grid.Column="11">
-                <TextBlock Name="textBlockVisibleLines" ToolTip="{DynamicResource visibleLines}" Text="{DynamicResource visibleLines}"></TextBlock>
+                <TextBlock Name="textBlockVisibleLines" ToolTip="{DynamicResource visibleLines}" Text="{DynamicResource visibleLines}" Visibility="Hidden"></TextBlock>
             </StatusBarItem>
             <Separator Grid.Column="12"/>
             <StatusBarItem Grid.Column="13">
-                <TextBlock Name="textBlockLinesInFile" ToolTip="{DynamicResource linesInFile}" Text="{DynamicResource linesInFile}"></TextBlock>
+                <TextBlock Name="textBlockLinesInFile" ToolTip="{DynamicResource linesInFile}" Text="{DynamicResource linesInFile}" Visibility="Hidden"></TextBlock>
             </StatusBarItem>
         </StatusBar>
         <DockPanel Grid.Row="0" Grid.Column="0">
-            <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left" SelectionChanged="colourfulListView_SelectionChanged">                
+            <my:ColourfulListView ScrollViewer.IsDeferredScrollingEnabled="True" ScrollViewer.CanContentScroll="True" ScrollViewer.ScrollChanged="colourfulListView_ScrollChanged" ScrollBar.Scroll="colourfulListView_Scroll" x:Name="colourfulListView" x:FieldModifier="private" FontFamily="Consolas" DockPanel.Dock="Left" SelectionChanged="colourfulListView_SelectionChanged" SelectionMode="Single" SnapsToDevicePixels="False">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="{DynamicResource selectionColumnHeader}" Width="30">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label Name="control1" Content="{Binding SelectedText}" Height="Auto" Width="Auto" HorizontalContentAlignment="Stretch" ></Label>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding Path=Selected}" Value="True">
+                                            <Setter TargetName="control1" Property="FontWeight" Value="Bold"/>
+                                            <Setter TargetName="control1" Property="Background" Value="Azure" />
+                                            <Setter TargetName="control1" Property="Foreground" Value="Black" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>                                    
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>                        
+                        <GridViewColumn Header="{DynamicResource textColumnHeader}" Width="Auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Path=Text}">
+                                        <Label.Foreground>
+                                            <SolidColorBrush Color="{Binding ForeColour}" />
+                                        </Label.Foreground>
+                                        <Label.Background>
+                                            <SolidColorBrush Color="{Binding BackColour}" />
+                                        </Label.Background>
+                                    </Label>                                    
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>    
+                        </GridViewColumn>
+                    </GridView>                    
+                </ListView.View>                                
             </my:ColourfulListView>
         </DockPanel>
-    </Grid>
+    </Grid>        
 </UserControl>

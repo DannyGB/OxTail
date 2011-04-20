@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="129" d:DesignWidth="373" Loaded="UserControl_Loaded">
+             d:DesignHeight="129" d:DesignWidth="373" Loaded="UserControl_Loaded">             
     <Grid KeyUp="Grid_KeyUp" Height="120" Width="367">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -19,12 +19,12 @@
                     <ColumnDefinition Width="120"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Label Name="labelSearchCriteria"  Content="{DynamicResource labelFind}" Margin="10" Grid.Column="0" />
-                <TextBox Name="textBoxSearchCriteria" Grid.Column="1" Margin="10" DockPanel.Dock="Left" />
-                <Button Name="buttonExpressionBuilder" Grid.Column="2" Content="{DynamicResource expressionBuilder}" Width="100px" Margin="0 10 0 10" Click="buttonExpressionBuilder_Click" />
+                <TextBox Name="textBoxSearchCriteria" Grid.Column="1" Margin="10" DockPanel.Dock="Left" AcceptsTab="True" TabIndex="2147483644" />
+                <Button Name="buttonExpressionBuilder" Grid.Column="2" Content="{DynamicResource expressionBuilder}" Width="100px" Margin="0 10 0 10" Click="buttonExpressionBuilder_Click" TabIndex="2147483645" />
             </Grid>
         </DockPanel>
         <Button Name="buttonFind" Content="{DynamicResource findButton}" Grid.Row="2" Width="100px" Margin="10" Click="buttonFind_Click" />
-        <ComboBox Name="comboBox" Grid.Row="1" Margin="10" SelectedIndex="0" Visibility="Visible">
+        <ComboBox Name="comboBox" Grid.Row="1" Margin="10" SelectedIndex="0" Visibility="Visible" TabIndex="2147483646">
             <ComboBoxItem Content="{DynamicResource comboBoxItemCurrentDocument}"></ComboBoxItem>
             <ComboBoxItem Content="{DynamicResource comboBoxItemAllOpenDocuments}"></ComboBoxItem>
         </ComboBox>

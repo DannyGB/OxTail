@@ -78,7 +78,8 @@ namespace OxTailHelpers
         public const string ENTER_EXPRESSION_NAME = "enterExpressionName";
         public const string NO_SORTING_ALLOWED = "noSortingAllowed";
         public const string LINE_NUMBER_ERROR = "lineNumberError";
-        public const string RESOURCE_KEY_FILE_NOT_SET = "resourceFileKeyNotSet";        
+        public const string RESOURCE_KEY_FILE_NOT_SET = "resourceFileKeyNotSet";
+        public const string LINES_IN_FILE = "linesInFile";
 
 #endregion Resource keys
 

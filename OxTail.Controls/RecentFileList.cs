@@ -137,9 +137,9 @@ namespace OxTail.Controls
         /// <param name="filename"></param>
         public void RemoveFile(string filename)
         {
-            for (int i = Files.Count; i >= 0; i--)
+            for (int i = Files.Count-1; i >= 0; i--)
             {
-                OxTail.Helpers.File file = new File(filename);
+                OxTail.Helpers.File file = Files[i];
 
                 if (file.Filename == filename)
                 {

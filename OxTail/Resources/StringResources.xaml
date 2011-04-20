@@ -63,9 +63,11 @@
     <!-- About form -->
 
     <system:String x:Key="aboutWindowTitle">About</system:String>
-    <system:String x:Key="version">Version</system:String>
+    <system:String x:Key="version">Version:</system:String>
     <system:String x:Key="credits">Credits</system:String>
     <system:String x:Key="license">License</system:String>
+    <system:String x:Key="buildDate">Build Date:</system:String>
+    <system:String x:Key="productName">Product Name:</system:String>
 
     <!-- Colour picker form -->
 
@@ -118,8 +120,11 @@
     <system:String x:Key="refresh">Refresh</system:String>
     <system:String x:Key="startLine">Start line</system:String>
     <system:String x:Key="visibleLines">Visible lines</system:String>
-    <system:String x:Key="linesInFile">Lines in file</system:String>
+    <system:String x:Key="linesInFile">Lines in file: {0}</system:String>
     <system:String x:Key="ready">Ready</system:String>
+    <system:String x:Key="textColumnHeader">Text</system:String>
+    <system:String x:Key="selectionColumnHeader">*</system:String>
+    <system:String x:Key="lineNoColumnHeader">Line</system:String>
 
     <!-- Messages -->
 

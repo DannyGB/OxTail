@@ -22,6 +22,7 @@ namespace OxTail.Controls
 {
     using System;
     using System.Windows.Media;
+    using System.Windows.Controls;
 
     [Serializable]
     public class HighlightedItem : IColourfulItem
@@ -81,6 +82,23 @@ namespace OxTail.Controls
         }
 
         public Color BorderColour { get; set; }
+        
+        public string SelectedText
+        {
+            get
+            {
+                if(this.Selected)
+                    return "*";
+                else
+                    return string.Empty;
+            }
+            set
+            {
+                ;
+            }
+        }
+
+        public bool Selected { get; set; }
 
         public override string ToString()
         {

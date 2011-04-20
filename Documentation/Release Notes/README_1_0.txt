@@ -1,5 +1,5 @@
 Version: 1.0
-Build date: <TBC>
+Build date: 20/04/2011
 
 *******************************************************************************
 * IMPORTANT NOTES:
@@ -10,33 +10,12 @@ Build date: <TBC>
 *
 *******************************************************************************
 
-INCORPORATING:
-
-0.1:
-
-. Pattern matching
-. Regular expression building
-. Administration of search terms
-. Ordering of search terms
-. Multi file opening
-. File Pattern opening (such as *.log)
-. Open all files in a directory
-
-0.2:
-
-. Find in current file functionality
-. Multi-lingual capable
-. Added "Visit website" menu item
-
-*******************************************************************************
-
-NEW:
-
 Functionality:
 
 . Main screen - Added Find in all open documents
 . Main screen - Added Open last written to file
 . Main screen - Added Open last written to files (Pattern)
+. FileWatcher - Completely re-written file comparison engine
 
 General:
 
@@ -57,3 +36,23 @@ Bugs:
 . Main screen - Only one selection at a time displayed
 
 ********************************************************************************
+
+ALSO INCORPORATING:
+
+0.1:
+
+. Pattern matching
+. Regular expression building
+. Administration of search terms
+. Ordering of search terms
+. Multi file opening
+. File Pattern opening (such as *.log)
+. Open all files in a directory
+
+0.2:
+
+. Find in current file functionality
+. Multi-lingual capable
+. Added "Visit website" menu item
+
+*******************************************************************************

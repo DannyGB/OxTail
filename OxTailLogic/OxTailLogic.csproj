@@ -98,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="OxTail.pfx" />
-    <None Include="OxTail.snk.pfx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OxTailHelpers\OxTail.Helpers.csproj">
