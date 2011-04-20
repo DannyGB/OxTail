@@ -38,27 +38,7 @@ namespace OxTail.Controls
 
         protected override void PrepareContainerForItemOverride(System.Windows.DependencyObject element, object item)
         {
-            base.PrepareContainerForItemOverride(element, item);
-
-            int index = ItemContainerGenerator.IndexFromContainer(element);
-            ListViewItem lvi = element as ListViewItem;
-
-            IColourfulItem p = lvi.Content as IColourfulItem;
-            if (p != null)
-            {
-                if (p.BorderColour != Constants.DEFAULT_NULL_COLOUR)
-                {
-                    lvi.BorderBrush = Constants.DEFAULT_BORDER_BRUSH;
-                    lvi.BorderThickness = new Thickness(Constants.DEFAULT_FOUND_RESULT_BORDER_SIZE);
-                }
-                else
-                {
-                    lvi.Background = new SolidColorBrush(p.BackColour);
-                    lvi.Foreground = new SolidColorBrush(p.ForeColour);
-                    lvi.BorderThickness = new Thickness(Constants.DEFAULT_BORDER_SIZE);
-                    lvi.BorderBrush = Constants.DEFAULT_NOT_FOUND_BORDER_BRUSH;
-                }
-            }
+            base.PrepareContainerForItemOverride(element, item);            
         }
 
         protected override System.Windows.Size ArrangeOverride(System.Windows.Size arrangeBounds)

@@ -350,7 +350,7 @@ namespace OxTail
             MenuItem item = (MenuItem)sender;
             string filename = (string)item.Header;
 
-            if (string.IsNullOrEmpty(filename) || !System.IO.File.Exists(filename))
+            if (string.IsNullOrEmpty(filename))
             {
                 return;
             }

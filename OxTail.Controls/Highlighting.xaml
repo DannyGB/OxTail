@@ -19,9 +19,27 @@
         </Grid.RowDefinitions>
         <DockPanel Grid.Row="0" Grid.Column="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <custom:ColourfulListView DockPanel.Dock="Bottom" Margin="12,12,12,0" x:Name="listViewPatterns" VerticalAlignment="Stretch" ItemsSource="{Binding}" SelectionChanged="listViewPatterns_SelectionChanged" SelectionMode="Single" HorizontalAlignment="Stretch">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="{DynamicResource patternColHeader}" DisplayMemberBinding="{Binding Pattern}" Width="Auto" />
+                        <GridViewColumn Header="{DynamicResource patternColHeader}" Width="Auto">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Path=Pattern}">
+                                        <Label.Foreground>
+                                            <SolidColorBrush Color="{Binding ForeColour}" />
+                                        </Label.Foreground>
+                                        <Label.Background>
+                                            <SolidColorBrush Color="{Binding BackColour}" />
+                                        </Label.Background>
+                                    </Label>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </custom:ColourfulListView>

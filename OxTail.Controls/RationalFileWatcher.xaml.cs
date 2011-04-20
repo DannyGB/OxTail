@@ -122,10 +122,10 @@ namespace OxTail.Controls
             {
                 return this._patterns;
             }
+
             set
             {
                 this._patterns = value;
-                this.Patterns.ListChanged += new ListChangedEventHandler(Patterns_ListChanged);
             }
         }
 
@@ -204,7 +204,7 @@ namespace OxTail.Controls
 
         #endregion
 
-        #region methods      
+        #region methods
 
         /// <summary>
         /// Determine if the file has changed since last read.
@@ -261,28 +261,25 @@ namespace OxTail.Controls
         /// </summary>
         private int AddHightLightedItem(string line, int location)
         {
-            lock (this)
-            {
-                return (int)this.Dispatcher.Invoke((ReturnInt)(() =>
+            return (int)this.Dispatcher.Invoke((ReturnInt)(() =>
+                {
+                    int index = location;
+                    HighlightedItem item = GetHighlighting(line);
+
+                    if (location >= this.colourfulListView.Items.Count || location == -1)
                     {
-                        int index = location;
-                        HighlightedItem item = GetHighlighting(line);
+                        this.CollectionBackBuffer.Add(item);
 
-                        if (location >= this.colourfulListView.Items.Count || location == -1)
-                        {
-                            this.CollectionBackBuffer.Add(item);
+                        return this.CollectionBackBuffer.Count - 1;
+                    }
+                    else
+                    {
+                        this.CollectionBackBuffer.RemoveAt(index);
+                        this.CollectionBackBuffer.Insert(index, item);
 
-                            return this.CollectionBackBuffer.Count - 1;
-                        }
-                        else
-                        {
-                            this.CollectionBackBuffer.RemoveAt(index);
-                            this.CollectionBackBuffer.Insert(index, item);
-
-                            return index;
-                        }
-                    }));
-            }
+                        return index;
+                    }
+                }));
         }
 
         /// <summary>
@@ -294,11 +291,11 @@ namespace OxTail.Controls
         {
             HighlightedItem item = null;
 
-            if (IsListInSearchMode)
-            {
-                GetFoundHighlightItem(line, out item);
-            }
-            else
+            //if (IsListInSearchMode)
+            //{
+            //    GetFoundHighlightItem(line, out item);
+            //}
+            //else
             {
                 item = this.GetHighlightedItem(line);
             }
@@ -316,23 +313,21 @@ namespace OxTail.Controls
         /// </summary>
         /// <param name="line">The line of text to match</param>
         /// <returns></returns>
-        private bool GetFoundHighlightItem(string line, out HighlightedItem item)
+        private bool GetFoundHighlightItem(ref HighlightedItem item)
         {
-            item = null;
             HighlightItem special = new HighlightItem(this.SearchText, Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
 
-            if (!string.IsNullOrEmpty(special.Pattern) && !string.IsNullOrEmpty(line))
+            if (!string.IsNullOrEmpty(special.Pattern) && !string.IsNullOrEmpty(item.Text))
             {
-                if (line == special.Pattern || _patternMatching.MatchPattern(line, special.Pattern))
+                if (item.Text == special.Pattern || _patternMatching.MatchPattern(item.Text, special.Pattern))
                 {
-                    item = new HighlightedItem(line, Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
-                    item.BorderColour = Constants.DEFAULT_BORDERCOLOUR;
+                    item.Selected = true;
 
                     return true;
                 }
                 else
                 {
-                    item = new HighlightedItem(line, Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
+                    item.Selected = false;
 
                     return false;
                 }
@@ -395,10 +390,6 @@ namespace OxTail.Controls
             }
         }
 
-        /// <summary>
-        /// Read the lines from the file, either from the beginning or from the last read to position
-        /// </summary>
-        /// <returns>Whether new lines have been read</returns>
         private bool ReadLines(bool overrideFileReadyCheck)
         {
             lock (this)
@@ -407,17 +398,24 @@ namespace OxTail.Controls
                 {
                     using (StreamReader streamReader = this.OpenFile())
                     {
-                        if (streamReader == null)
+                        // If there is no stream, or it's empty reset the collection and return
+                        if (streamReader == null || streamReader.BaseStream.Length == 0)
                         {
-                            return false;
-                        }                                               
+                            this.LastReadStream = new MemoryStream();
+                            this.CollectionBackBuffer.Clear();
+                            CopyBackBufferToFront();
 
+                            return false;
+                        }
+
+                        // We have a viable stream so we now must parse through it
                         StreamReader oldReader = new StreamReader(this.LastReadStream);
                         oldReader.BaseStream.Position = 0;
                         int location = 0;
                         int positionInList = 0;
                         bool skipSameContent = false;
                         int lastUsedIndex = 0;
+
                         while (streamReader.Peek() > -1)
                         {
                             string oldLine = oldReader.ReadLine();
@@ -425,24 +423,44 @@ namespace OxTail.Controls
 
                             if (line != null)
                             {
-                                if (string.IsNullOrEmpty(oldLine))
+                                // There is no previous stream to compare against so just add the content to the screen
+                                if (oldReader.BaseStream.Length <= 0)
                                 {
-                                    positionInList = -1;
-                                }
-                                else if (oldLine != null && !line.Equals(oldLine))
-                                {
-                                    positionInList = location;                                    
+                                    skipSameContent = false;
+                                    positionInList = location;
                                 }
                                 else
                                 {
-                                    skipSameContent = true;
-                                    lastUsedIndex = location;
+                                    // We have more lines in the new stream than the old so add it to the end of the collection
+                                    if (oldLine == null)
+                                    {
+                                        // This results in a blank line being added to the end of the line collection
+                                        positionInList = -1;
+                                    }
+
+                                    // the oldline is not null and is either different from the new line or empty so add it to the collection
+                                    // at the current location
+                                    else if ((oldLine != null) && (!line.Equals(oldLine) || oldLine == string.Empty) )
+                                    {
+                                        positionInList = location;
+                                    }
+
+                                    // Otherwise the old and new lines are the same so do nothing to the screen content
+                                    else
+                                    {
+                                        skipSameContent = true;
+                                        lastUsedIndex = location;
+                                        HighlightedItem item = GetHighlighting(line);
+                                        this.CollectionBackBuffer[location].BackColour = item.BackColour;
+                                        this.CollectionBackBuffer[location].ForeColour = item.ForeColour;
+                                    }
                                 }
 
+                                // if the old and new lines are different
                                 if (!skipSameContent)
                                 {
                                     line = line.TrimEnd(Constants.NULL_TERMINATOR).Replace(Constants.MAC_NEWLINE, Constants.CARRIAGE_RETURN).Replace(Constants.UNIX_NEWLINE, Constants.LINE_FEED); // in case of incorrectly selected line end;
-                                    lastUsedIndex = this.AddHightLightedItem(line, positionInList);                                    
+                                    lastUsedIndex = this.AddHightLightedItem(line, positionInList);
                                 }
 
                                 skipSameContent = false;
@@ -452,7 +470,7 @@ namespace OxTail.Controls
 
                             if (location % 1000 == 0)
                             {
-                                ReportProgress((int)(location * 100 / streamReader.BaseStream.Length), string.Format("counting lines in file: {0}", location), false, System.Windows.Visibility.Visible);
+                                ReportProgress((int)(location * 100 / streamReader.BaseStream.Length), string.Format(LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.LINES_IN_FILE), location), false, System.Windows.Visibility.Visible);
                             }
                         }
 
@@ -462,9 +480,10 @@ namespace OxTail.Controls
                         {
                             lastUsedIndex = location;
                         }
-
-                        // Remove any lines that have been deleted from the end
+                        
+                        // Remove any lines that have been deleted from the end of the file
                         int max = this.CollectionBackBuffer.Count - 1;
+                        
                         if (lastUsedIndex != max)
                         {
                             for (int j = max; j > lastUsedIndex; j--)
@@ -473,11 +492,14 @@ namespace OxTail.Controls
                             }
                         }
 
+                        // Create the previous stream to compare with next time from the current stream this time
                         streamReader.BaseStream.Position = 0;
                         this.LastReadStream = new MemoryStream();
-                        streamReader.BaseStream.CopyTo(this.LastReadStream);                        
+                        streamReader.BaseStream.CopyTo(this.LastReadStream);
                     }
 
+                    // Copy the collection of ListView items to the ListView control
+                    // Doing it this way should result in quicker page refreshes as the screen will only be updated once
                     CopyBackBufferToFront();
 
                     return true;
@@ -657,31 +679,48 @@ namespace OxTail.Controls
 
         private void colourfulListView_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            ScrollViewer scrollViewer = e.OriginalSource as ScrollViewer;
+            ScrollBar scroll = scrollViewer.Template.FindName("PART_VerticalScrollBar", scrollViewer) as ScrollBar;
+            CalculateFollowTailFromScrollbarPosition(scroll);
         }
 
         private void colourfulListView_Scroll(object sender, ScrollEventArgs e)
         {
+            ScrollBar scroll = e.OriginalSource as ScrollBar;
+            CalculateFollowTailFromScrollbarPosition(scroll);
+        }
+
+        private void CalculateFollowTailFromScrollbarPosition(ScrollBar scroll)
+        {
+            if (scroll != null && scroll.Orientation == Orientation.Vertical)
+            {
+                if (scroll.Value != scroll.Maximum)
+                {
+                    this.checkBoxFollowTail.IsChecked = false;
+                }
+                else
+                {
+                    this.checkBoxFollowTail.IsChecked = true;
+                }
+            }
         }
 
         private void colourfulListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            this.SelectedItem.Clear();
+
+            foreach (var item in e.AddedItems)
+            {
+                this.SelectedItem.Add((HighlightedItem)item);
+            }
         }
 
         void Patterns_ListChanged(object sender, ListChangedEventArgs e)
         {
-            this.UpdateHighlighting();
         }
 
         private void UpdateHighlighting()
         {
-            this.Dispatcher.Invoke(new Action(delegate()
-            {
-                for (int i = (this.colourfulListView.Items.Count - 1); i >= 0; i--)
-                {
-                    HighlightedItem item = this.GetHighlightedItem(((HighlightedItem)this.colourfulListView.Items[i]).Text);
-                    this.colourfulListView.Items[i] = item;
-                }
-            }));
         }        
 
         private void UpdateFindHighlighting(string text)
@@ -690,18 +729,20 @@ namespace OxTail.Controls
                         {
                             foreach (int i in this.PreviouslySelectedItems)
                             {
-                                this.colourfulListView.Items[i] = new HighlightedItem(((HighlightedItem)this.colourfulListView.Items[i]).Text, Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
-                                ((HighlightedItem)this.colourfulListView.Items[i]).BorderColour = Constants.DEFAULT_NULL_COLOUR;
+                                this.colourfulListView.SelectedIndex = -1;
+                                HighlightedItem item = new HighlightedItem(((HighlightedItem)this.colourfulListView.Items[i]).Text, ((HighlightedItem)this.colourfulListView.Items[i]).ForeColour, ((HighlightedItem)this.colourfulListView.Items[i]).BackColour);
+                                item.Selected = false;
+                                this.colourfulListView.Items[i] = item;
                             }
 
                             for (int i = LastSearchIndex; i < this.colourfulListView.Items.Count; i++)
                             {
-                                HighlightedItem item = null;
-                                if (this.GetFoundHighlightItem(((HighlightedItem)this.colourfulListView.Items[i]).Text, out item))
+                                HighlightedItem item = new HighlightedItem(((HighlightedItem)this.colourfulListView.Items[i]).Text, ((HighlightedItem)this.colourfulListView.Items[i]).ForeColour, ((HighlightedItem)this.colourfulListView.Items[i]).BackColour);
+                                if (this.GetFoundHighlightItem(ref item))
                                 {
                                     {
                                         this.colourfulListView.Items[i] = item;
-                                        this.colourfulListView.SelectedIndex = i;
+                                        this.colourfulListView.SelectedIndex = i;                                        
                                         this.colourfulListView.ScrollIntoView(item);
                                     }
 
@@ -717,7 +758,9 @@ namespace OxTail.Controls
                                     //HACK: need to ensure that blank lines are not null!
                                     if (item != null)
                                     {
-                                        this.colourfulListView.Items[i] = new HighlightedItem(item.Text, Constants.DEFAULT_FORECOLOUR, Constants.DEFAULT_BACKCOLOUR);
+                                        item.Selected = false;
+                                        this.colourfulListView.Items[i] = item;
+                                        this.colourfulListView.SelectedIndex = -1;
                                     }
                                 }
                             }

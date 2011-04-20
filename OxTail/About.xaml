@@ -10,11 +10,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
-        <Label Name="labelApplicationName" Content="" Grid.Row="0" />
+        <Label Name="labelApplicationName" Content="{DynamicResource productName}" Grid.Row="0" />
         <Label Name="labelVersion" Content="{DynamicResource version}" Grid.Row="1"/>
-        <TabControl  Grid.Row="2">
+        <Label Name="labelBuildDate" Content="{DynamicResource buildDate}" Grid.Row="2"/>
+        <TabControl  Grid.Row="3">
             <TabItem Header="{DynamicResource credits}">
                 <TextBox Name="textBoxCredits" IsReadOnly="True" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto">                    
                 </TextBox>

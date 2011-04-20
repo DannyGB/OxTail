@@ -64,7 +64,7 @@ namespace OxTail.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-
+            this.textBoxSearchCriteria.Focus();
         }
 
         private void buttonExpressionBuilder_Click(object sender, RoutedEventArgs e)
