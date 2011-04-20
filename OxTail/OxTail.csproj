@@ -231,7 +231,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /E /Q /I "$(ProjectDir)Culture\*.*" "$(TargetDir)Culture"</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y /E /Q /I "$(ProjectDir)Culture\*.*" "$(TargetDir)Culture"
+xcopy /Y /E /Q /I "$(TargetDir)OxTail.exe" "$(SolutionDir)LatestBuild\"
+xcopy /Y /E /Q /I "$(TargetDir)OxTail.Controls.dll" "$(SolutionDir)LatestBuild\"
+xcopy /Y /E /Q /I "$(TargetDir)OxTailHelpers.dll" "$(SolutionDir)LatestBuild\"
+xcopy /Y /E /Q /I "$(TargetDir)OxTailLogic.dll" "$(SolutionDir)LatestBuild\"
+xcopy /Y /E /Q /I "$(TargetDir)SavedExpression.xml" "$(SolutionDir)LatestBuild\"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

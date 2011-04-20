@@ -53,7 +53,7 @@ namespace OxTail
             this.textBoxCredits.Text += string.Format("{0}{1}", System.Environment.NewLine, Constants.ICON_CREDITS);
             this.labelVersion.Content += " " + Assembly.GetExecutingAssembly().GetName().Version.Major.ToString() + "." + Assembly.GetExecutingAssembly().GetName().Version.Minor.ToString();
             this.labelApplicationName.Content += " " + Constants.APPLICATION_NAME;
-            this.labelBuildDate.Content += " " + new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime.ToString();
+            this.labelBuildDate.Content += " " + new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime.ToString("dd/MM/yyyy");
 
         }
     }
