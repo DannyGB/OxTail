@@ -35,6 +35,7 @@ namespace OxTail
     using OxTailLogic.PatternMatching;
     using OxTail.Properties;
     using OxTail.Controls;
+    using OxTailHelpers;
 
     /// <summary>
     /// Interaction logic for Highlight.xaml

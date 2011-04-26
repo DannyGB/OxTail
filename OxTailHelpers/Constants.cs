@@ -105,5 +105,14 @@ namespace OxTailHelpers
         public const string RESOURCES_URI_TEMPLATE = @"/{0};component/Resources/{1}";
         public const string CULTURE_TEMPLATE = "Culture_{0}";
         public const string DEFAULT_LANGUAGE = "en";
+
+        #region Database Constants
+
+        public const string APPSETTINGS_TABLE_DDL = @"CREATE TABLE IF NOT EXISTS AppSettings ( Code VARCHAR(20) PRIMARY KEY, Value VARCHAR(4000) )";
+        public const string APPSETTINGS_SELECT_ALL = "SELECT * FROM AppSettings";
+        public const string DATABASE_NAME = @"\oxtail.db3";
+        public const string DATA_SOURCE = @"Data Source={0}";
+
+        #endregion Database Constants
     }
 }

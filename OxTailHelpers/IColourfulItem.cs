@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Media;
 
-namespace OxTail.Controls
+namespace OxTailHelpers
 {
     public interface IColourfulItem
     {

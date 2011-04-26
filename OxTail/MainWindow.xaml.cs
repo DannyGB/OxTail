@@ -31,10 +31,11 @@ namespace OxTail
     using System.Collections.Generic;
     using System.Text;
     using OxTailHelpers;
-    using OxTailLogic.Compare;
     using OxTailLogic;
     using System.Windows.Controls;
     using System.Windows.Input;
+    using OxTailHelpers.Data;
+    using OxTailLogic.Data;
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -138,6 +139,8 @@ namespace OxTail
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            IAppSettingsData data = (IAppSettingsData)DataService<AppSettingsData>.InitialiseDataService();
+            SettingsHelper.AppSettings = data.ReadAppSettings();
             HighlightItems = HighlightItem.LoadHighlights(Settings.Default.HighlightFileLocations);
             HighlightItems.ApplySort(null, ListSortDirection.Descending);
         }
@@ -154,7 +157,7 @@ namespace OxTail
 
         private List<FileInfo> OpenDirectory(bool showFileLimitMessage)
         {
-            return FileOpenLogic.OpenDirectory(showFileLimitMessage, (Application.Current as IApplication), Settings.Default.MaxFilesToOpen);
+            return FileOpenLogic.OpenDirectory(showFileLimitMessage, (Application.Current as IApplication), int.Parse(SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES]));
         }
 
         private void MenuOpenLastWrittenPatterns_Click(object sender, RoutedEventArgs e)
@@ -219,6 +222,20 @@ namespace OxTail
             {
                 this.FileToSearch = (FileWatcherTabItem)e.AddedItems[0];
             }
+        }
+
+        private void MenuSettings_Click(object sender, RoutedEventArgs e)
+        {            
+            ApplicationSettings settings = new ApplicationSettings();
+            settings.SaveClick += (s, ev) => SaveApplicationSettings(settings);
+            settings.ShowDialog();
+        }
+
+        private void SaveApplicationSettings(ApplicationSettings settings)
+        {
+            IAppSettingsData data = (IAppSettingsData)DataService<AppSettingsData>.InitialiseDataService();
+            data.WriteAppSettings(SettingsHelper.AppSettings);
+            settings.Close();
         }
 
         private void MenuCopy_Click(object sender, RoutedEventArgs e)

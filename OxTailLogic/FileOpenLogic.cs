@@ -26,8 +26,8 @@ using System.IO;
 using OxTail.Helpers;
 using System.Windows;
 using OxTailHelpers;
-using OxTailLogic.Compare;
 using System.ComponentModel;
+using OxTailHelpers.Compare;
 
 namespace OxTailLogic
 {

@@ -27,10 +27,10 @@ using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Collections;
-using OxTailLogic.Compare;
 using OxTailHelpers;
+using OxTailHelpers.Compare;
 
-namespace OxTail.Controls
+namespace OxTailHelpers
 {
     [Serializable]
     public class HighlightCollection<T> : List<T>, IBindingList where T : HighlightItem
