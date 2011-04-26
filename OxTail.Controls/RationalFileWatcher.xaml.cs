@@ -35,6 +35,7 @@ namespace OxTail.Controls
     using OxTailLogic.PatternMatching;
     using System.Windows.Media;
     using System.Windows.Controls.Primitives;
+    using OxTailLogic;
 
     /// <summary>
     /// Interaction logic for RationalFileWatcher.xaml
@@ -56,7 +57,7 @@ namespace OxTail.Controls
         /// Create a custom routed event by first registering a RoutedEventID
         /// This event uses the bubbling routing strategy
         /// </summary>
-        public static readonly RoutedEvent FileChangedEvent = EventManager.RegisterRoutedEvent("FileChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(FileWatcher));
+        public static readonly RoutedEvent FileChangedEvent = EventManager.RegisterRoutedEvent("FileChanged", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(RationalFileWatcher));
 
         #endregion events & delegates
 
@@ -150,8 +151,7 @@ namespace OxTail.Controls
 
         private int Interval
         {
-            get { return this._interval; }
-            set { this._interval = value; }
+            get { return int.Parse(SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY]); }
         }
 
         /// <summary>

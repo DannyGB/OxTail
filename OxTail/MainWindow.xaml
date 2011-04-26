@@ -28,7 +28,9 @@
                 <MenuItem Name="MenuFind" Header="{DynamicResource find}" Click="MenuFind_Click" />
                 <MenuItem Name="MenuHighlighting" Header="{DynamicResource highlighting}" Click="MenuHighlightingClick" />
                 <Separator></Separator>
-                <MenuItem Name="MenuCopy" Header="{DynamicResource copy}" Click="MenuCopy_Click" />                
+                <MenuItem Name="MenuCopy" Header="{DynamicResource copy}" Click="MenuCopy_Click" />
+                <Separator></Separator>
+                <MenuItem Name="MenuSettings" Header="{DynamicResource settingsMenu}" Click="MenuSettings_Click" />
             </MenuItem>            
             <MenuItem Name="MenuTools" Header="{DynamicResource tools}">
                 <MenuItem Name="MenuExpressionBuilder" Header="{DynamicResource regExpBuilder}" Click="MenuExpressionBuilderClick">

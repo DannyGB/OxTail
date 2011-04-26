@@ -18,7 +18,7 @@
 * along with OxTail.  If not, see <http://www.gnu.org/licenses/>.
 * ********************************************************************/
 
-namespace OxTail.Controls
+namespace OxTailHelpers
 {
     using System;
     using System.Collections.Generic;
@@ -30,7 +30,6 @@ namespace OxTail.Controls
     using System.Collections.ObjectModel;
     using System.Xml;
     using System.IO;
-    using OxTail.Controls;
     using OxTail.Helpers;
     using System.Runtime.Serialization;
     using System.Security.Permissions;

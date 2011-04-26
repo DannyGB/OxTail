@@ -23,6 +23,7 @@ namespace OxTail.Controls
     using System;
     using System.Windows.Media;
     using System.Windows.Controls;
+    using OxTailHelpers;
 
     [Serializable]
     public class HighlightedItem : IColourfulItem
