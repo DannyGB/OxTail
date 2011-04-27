@@ -4,7 +4,7 @@
     xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"                
     xmlns:oxtail="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
     ResizeMode="CanResizeWithGrip"
-    Icon="/OxTail;component/OxTail2.ico"
+    Icon="OxTail.ico"
     Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="BaseWindow_Closing">
     <DockPanel Name="dockPanelMain" LastChildFill="True">
         <Menu Name="menu1" DockPanel.Dock="Top" >

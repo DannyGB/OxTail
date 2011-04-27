@@ -45,7 +45,14 @@ namespace OxTailLogic.Data
                     File.Delete(inner.FilePath);
                 }
 
-                throw inner;
+                if (inner != null)
+                {
+                    throw inner;
+                }
+                else
+                {
+                    throw ex;
+                }
             }
         }
     }
