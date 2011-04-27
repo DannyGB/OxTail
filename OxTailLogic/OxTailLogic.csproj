@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="Data\AppSettingsData.cs" />
     <Compile Include="Data\DataService.cs" />
+    <Compile Include="Data\HighlightData.cs" />
     <Compile Include="FileOpenLogic.cs" />
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />
     <Compile Include="PatternMatching\PatternToMatchWasNullException.cs" />

@@ -20,11 +20,12 @@
             <Grid>
                 <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 
                 <Label Name="labelRefreshInterval" Content="{DynamicResource refreshIntervals}" Grid.Row="0" Grid.Column="0"></Label>
@@ -38,6 +39,10 @@
 
                 <Label Grid.Row="1" Grid.Column="0" Name="labelMaxDirectoryOpenFiles" Content="{DynamicResource maxDirOpenFiles}" ToolTip="{DynamicResource maxDirOpenFilesToolTip}"></Label>
                 <custom:IntegerTextBox Grid.Row="1" Grid.Column="1" x:Name="integerTextBoxMaxOpenFiles" Width="40"></custom:IntegerTextBox>
+
+                <Label Grid.Row="2" Grid.Column="0" Name="labelMaxMruOpenFiles" Content="{DynamicResource maxMruOpenFiles}"></Label>
+                <custom:IntegerTextBox Grid.Row="2" Grid.Column="1" x:Name="integerTextBoxMaxMruOpenFiles" Width="40"></custom:IntegerTextBox>
+                
             </Grid>
         </WrapPanel>
        

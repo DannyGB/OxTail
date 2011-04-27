@@ -141,7 +141,10 @@ namespace OxTail
         {
             IAppSettingsData data = (IAppSettingsData)DataService<AppSettingsData>.InitialiseDataService();
             SettingsHelper.AppSettings = data.ReadAppSettings();
-            HighlightItems = HighlightItem.LoadHighlights(Settings.Default.HighlightFileLocations);
+
+            IHighlightItemData hightlightData = (IHighlightItemData)DataService<HighlightData>.InitialiseDataService();
+            HighlightItems = hightlightData.Read();
+            //HighlightItems = HighlightItem.LoadHighlights(Settings.Default.HighlightFileLocations);
             HighlightItems.ApplySort(null, ListSortDirection.Descending);
         }
 

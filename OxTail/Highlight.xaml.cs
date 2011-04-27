@@ -36,6 +36,8 @@ namespace OxTail
     using OxTail.Properties;
     using OxTail.Controls;
     using OxTailHelpers;
+    using OxTailHelpers.Data;
+    using OxTailLogic.Data;
 
     /// <summary>
     /// Interaction logic for Highlight.xaml
@@ -55,7 +57,8 @@ namespace OxTail
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            HighlightItem.SaveHighlights(this.hightlighting.Patterns, Settings.Default.HighlightFileLocations);
+            IHighlightItemData data = (IHighlightItemData)DataService<HighlightData>.InitialiseDataService();
+            MainWindow.HighlightItems = data.Write(this.hightlighting.Patterns);
         }
 
         private void hightlighting_OpenExpressionBuilder(object sender, RoutedEventArgs e)

@@ -22,29 +22,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OxTailHelpers.Data;
-using OxTailHelpers;
-using OxTail.Data.SQLite;
 
-namespace OxTailLogic.Data
+namespace OxTail.Data
 {
-    public class AppSettingsData : IAppSettingsData
+    [Serializable]
+    public class DatabaseCreateFailureException : Exception
     {
-        private IAppSettingsData AppSettingsDataHelper;
+        public string FilePath { get; set; }
 
-        public AppSettingsData()
-        {
-            this.AppSettingsDataHelper = new AppSettingsDataHelper();
-        }
-
-        public AppSettings ReadAppSettings()
-        {
-            return this.AppSettingsDataHelper.ReadAppSettings();
-        }
-
-        public int WriteAppSettings(AppSettings settings)
-        {
-            return this.AppSettingsDataHelper.WriteAppSettings(settings);
-        }
-    }
+        public DatabaseCreateFailureException() { }
+        public DatabaseCreateFailureException(string filePath, string message) : base(message) { FilePath = filePath; }
+        public DatabaseCreateFailureException(string message) : base(message) { }
+        public DatabaseCreateFailureException(string message, Exception inner) : base(message, inner) { }
+        public DatabaseCreateFailureException(string filePath, string message, Exception inner) : base(message, inner) { FilePath = filePath; }
+        protected DatabaseCreateFailureException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
+    }   
 }

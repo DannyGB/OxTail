@@ -54,13 +54,20 @@ namespace OxTailHelpers
         public const char NULL_TERMINATOR = '\0';
         public const string LINE_NUMBER_DIVIDER = ": ";
 
-#if DEBUG
-        public const int MAX_MRU_LIST = 5;
-#else
-        public const int MAX_MRU_LIST = 10;
-#endif
 
-#region Resource keys
+        #region Settings Defaults
+
+#if DEBUG
+        public const string MAX_MRU_LIST = "5";
+#else
+        public const string MAX_MRU_LIST = "10";
+#endif
+        public const string MAX_OPEN_FILES = "10";
+        public const string REFRESH_INTERVAL = "1";
+
+        #endregion Settings Defaults
+
+        #region Resource keys
 
         public const string UKNOWN_SEARCH_OPTION = "unknownSearchOption";
         public const string COMBO_CURRENT_DOCUMENT = "comboBoxItemCurrentDocument";
@@ -81,7 +88,7 @@ namespace OxTailHelpers
         public const string RESOURCE_KEY_FILE_NOT_SET = "resourceFileKeyNotSet";
         public const string LINES_IN_FILE = "linesInFile";
 
-#endregion Resource keys
+        #endregion Resource keys
 
         public const string PART_ICON = "PART_Icon";
         public const string DEFAULT_FILE_OPEN_PATTERN = "*.log";
@@ -104,15 +111,6 @@ namespace OxTailHelpers
         public const string STRING_RESOURCES_FILENAME = "StringResources_{0}.xaml";
         public const string RESOURCES_URI_TEMPLATE = @"/{0};component/Resources/{1}";
         public const string CULTURE_TEMPLATE = "Culture_{0}";
-        public const string DEFAULT_LANGUAGE = "en";
-
-        #region Database Constants
-
-        public const string APPSETTINGS_TABLE_DDL = @"CREATE TABLE IF NOT EXISTS AppSettings ( Code VARCHAR(20) PRIMARY KEY, Value VARCHAR(4000) )";
-        public const string APPSETTINGS_SELECT_ALL = "SELECT * FROM AppSettings";
-        public const string DATABASE_NAME = @"\oxtail.db3";
-        public const string DATA_SOURCE = @"Data Source={0}";
-
-        #endregion Database Constants
+        public const string DEFAULT_LANGUAGE = "en";       
     }
 }

@@ -26,6 +26,7 @@ using System.Windows.Controls;
 using OxTail.Helpers;
 using OxTailHelpers;
 using System.Windows;
+using OxTailLogic;
 
 namespace OxTail.Controls
 {
@@ -121,7 +122,7 @@ namespace OxTail.Controls
             {
                 Files.Add(new Helpers.File(filename));
 
-                if (Files.Count > Constants.MAX_MRU_LIST)
+                if (Files.Count > int.Parse(SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES]))
                 {
                     Files.RemoveAt(0);
                 }
