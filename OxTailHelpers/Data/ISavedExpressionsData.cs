@@ -1,4 +1,4 @@
-﻿/*****************************************************************
+/*****************************************************************
 *
 * Copyright 2011 Dan Beavon
 *
@@ -22,25 +22,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Windows.Controls;
+using System.Collections.ObjectModel;
 
-namespace OxTail.Controls
+namespace OxTailHelpers.Data
 {
-    public class ExpressionTextBox : TextBox
+    public interface ISavedExpressionsData : IData
     {
-        private OxTailHelpers.Expression _expression;
-
-        public OxTailHelpers.Expression Expression 
-        {
-            get
-            {
-                return this._expression;
-            }
-            set
-            {
-                this._expression = value;
-                this.Text = value.Text;
-            }
-        }
+        ObservableCollection<Expression> Read();
+        ObservableCollection<Expression> Write(ObservableCollection<Expression> items);
     }
 }

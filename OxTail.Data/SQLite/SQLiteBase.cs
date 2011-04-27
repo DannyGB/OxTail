@@ -45,26 +45,27 @@ namespace OxTail.Data.SQLite
             if (!File.Exists(path))
             {
                 SQLiteDatabaseHelper.CreateDatabaseFile(path);
+            }
 
-                DbConnection.Open();
-                DbTransaction trans = DbConnection.BeginTransaction(System.Data.IsolationLevel.Serializable);
+            DbConnection.Open();
+            DbTransaction trans = DbConnection.BeginTransaction(System.Data.IsolationLevel.Serializable);
 
-                try
-                {
-                    SQLiteDatabaseHelper.ExecuteNonQuery(Constants.APPSETTINGS_TABLE_DDL, DbConnection, Factory, trans);
-                    SQLiteDatabaseHelper.ExecuteNonQuery(Constants.HIGHLIGHTITEMS_TABLE_DDL, DbConnection, Factory, trans);
+            try
+            {
+                SQLiteDatabaseHelper.ExecuteNonQuery(Constants.APPSETTINGS_TABLE_DDL, DbConnection, Factory, trans);
+                SQLiteDatabaseHelper.ExecuteNonQuery(Constants.HIGHLIGHTITEMS_TABLE_DDL, DbConnection, Factory, trans);
+                SQLiteDatabaseHelper.ExecuteNonQuery(Constants.SAVEDEXPRESSIONS_TABLE_DDL, DbConnection, Factory, trans);
 
-                    trans.Commit();
-                }
-                catch (Exception ex)
-                {
-                    trans.Rollback();
-                    throw new DatabaseCreateFailureException(path, "Failure creating database!", ex);
-                }
-                finally
-                {
-                    DbConnection.Close();
-                }
+                trans.Commit();
+            }
+            catch (Exception ex)
+            {
+                trans.Rollback();
+                throw new DatabaseCreateFailureException(path, "Failure creating database!", ex);
+            }
+            finally
+            {
+                DbConnection.Close();
             }
         }
     }

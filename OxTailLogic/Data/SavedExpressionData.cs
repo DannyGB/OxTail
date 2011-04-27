@@ -1,4 +1,4 @@
-﻿/*****************************************************************
+/*****************************************************************
 *
 * Copyright 2011 Dan Beavon
 *
@@ -18,32 +18,34 @@
 * along with OxTail.  If not, see <http://www.gnu.org/licenses/>.
 * ********************************************************************/
 
-namespace OxTail.Controls
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using OxTailHelpers.Data;
+using OxTail.Data.SQLite;
+using OxTailHelpers;
+using System.Collections.ObjectModel;
+
+namespace OxTailLogic.Data
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    [Serializable]
-    public class Expression
+    public class SavedExpressionData : ISavedExpressionsData
     {
-        public string Text { get; set; }
-        public string Name { get; set; }
+        private SavedExpressionsDataHelper SavedExpressionsDataHelper { get; set; }
 
-        public Expression(string text, string name)
+        public SavedExpressionData()
         {
-            this.Text = text;
-            this.Name = name;
+            this.SavedExpressionsDataHelper = new SavedExpressionsDataHelper();
         }
 
-        public Expression() : this(string.Empty, string.Empty)
+        public ObservableCollection<Expression> Read()
         {
+            return SavedExpressionsDataHelper.Read();
         }
 
-        public override string ToString()
+        public ObservableCollection<Expression> Write(ObservableCollection<Expression> items)
         {
-            return this.Name;
+            return SavedExpressionsDataHelper.Write(items);
         }
     }
 }

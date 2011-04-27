@@ -85,12 +85,14 @@ namespace OxTail.Controls
 
             this.Items.Clear();
 
+            int i = 1;
             foreach(OxTail.Helpers.File file in this.Files)
             {
-                child = new MenuItem();
-                child.Header = file.Filename;
+                child = new MenuItem();                
+                child.Header = "_" + i.ToString() + " " + file.Filename;
                 child.Click += new System.Windows.RoutedEventHandler(child_Click);
                 this.Items.Add(child);
+                i++;
             }
         }
 
@@ -98,7 +100,12 @@ namespace OxTail.Controls
         {
             MenuItem item = (MenuItem)sender;
             EventHandler<EventArgs> MenuClick = SubMenuClick;
-            if (MenuClick != null) MenuClick(item, new EventArgs());
+            
+            string headerText = item.Header.ToString();
+            int startIndex = headerText.IndexOf(' ') + 1;
+            string filename = headerText.Substring(startIndex, (headerText.Length - startIndex));
+
+            if (MenuClick != null) MenuClick(filename, new EventArgs());
         }
 
         /// <summary>

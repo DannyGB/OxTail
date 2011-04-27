@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:custom="clr-namespace:OxTail.Controls"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             d:DesignHeight="300" d:DesignWidth="370"
              Loaded="UserControl_Loaded">
     <Grid Margin="20" x:Name="grid">
         <Grid.RowDefinitions>
@@ -23,13 +23,15 @@
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
+                
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                
-                <Label Name="labelRefreshInterval" Content="{DynamicResource refreshIntervals}" Grid.Row="0" Grid.Column="0"></Label>
-                <ComboBox Name="comboBoxInterval" SelectedIndex="0" Width="Auto" Grid.Row="0" Grid.Column="1">
+                                                 
+                <Label Name="labelRefreshInterval" Content="{DynamicResource refreshIntervals}" Grid.Row="0" Grid.Column="0" Margin="5"></Label>
+                <ComboBox Name="comboBoxInterval" SelectedIndex="0" Width="Auto" Grid.Row="0" Grid.Column="1" Margin="5">
                     <ComboBoxItem Content="5"></ComboBoxItem>
                     <ComboBoxItem Content="30"></ComboBoxItem>
                     <ComboBoxItem Content="60"></ComboBoxItem>
@@ -37,11 +39,13 @@
                     <ComboBoxItem Content="240"></ComboBoxItem>
                 </ComboBox>
 
-                <Label Grid.Row="1" Grid.Column="0" Name="labelMaxDirectoryOpenFiles" Content="{DynamicResource maxDirOpenFiles}" ToolTip="{DynamicResource maxDirOpenFilesToolTip}"></Label>
-                <custom:IntegerTextBox Grid.Row="1" Grid.Column="1" x:Name="integerTextBoxMaxOpenFiles" Width="40"></custom:IntegerTextBox>
+                <Label Grid.Row="1" Grid.Column="0" Name="labelMaxDirectoryOpenFiles" Content="{DynamicResource maxDirOpenFiles}" ToolTip="{DynamicResource maxDirOpenFilesToolTip}" Margin="5"></Label>
+                <Slider Height="23" Name="sliderMaxOpenFiles" Width="100" Grid.Row="1" Grid.Column="1" TickPlacement="TopLeft" Orientation="Horizontal" SmallChange="1" Interval="1" AutoToolTipPlacement="TopLeft" Maximum="10" UseLayoutRounding="False" LargeChange="5" ValueChanged="sliderMaxOpenFiles_ValueChanged" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"  Margin="5"/>
+                <Label Name="labelSelectedMaxOpen" Grid.Column="2" Grid.Row="1" Content="({0})" Margin="5"></Label>
 
-                <Label Grid.Row="2" Grid.Column="0" Name="labelMaxMruOpenFiles" Content="{DynamicResource maxMruOpenFiles}"></Label>
-                <custom:IntegerTextBox Grid.Row="2" Grid.Column="1" x:Name="integerTextBoxMaxMruOpenFiles" Width="40"></custom:IntegerTextBox>
+                <Label Grid.Row="2" Grid.Column="0" Name="labelMaxMruOpenFiles" Content="{DynamicResource maxMruOpenFiles}" Margin="5"></Label>
+                <Slider Height="23" Name="sliderMaxMruOpenFiles" Width="100" Grid.Row="2" Grid.Column="1" TickPlacement="TopLeft" Orientation="Horizontal" SmallChange="1" Interval="1" AutoToolTipPlacement="TopLeft" Maximum="10" UseLayoutRounding="False" LargeChange="5" ValueChanged="sliderMaxMruOpenFiles_ValueChanged" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"  Margin="5"/>
+                <Label Name="labelSelectedMru" Grid.Column="2" Grid.Row="2" Content="({0})" Margin="5"></Label>
                 
             </Grid>
         </WrapPanel>

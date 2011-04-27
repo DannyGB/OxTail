@@ -18,44 +18,33 @@
 * along with OxTail.  If not, see <http://www.gnu.org/licenses/>.
 * ********************************************************************/
 
-namespace OxTail
+namespace OxTailHelpers
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Shapes;
-    using OxTail.Controls;
 
-    /// <summary>
-    /// Interaction logic for ExpressionBuilder.xaml
-    /// </summary>
-    public partial class ExpressionBuilder : BaseWindow
+    [Serializable]
+    public class Expression
     {
-        public OxTailHelpers.Expression Expression { get; set; }
+        public int ID { get; set; }
+        public string Text { get; set; }
+        public string Name { get; set; }
 
-        public ExpressionBuilder()
+        public Expression(string text, string name)
         {
-            InitializeComponent();
+            this.Text = text;
+            this.Name = name;
         }
 
-        private void RegularExpressionBuilder_OkClick(object sender, RoutedEventArgs e)
+        public Expression() : this(string.Empty, string.Empty)
         {
-            this.Expression = this.regularExpressionBuilder.Expression;
-            this.DialogResult = true;
-            this.Close();
         }
 
-        private void RegularExpressionBuilder_CancelClick(object sender, RoutedEventArgs e)
+        public override string ToString()
         {
-            this.Close();
+            return this.Name;
         }
     }
 }

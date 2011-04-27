@@ -5,7 +5,7 @@
     xmlns:oxtail="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
     ResizeMode="CanResizeWithGrip"
     Icon="OxTail.ico"
-    Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="BaseWindow_Closing">
+    Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="BaseWindow_Closing" KeyUp="BaseWindow_KeyUp">
     <DockPanel Name="dockPanelMain" LastChildFill="True">
         <Menu Name="menu1" DockPanel.Dock="Top" >
             <MenuItem  Header="{DynamicResource file}">
@@ -22,13 +22,15 @@
                 <MenuItem Name="MenuItemClose" Header="{DynamicResource close}" Click="MenuItemClose_Click" />
                 <MenuItem Name="MenuItemCloseAll" Header="{DynamicResource closeAll}" Click="MenuItemCloseAll_Click" />
                 <Separator></Separator>
-                <MenuItem Name="MenuExit" Header="{DynamicResource exit}" Click="MenuExitClick" />
+                <MenuItem Name="MenuExit" Header="{DynamicResource exit}" Click="MenuExitClick">
+                </MenuItem>
             </MenuItem>
             <MenuItem Name="MenuEdit" Header="{DynamicResource edit}">
                 <MenuItem Name="MenuFind" Header="{DynamicResource find}" Click="MenuFind_Click" />
                 <MenuItem Name="MenuHighlighting" Header="{DynamicResource highlighting}" Click="MenuHighlightingClick" />
                 <Separator></Separator>
-                <MenuItem Name="MenuCopy" Header="{DynamicResource copy}" Click="MenuCopy_Click" />
+                <MenuItem Name="MenuCopy" Header="{DynamicResource copy}" Click="MenuCopy_Click">
+                </MenuItem>
                 <Separator></Separator>
                 <MenuItem Name="MenuSettings" Header="{DynamicResource settingsMenu}" Click="MenuSettings_Click" />
             </MenuItem>            

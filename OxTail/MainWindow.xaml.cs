@@ -215,8 +215,12 @@ namespace OxTail
         private void MenuItemClose_Click(object sender, RoutedEventArgs e)
         {
             FileWatcherTabItem closeTab = (FileWatcherTabItem)this.tabControlMain.SelectedItem;
-            tabControlMain.Items.Remove(closeTab);
-            closeTab.Dispose();
+            
+            if (closeTab != null)
+            {
+                tabControlMain.Items.Remove(closeTab);
+                closeTab.Dispose();
+            }
         }
 
         private void tabControlMain_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
@@ -367,8 +371,7 @@ namespace OxTail
 
         private void recentFileList_SubMenuClick(object sender, EventArgs e)
         {
-            MenuItem item = (MenuItem)sender;
-            string filename = (string)item.Header;
+            string filename = (string)sender;
 
             if (string.IsNullOrEmpty(filename))
             {

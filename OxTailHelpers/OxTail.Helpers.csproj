@@ -57,6 +57,8 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Data\IData.cs" />
     <Compile Include="Data\IHighlightItemData.cs" />
+    <Compile Include="Data\ISavedExpressionsData.cs" />
+    <Compile Include="Expression.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FileHelper.cs" />
     <Compile Include="HighlightCollection.cs">

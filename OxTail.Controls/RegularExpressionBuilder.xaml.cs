@@ -32,6 +32,9 @@ namespace OxTail.Controls
     using System;
     using System.Reflection;
     using OxTailHelpers;
+    using OxTailLogic;
+    using OxTailHelpers.Data;
+    using OxTailLogic.Data;
 
     /// <summary>
     /// Interaction logic for RegularExpressionBuilder.xaml
@@ -59,13 +62,13 @@ namespace OxTail.Controls
         /// <summary>
         /// The entered regular expression
         /// </summary>
-        public Expression Expression
+        public OxTailHelpers.Expression Expression
         {
             get
             {
                 if (this.textBoxExpression.Expression == null)
                 {
-                    return new Expression(this.textBoxExpression.Text, Constants.UNAMED);
+                    return new OxTailHelpers.Expression(this.textBoxExpression.Text, Constants.UNAMED);
                 }
                 else
                 {
@@ -96,11 +99,11 @@ namespace OxTail.Controls
 
             if (e.AddedItems.Count <= 0)
             {
-                this.textBoxExpression.Expression = new Expression();
+                this.textBoxExpression.Expression = new OxTailHelpers.Expression();
             }
-            else if (((Expression)e.AddedItems[0]).Name != LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.CHOOSE_ITEM))
+            else if (((OxTailHelpers.Expression)e.AddedItems[0]).Name != LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.CHOOSE_ITEM))
             {
-                this.textBoxExpression.Expression = ((Expression)e.AddedItems[0]);
+                this.textBoxExpression.Expression = ((OxTailHelpers.Expression)e.AddedItems[0]);
             }
         }
 
@@ -129,7 +132,7 @@ namespace OxTail.Controls
 
             if (msg.DialogResult.HasValue && msg.DialogResult.Value)
             {
-                ((ObservableCollection<Expression>)this.comboBoxSavedExpressions.DataContext).Add(CreateExpression(this.textBoxExpression.Text, msg.Message));
+                ((ObservableCollection<OxTailHelpers.Expression>)this.comboBoxSavedExpressions.DataContext).Add(CreateExpression(this.textBoxExpression.Text, msg.Message));
             }
 
             this.SaveExpressions();
@@ -137,21 +140,8 @@ namespace OxTail.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ObservableCollection<Expression> expr = new ObservableCollection<Expression>();
-
-            if (!System.IO.File.Exists(Constants.SAVED_EXPRESSION_FILE_NAME))
-            {
-                expr.Add(this.CreateExpression(string.Empty, LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.CHOOSE_ITEM)));
-                expr.Add(this.CreateExpression(@"^([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})$", "Email"));
-                expr.Add(this.CreateExpression(@"^([a-zA-Z]{1,2}\w{1,2})+(\d{1}[a-zA-Z]{2})+$", "Postcode"));
-            }
-            else
-            {
-                XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Expression>));
-                expr = (ObservableCollection<Expression>)FileHelper.DeserializeFromExecutableDirectory(Constants.SAVED_EXPRESSION_FILE_NAME, serializer);
-            }
-
-            this.comboBoxSavedExpressions.DataContext = expr;
+            ISavedExpressionsData data = (ISavedExpressionsData)DataService<SavedExpressionData>.InitialiseDataService();
+            this.comboBoxSavedExpressions.DataContext = data.Read();
             this.FillExampleRegExData();
             this.textBoxExpression.Focus();
         }
@@ -168,15 +158,15 @@ namespace OxTail.Controls
 
         private void SaveExpressions()
         {
-            ObservableCollection<Expression> list = (ObservableCollection<Expression>)this.comboBoxSavedExpressions.DataContext;
-
-            XmlSerializer serializer = new XmlSerializer(typeof(ObservableCollection<Expression>));
-            FileHelper.SerializeToExecutableDirectory(Constants.SAVED_EXPRESSION_FILE_NAME, serializer, list);
+            ObservableCollection<OxTailHelpers.Expression> list = (ObservableCollection<OxTailHelpers.Expression>)this.comboBoxSavedExpressions.DataContext;
+            ISavedExpressionsData data = (ISavedExpressionsData)DataService<SavedExpressionData>.InitialiseDataService();
+         
+            this.comboBoxSavedExpressions.DataContext = data.Write(list);
         }
 
-        private Expression CreateExpression(string text, string content)
+        private OxTailHelpers.Expression CreateExpression(string text, string content)
         {
-            Expression item = new Expression(text, content);           
+            OxTailHelpers.Expression item = new OxTailHelpers.Expression(text, content);           
             return item;
         }
 
@@ -206,10 +196,10 @@ namespace OxTail.Controls
 
         private void buttonDeleteExpression_Click(object sender, RoutedEventArgs e)
         {
-            Expression expr = (Expression)this.comboBoxSavedExpressions.SelectedItem;
+            OxTailHelpers.Expression expr = (OxTailHelpers.Expression)this.comboBoxSavedExpressions.SelectedItem;
             if (expr.Name != "Choose Item:")
             {
-                ((ObservableCollection<Expression>)this.comboBoxSavedExpressions.DataContext).Remove(expr);
+                ((ObservableCollection<OxTailHelpers.Expression>)this.comboBoxSavedExpressions.DataContext).Remove(expr);
             }
             
             this.SaveExpressions();
