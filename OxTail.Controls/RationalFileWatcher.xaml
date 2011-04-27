@@ -84,15 +84,15 @@
             <StatusBarItem Grid.Column="7">
                 <ProgressBar Name="progressBarStatus" Width="50" Height="18"/>
             </StatusBarItem>
-            <Separator Grid.Column="8"/>
+            <Separator Grid.Column="8" Visibility="Hidden" />
             <StatusBarItem Grid.Column="9">
                 <TextBlock Name="textBlockStartLine" ToolTip="{DynamicResource startLine}" Text="{DynamicResource startLine}" Visibility="Hidden"></TextBlock>
             </StatusBarItem>
-            <Separator Grid.Column="10"/>
+            <Separator Grid.Column="10" Visibility="Hidden"/>
             <StatusBarItem Grid.Column="11">
                 <TextBlock Name="textBlockVisibleLines" ToolTip="{DynamicResource visibleLines}" Text="{DynamicResource visibleLines}" Visibility="Hidden"></TextBlock>
             </StatusBarItem>
-            <Separator Grid.Column="12"/>
+            <Separator Grid.Column="12" Visibility="Hidden"/>
             <StatusBarItem Grid.Column="13">
                 <TextBlock Name="textBlockLinesInFile" ToolTip="{DynamicResource linesInFile}" Text="{DynamicResource linesInFile}" Visibility="Hidden"></TextBlock>
             </StatusBarItem>

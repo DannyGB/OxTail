@@ -106,5 +106,13 @@ namespace OxTail.Controls
                 CallFindButtonClickEvent();
             }
         }
+
+        private void textBoxSearchCriteria_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                CallFindButtonClickEvent();
+            }
+        }
     }
 }

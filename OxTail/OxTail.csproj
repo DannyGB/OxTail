@@ -155,10 +155,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Resources\SelectedStyle.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Resources\StringResources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -252,6 +248,10 @@ xcopy /Y /E /Q /I "$(TargetDir)OxTailLogic.dll" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(TargetDir)SavedExpression.xml" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(SolutionDir)\ExternalDlls\*.dll" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(TargetDir)OxTail.Data.dll" "$(SolutionDir)LatestBuild\"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

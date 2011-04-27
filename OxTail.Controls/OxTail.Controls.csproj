@@ -65,7 +65,6 @@
       <DependentUpon>ColourfullListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="DisappearingTextTextBox.cs" />
-    <Compile Include="Expression.cs" />
     <Compile Include="ExpressionTextBox.cs" />
     <Compile Include="Find.xaml.cs">
       <DependentUpon>Find.xaml</DependentUpon>

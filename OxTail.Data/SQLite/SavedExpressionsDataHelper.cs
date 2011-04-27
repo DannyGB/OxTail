@@ -1,4 +1,4 @@
-﻿/*****************************************************************
+/*****************************************************************
 *
 * Copyright 2011 Dan Beavon
 *
@@ -23,19 +23,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OxTailHelpers.Data;
+using System.Collections.ObjectModel;
 using OxTailHelpers;
 using System.Data.Common;
 using System.Data;
-using System.Windows.Media;
 
 namespace OxTail.Data.SQLite
 {
-    public class HighlightDataHelper : SQLiteBase, IHighlightItemData
+    public class SavedExpressionsDataHelper : SQLiteBase, ISavedExpressionsData
     {
-
-        public HighlightCollection<HighlightItem> Read()
+        public System.Collections.ObjectModel.ObservableCollection<OxTailHelpers.Expression> Read()
         {
-            HighlightCollection<HighlightItem> highlights = new HighlightCollection<HighlightItem>();
+            ObservableCollection<Expression> expressions = new ObservableCollection<Expression>();
 
             DbConnection.Open();
 
@@ -46,7 +45,7 @@ namespace OxTail.Data.SQLite
                     using (DbCommand cmd = DbConnection.CreateCommand())
                     {
                         cmd.Transaction = trans;
-                        cmd.CommandText = Constants.HIGHTLIGHTITEMS_SELECT_ALL;
+                        cmd.CommandText = Constants.SAVEDEXPRESSIONS_SELECT_ALL;
                         cmd.ExecuteNonQuery();
                         adpt.SelectCommand = cmd;
 
@@ -60,28 +59,14 @@ namespace OxTail.Data.SQLite
 
                                 foreach (DataRow row in tbl.Rows)
                                 {
-                                    HighlightItem item = new HighlightItem()
+                                    Expression expr = new Expression()
                                     {
                                         ID = int.Parse(row[0].ToString()),
-                                        Pattern = row[1].ToString(),
-                                        Order = int.Parse(row[2].ToString()),
+                                        Name = row[1].ToString(),
+                                        Text = row[2].ToString()
                                     };
 
-                                    //HACK: System.Drawing.Color allows storing of the colour as one integer, gonna use this to populate DB and re-hydrate back in code. Easier!
-
-                                    System.Drawing.Color tempCol = System.Drawing.Color.FromArgb(int.Parse(row[3].ToString()));
-                                    Color tempCol2 = Color.FromArgb(tempCol.A, tempCol.R, tempCol.G, tempCol.B);
-                                    item.ForeColour = tempCol2;
-
-                                    tempCol = System.Drawing.Color.FromArgb(int.Parse(row[4].ToString()));
-                                    tempCol2 = Color.FromArgb(tempCol.A, tempCol.R, tempCol.G, tempCol.B);
-                                    item.BackColour = tempCol2;
-
-                                    tempCol = System.Drawing.Color.FromArgb(int.Parse(row[5].ToString()));
-                                    tempCol2 = Color.FromArgb(tempCol.A, tempCol.R, tempCol.G, tempCol.B);
-                                    item.BorderColour = tempCol2;
-
-                                    highlights.Add(item);
+                                    expressions.Add(expr);
                                 }
                             }
                         }
@@ -91,10 +76,10 @@ namespace OxTail.Data.SQLite
 
             DbConnection.Close();
 
-            return highlights;
+            return expressions;
         }
 
-        public HighlightCollection<HighlightItem> Write(HighlightCollection<HighlightItem> items)
+        public ObservableCollection<Expression> Write(ObservableCollection<Expression> items)
         {
             int retval = 0;
 
@@ -107,7 +92,7 @@ namespace OxTail.Data.SQLite
                     using (DbCommand cmd = DbConnection.CreateCommand())
                     {
                         cmd.Transaction = trans;
-                        cmd.CommandText = Constants.HIGHTLIGHTITEMS_SELECT_ALL;
+                        cmd.CommandText = Constants.SAVEDEXPRESSIONS_SELECT_ALL;
                         cmd.ExecuteNonQuery();
                         adpt.SelectCommand = cmd;
 
@@ -125,7 +110,7 @@ namespace OxTail.Data.SQLite
                                 foreach (DataRow row in existingRows)
                                 {
                                     found = false;
-                                    foreach (HighlightItem item in items)
+                                    foreach (Expression item in items)
                                     {
                                         if (item.ID > 0 && item.ID == int.Parse(row[0].ToString()))
                                         {
@@ -140,7 +125,7 @@ namespace OxTail.Data.SQLite
                                     }
                                 }
 
-                                foreach (HighlightItem item in items)
+                                foreach (Expression item in items)
                                 {
                                     found = false;
 
@@ -152,46 +137,26 @@ namespace OxTail.Data.SQLite
                                             break;
                                         }
 
-                                        // Updates existing rows
                                         if (int.Parse(row[0].ToString()) == item.ID)
                                         {
-                                            row[1] = item.Pattern;
-                                            row[2] = item.Order;
-
-                                            System.Drawing.Color tempCol = System.Drawing.Color.FromArgb(item.ForeColour.A, item.ForeColour.R, item.ForeColour.G, item.ForeColour.B);
-                                            row[3] = tempCol.ToArgb();
-
-                                            tempCol = System.Drawing.Color.FromArgb(item.BackColour.A, item.BackColour.R, item.BackColour.G, item.BackColour.B);
-                                            row[4] = tempCol.ToArgb();
-
-                                            tempCol = System.Drawing.Color.FromArgb(item.BorderColour.A, item.BorderColour.R, item.BorderColour.G, item.BorderColour.B);
-                                            row[5] = tempCol.ToArgb();
+                                            row[1] = item.Name;
+                                            row[2] = item.Text;
 
                                             found = true;
                                             break;
                                         }
                                     }
 
-                                    // Inserts new rows
                                     if (!found)
                                     {
                                         DataRow r = tbl.NewRow();
 
-                                        r[1] = item.Pattern;
-                                        r[2] = item.Order;
-
-                                        System.Drawing.Color tempCol = System.Drawing.Color.FromArgb(item.ForeColour.A, item.ForeColour.R, item.ForeColour.G, item.ForeColour.B);
-                                        r[3] = tempCol.ToArgb();
-
-                                        tempCol = System.Drawing.Color.FromArgb(item.BackColour.A, item.BackColour.R, item.BackColour.G, item.BackColour.B);
-                                        r[4] = tempCol.ToArgb();
-
-                                        tempCol = System.Drawing.Color.FromArgb(item.BorderColour.A, item.BorderColour.R, item.BorderColour.G, item.BorderColour.B);
-                                        r[5] = tempCol.ToArgb();
+                                        r[1] = item.Name;
+                                        r[2] = item.Text;
 
                                         tbl.Rows.Add(r);
                                     }
-                                }                                
+                                }
 
                                 try
                                 {

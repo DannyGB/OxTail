@@ -67,10 +67,6 @@ namespace OxTail
             {
                 this.ApplyCultureDictionary(uri);
             }
-
-            //"/OxTail;component/Resources/StringResources.xaml"
-            ResourceDictionary styleDict = Application.LoadComponent(new Uri("/OxTail;component/Resources/SelectedStyle.xaml", UriKind.Relative)) as ResourceDictionary;
-            base.Resources.MergedDictionaries.Add(styleDict);
         }
     }
 }

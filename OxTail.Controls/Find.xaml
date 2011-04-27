@@ -19,7 +19,7 @@
                     <ColumnDefinition Width="120"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Label Name="labelSearchCriteria"  Content="{DynamicResource labelFind}" Margin="10" Grid.Column="0" />
-                <TextBox Name="textBoxSearchCriteria" Grid.Column="1" Margin="10" DockPanel.Dock="Left" AcceptsTab="True" TabIndex="2147483644" />
+                <TextBox Name="textBoxSearchCriteria" Grid.Column="1" Margin="10" DockPanel.Dock="Left" AcceptsTab="True" TabIndex="2147483644" KeyUp="textBoxSearchCriteria_KeyUp" />
                 <Button Name="buttonExpressionBuilder" Grid.Column="2" Content="{DynamicResource expressionBuilder}" Width="100px" Margin="0 10 0 10" Click="buttonExpressionBuilder_Click" TabIndex="2147483645" />
             </Grid>
         </DockPanel>

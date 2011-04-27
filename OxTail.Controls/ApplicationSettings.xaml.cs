@@ -66,8 +66,8 @@ namespace OxTail.Controls
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY] = (int.Parse(this.comboBoxInterval.Text) * 1000).ToString();
-            SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES] = (int.Parse(this.integerTextBoxMaxOpenFiles.Text)).ToString();
-            SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES] = (int.Parse(this.integerTextBoxMaxMruOpenFiles.Text)).ToString();
+            SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES] = this.sliderMaxOpenFiles.Value.ToString();
+            SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES] = this.sliderMaxMruOpenFiles.Value.ToString();
 
             if (this.SaveClick != null)
             {
@@ -86,8 +86,18 @@ namespace OxTail.Controls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             this.comboBoxInterval.Text = (int.Parse(SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY]) / 1000).ToString();
-            this.integerTextBoxMaxOpenFiles.Text = (int.Parse(SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES])).ToString();
-            this.integerTextBoxMaxMruOpenFiles.Text = (int.Parse(SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES])).ToString();
+            this.sliderMaxOpenFiles.Value = (double.Parse(SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES]));
+            this.sliderMaxMruOpenFiles.Value = (double.Parse(SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES]));
+        }
+
+        private void sliderMaxOpenFiles_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.labelSelectedMaxOpen.Content = string.Format("({0})", e.NewValue);
+        }
+
+        private void sliderMaxMruOpenFiles_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            this.labelSelectedMru.Content = string.Format("({0})", e.NewValue);
         }
     }
 }
