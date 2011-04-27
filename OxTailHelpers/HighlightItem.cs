@@ -33,6 +33,7 @@ namespace OxTailHelpers
     using OxTail.Helpers;
     using System.Runtime.Serialization;
     using System.Security.Permissions;
+    using OxTailHelpers.Data;
 
     /// <summary>
     /// Highlight item
@@ -65,6 +66,23 @@ namespace OxTailHelpers
             ForeColour = colour;
             BackColour = backColour;
         }
+
+        /// <summary>
+        /// Initialise instance
+        /// </summary>
+        /// <param name="pattern">The regular expression pattern</param>
+        /// <param name="order">The order of the regular expression pattern in the list</param>
+        /// <param name="colour">The fore color of the item</param>
+        /// <param name="backColour">The back color of the item</param>
+        public HighlightItem(string pattern, int order, Color colour, Color backColour)
+        {
+            Pattern = pattern;
+            ForeColour = colour;
+            BackColour = backColour;
+            Order = order;
+        }
+
+        public int ID { get; set; }
 
         /// <summary>
         /// The regular expression pattern

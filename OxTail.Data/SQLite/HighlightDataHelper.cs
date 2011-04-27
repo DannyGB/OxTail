@@ -22,26 +22,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data.Common;
-using OxTailHelpers;
-using System.IO;
-using System.Data.SQLite;
-using System.Data;
-using System.Reflection;
-using System.Windows.Forms;
 using OxTailHelpers.Data;
+using OxTailHelpers;
+using System.Data.Common;
+using System.Data;
+using System.Windows.Media;
 
 namespace OxTail.Data.SQLite
 {
-    public class AppSettingsDataHelper : SQLiteBase, IAppSettingsData
+    public class HighlightDataHelper : SQLiteBase, IHighlightItemData
     {
-        public AppSettingsDataHelper()
-        {            
-        }
 
-        public AppSettings ReadAppSettings()
+        public HighlightCollection<HighlightItem> Read()
         {
-            AppSettings appSettings = new AppSettings();
+            HighlightCollection<HighlightItem> highlights = new HighlightCollection<HighlightItem>();
 
             DbConnection.Open();
 
@@ -52,7 +46,7 @@ namespace OxTail.Data.SQLite
                     using (DbCommand cmd = DbConnection.CreateCommand())
                     {
                         cmd.Transaction = trans;
-                        cmd.CommandText = Constants.APPSETTINGS_SELECT_ALL;
+                        cmd.CommandText = Constants.HIGHTLIGHTITEMS_SELECT_ALL;
                         cmd.ExecuteNonQuery();
                         adpt.SelectCommand = cmd;
 
@@ -66,7 +60,28 @@ namespace OxTail.Data.SQLite
 
                                 foreach (DataRow row in tbl.Rows)
                                 {
-                                    appSettings[row[0].ToString()] = row[1].ToString();
+                                    HighlightItem item = new HighlightItem()
+                                    {
+                                        ID = int.Parse(row[0].ToString()),
+                                        Pattern = row[1].ToString(),
+                                        Order = int.Parse(row[2].ToString()),
+                                    };
+
+                                    //HACK: System.Drawing.Color allows storing of the colour as one integer, gonna use this to populate DB and re-hydrate back in code. Easier!
+
+                                    System.Drawing.Color tempCol = System.Drawing.Color.FromArgb(int.Parse(row[3].ToString()));
+                                    Color tempCol2 = Color.FromArgb(tempCol.A, tempCol.R, tempCol.G, tempCol.B);
+                                    item.ForeColour = tempCol2;
+
+                                    tempCol = System.Drawing.Color.FromArgb(int.Parse(row[4].ToString()));
+                                    tempCol2 = Color.FromArgb(tempCol.A, tempCol.R, tempCol.G, tempCol.B);
+                                    item.BackColour = tempCol2;
+
+                                    tempCol = System.Drawing.Color.FromArgb(int.Parse(row[5].ToString()));
+                                    tempCol2 = Color.FromArgb(tempCol.A, tempCol.R, tempCol.G, tempCol.B);
+                                    item.BorderColour = tempCol2;
+
+                                    highlights.Add(item);
                                 }
                             }
                         }
@@ -76,10 +91,10 @@ namespace OxTail.Data.SQLite
 
             DbConnection.Close();
 
-            return appSettings;
+            return highlights;
         }
-        
-        public int WriteAppSettings(AppSettings settings)
+
+        public HighlightCollection<HighlightItem> Write(HighlightCollection<HighlightItem> items)
         {
             int retval = 0;
 
@@ -92,7 +107,7 @@ namespace OxTail.Data.SQLite
                     using (DbCommand cmd = DbConnection.CreateCommand())
                     {
                         cmd.Transaction = trans;
-                        cmd.CommandText = Constants.APPSETTINGS_SELECT_ALL;
+                        cmd.CommandText = Constants.HIGHTLIGHTITEMS_SELECT_ALL;
                         cmd.ExecuteNonQuery();
                         adpt.SelectCommand = cmd;
 
@@ -103,26 +118,48 @@ namespace OxTail.Data.SQLite
                             using (DataTable tbl = new DataTable())
                             {
                                 adpt.Fill(tbl);
-                                
-                                foreach (string key in settings.Keys)
+
+                                foreach (HighlightItem item in items)
                                 {
                                     bool found = false;
 
                                     foreach (DataRow row in tbl.Rows)
                                     {
-                                        if(row[0].ToString() == key)
+                                        if (int.Parse(row[0].ToString()) == item.ID)
                                         {
-                                            row[1] = settings[key];
+                                            row[1] = item.Pattern;
+                                            row[2] = item.Order;
+
+                                            System.Drawing.Color tempCol = System.Drawing.Color.FromArgb(item.ForeColour.A, item.ForeColour.R, item.ForeColour.G, item.ForeColour.B);
+                                            row[3] = tempCol.ToArgb();
+
+                                            tempCol = System.Drawing.Color.FromArgb(item.BackColour.A, item.BackColour.R, item.BackColour.G, item.BackColour.B);
+                                            row[4] = tempCol.ToArgb();
+
+                                            tempCol = System.Drawing.Color.FromArgb(item.BorderColour.A, item.BorderColour.R, item.BorderColour.G, item.BorderColour.B);
+                                            row[5] = tempCol.ToArgb();
+
                                             found = true;
                                             break;
                                         }
                                     }
 
-                                    if(!found)
+                                    if (!found)
                                     {
                                         DataRow r = tbl.NewRow();
-                                        r[0] = key;
-                                        r[1] = settings[key];
+
+                                        r[1] = item.Pattern;
+                                        r[2] = item.Order;
+
+                                        System.Drawing.Color tempCol = System.Drawing.Color.FromArgb(item.ForeColour.A, item.ForeColour.R, item.ForeColour.G, item.ForeColour.B);
+                                        r[3] = tempCol.ToArgb();
+
+                                        tempCol = System.Drawing.Color.FromArgb(item.BackColour.A, item.BackColour.R, item.BackColour.G, item.BackColour.B);
+                                        r[4] = tempCol.ToArgb();
+
+                                        tempCol = System.Drawing.Color.FromArgb(item.BorderColour.A, item.BorderColour.R, item.BorderColour.G, item.BorderColour.B);
+                                        r[5] = tempCol.ToArgb();
+
                                         tbl.Rows.Add(r);
                                     }
                                 }
@@ -147,7 +184,7 @@ namespace OxTail.Data.SQLite
                 }
             }
 
-            return retval;
-        }        
+            return this.Read();
+        }
     }
 }

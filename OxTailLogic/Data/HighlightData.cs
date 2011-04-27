@@ -23,28 +23,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OxTailHelpers.Data;
-using OxTailHelpers;
 using OxTail.Data.SQLite;
 
 namespace OxTailLogic.Data
 {
-    public class AppSettingsData : IAppSettingsData
+    public class HighlightData : IHighlightItemData
     {
-        private IAppSettingsData AppSettingsDataHelper;
+        private IHighlightItemData HighlightDataHelper { get; set; }
 
-        public AppSettingsData()
+        public HighlightData()
         {
-            this.AppSettingsDataHelper = new AppSettingsDataHelper();
+            this.HighlightDataHelper = new HighlightDataHelper();
         }
 
-        public AppSettings ReadAppSettings()
+        public OxTailHelpers.HighlightCollection<OxTailHelpers.HighlightItem> Read()
         {
-            return this.AppSettingsDataHelper.ReadAppSettings();
+            return HighlightDataHelper.Read();
         }
 
-        public int WriteAppSettings(AppSettings settings)
+        public OxTailHelpers.HighlightCollection<OxTailHelpers.HighlightItem> Write(OxTailHelpers.HighlightCollection<OxTailHelpers.HighlightItem> items)
         {
-            return this.AppSettingsDataHelper.WriteAppSettings(settings);
+            return HighlightDataHelper.Write(items);
         }
     }
 }

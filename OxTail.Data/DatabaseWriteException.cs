@@ -22,29 +22,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OxTailHelpers.Data;
-using OxTailHelpers;
-using OxTail.Data.SQLite;
 
-namespace OxTailLogic.Data
+namespace OxTail.Data
 {
-    public class AppSettingsData : IAppSettingsData
+    [Serializable]
+    public class DatabaseWriteException : Exception
     {
-        private IAppSettingsData AppSettingsDataHelper;
-
-        public AppSettingsData()
-        {
-            this.AppSettingsDataHelper = new AppSettingsDataHelper();
-        }
-
-        public AppSettings ReadAppSettings()
-        {
-            return this.AppSettingsDataHelper.ReadAppSettings();
-        }
-
-        public int WriteAppSettings(AppSettings settings)
-        {
-            return this.AppSettingsDataHelper.WriteAppSettings(settings);
-        }
+        public DatabaseWriteException() : base("Failure to write to database") { }
+        public DatabaseWriteException(string message) : base(message) { }
+        public DatabaseWriteException(string message, Exception inner) : base(message, inner) { }
+        protected DatabaseWriteException(
+          System.Runtime.Serialization.SerializationInfo info,
+          System.Runtime.Serialization.StreamingContext context)
+            : base(info, context) { }
     }
 }

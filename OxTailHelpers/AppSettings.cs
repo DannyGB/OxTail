@@ -31,6 +31,7 @@ namespace OxTailHelpers
     {
         public const string REFRESH_INTERVAL_KEY = "RefreshInterval";
         public const string MAX_OPEN_FILES = "MaxOpenFiles";
+        public const string MAX_MRU_FILES = "MaMruFiles";
 
         public EventHandler<EventArgs> AppSettingsChanged;
 
@@ -41,8 +42,9 @@ namespace OxTailHelpers
 
         private void Initialize()
         {
-            base.Add(AppSettings.REFRESH_INTERVAL_KEY, "1");
-            base.Add(AppSettings.MAX_OPEN_FILES, "10");
+            base.Add(AppSettings.REFRESH_INTERVAL_KEY, Constants.REFRESH_INTERVAL);
+            base.Add(AppSettings.MAX_OPEN_FILES, Constants.MAX_OPEN_FILES);
+            base.Add(AppSettings.MAX_MRU_FILES, Constants.MAX_MRU_LIST);
         }
 
         public override void Add(string name, string value)
