@@ -63,7 +63,7 @@ namespace OxTailHelpers
         public const string MAX_MRU_LIST = "10";
 #endif
         public const string MAX_OPEN_FILES = "10";
-        public const string REFRESH_INTERVAL = "1";
+        public const string REFRESH_INTERVAL = "5";
 
         #endregion Settings Defaults
 
