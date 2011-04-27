@@ -74,6 +74,7 @@
     <Reference Include="System.Data.SQLite, Version=1.0.69.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\utils\System.Data.SQLite\bin\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -246,7 +247,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y /E /Q /I "$(ProjectDir)Culture\*.*" "$(TargetDir)Culture"
+    <PostBuildEvent>xcopy /Y /E /Q /I "$(SolutionDir)\ExternalDlls\SQLite.Interop.dll" "$(TargetDir)"
+xcopy /Y /E /Q /I "$(ProjectDir)Culture\*.*" "$(TargetDir)Culture"
 xcopy /Y /E /Q /I "$(TargetDir)OxTail.exe" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(TargetDir)OxTail.Controls.dll" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(TargetDir)OxTailHelpers.dll" "$(SolutionDir)LatestBuild\"
