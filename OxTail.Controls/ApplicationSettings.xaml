@@ -21,6 +21,8 @@
                 <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
                 
@@ -46,11 +48,14 @@
                 <Label Grid.Row="2" Grid.Column="0" Name="labelMaxMruOpenFiles" Content="{DynamicResource maxMruOpenFiles}" Margin="5"></Label>
                 <Slider Height="23" Name="sliderMaxMruOpenFiles" Width="100" Grid.Row="2" Grid.Column="1" TickPlacement="TopLeft" Orientation="Horizontal" SmallChange="1" Interval="1" AutoToolTipPlacement="TopLeft" Maximum="10" UseLayoutRounding="False" LargeChange="5" ValueChanged="sliderMaxMruOpenFiles_ValueChanged" IsSnapToTickEnabled="True" IsMoveToPointEnabled="True"  Margin="5"/>
                 <Label Name="labelSelectedMru" Grid.Column="2" Grid.Row="2" Content="({0})" Margin="5"></Label>
+
+                <Label Name="labelReopenFiles" Content="{DynamicResource reopenFiles}" Grid.Column="0" Grid.Row="3" />
+                <CheckBox Name="checkBoxReopenFiles" Grid.Row="3" Grid.Column="1" Margin="5" IsThreeState="False" />
                 
             </Grid>
         </WrapPanel>
        
-        <WrapPanel Grid.Row="2" Margin="10,0" HorizontalAlignment="Center">
+        <WrapPanel Grid.Row="4" Margin="10,0" HorizontalAlignment="Center">
             <Button Name="buttonSave" Content="{DynamicResource saveButton}" Width="100" Margin="10,10" Click="buttonSave_Click"></Button>
             <Button Name="buttonCancel" Content="{DynamicResource cancelButton}" Width="100" Margin="10,10" Click="buttonCancel_Click"></Button>
         </WrapPanel>
