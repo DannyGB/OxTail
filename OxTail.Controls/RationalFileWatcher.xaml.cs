@@ -394,7 +394,7 @@ namespace OxTail.Controls
         {
             lock (this)
             {
-                if (this.IsFileReadyForReread() || overrideFileReadyCheck)
+                if (overrideFileReadyCheck || this.IsFileReadyForReread())
                 {
                     using (StreamReader streamReader = this.OpenFile())
                     {
