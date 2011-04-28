@@ -36,6 +36,8 @@ namespace OxTail.Controls
     using System.Windows.Media;
     using System.Windows.Controls.Primitives;
     using OxTailLogic;
+    using System.Media;
+    using OxTailLogic.Audio;
 
     /// <summary>
     /// Interaction logic for RationalFileWatcher.xaml
@@ -79,6 +81,18 @@ namespace OxTail.Controls
         #endregion data members
 
         #region properties
+
+        private bool PlaySound
+        {
+            get;
+            set;
+        }
+
+        private bool SoundPlayed
+        {
+            get;
+            set;
+        }
 
         private List<int> PreviouslySelectedItems
         {
@@ -290,15 +304,7 @@ namespace OxTail.Controls
         private HighlightedItem GetHighlighting(string line)
         {
             HighlightedItem item = null;
-
-            //if (IsListInSearchMode)
-            //{
-            //    GetFoundHighlightItem(line, out item);
-            //}
-            //else
-            {
-                item = this.GetHighlightedItem(line);
-            }
+            item = this.GetHighlightedItem(line);
 
             if (item == null)
             {
@@ -363,6 +369,13 @@ namespace OxTail.Controls
                     highlighted.BorderColour = Constants.DEFAULT_NULL_COLOUR;
                 }
 
+                // Only play a sound if we are told to by ReadLines() and the user
+                if (PlaySound && bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]))
+                {
+                    AudioHelper.Play(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND_FILE]);
+                    SoundPlayed = true;
+                }
+
                 break; // use the first one we come across in the list - items at the top are most important
             }
 
@@ -414,10 +427,12 @@ namespace OxTail.Controls
                         int location = 0;
                         int positionInList = 0;
                         bool skipSameContent = false;
-                        int lastUsedIndex = 0;
+                        int lastUsedIndex = 0;                        
+                        this.SoundPlayed = false;
+                        this.PlaySound = true;
 
                         while (streamReader.Peek() > -1)
-                        {
+                        {                            
                             string oldLine = oldReader.ReadLine();
                             string line = streamReader.ReadLine();
 
@@ -426,6 +441,7 @@ namespace OxTail.Controls
                                 // There is no previous stream to compare against so just add the content to the screen
                                 if (oldReader.BaseStream.Length <= 0)
                                 {
+                                    this.SoundPlayed = true;
                                     skipSameContent = false;
                                     positionInList = location;
                                 }
@@ -448,11 +464,13 @@ namespace OxTail.Controls
                                     // Otherwise the old and new lines are the same so do nothing to the screen content
                                     else
                                     {
+                                        this.PlaySound = false;
                                         skipSameContent = true;
                                         lastUsedIndex = location;
                                         HighlightedItem item = GetHighlighting(line);
                                         this.CollectionBackBuffer[location].BackColour = item.BackColour;
                                         this.CollectionBackBuffer[location].ForeColour = item.ForeColour;
+                                        this.PlaySound = true;
                                     }
                                 }
 
@@ -461,6 +479,11 @@ namespace OxTail.Controls
                                 {
                                     line = line.TrimEnd(Constants.NULL_TERMINATOR).Replace(Constants.MAC_NEWLINE, Constants.CARRIAGE_RETURN).Replace(Constants.UNIX_NEWLINE, Constants.LINE_FEED); // in case of incorrectly selected line end;
                                     lastUsedIndex = this.AddHightLightedItem(line, positionInList);
+
+                                    if (this.SoundPlayed)
+                                    {
+                                        this.PlaySound = false;
+                                    }
                                 }
 
                                 skipSameContent = false;

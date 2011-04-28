@@ -35,7 +35,9 @@ namespace OxTail
     using System.Windows.Controls;
     using System.Windows.Input;
     using OxTailHelpers.Data;
-    using OxTailLogic.Data;
+    using OxTailLogic.Data;    
+    using System.Drawing;
+    using System.Reflection;    
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -45,6 +47,8 @@ namespace OxTail
         private List<Window> OpenWindows { get; set; }
         private FileWatcherTabItem FileToSearch { get; set; }
         private bool StopFileSwitchOnSearch { get; set; }
+        private List<LastOpenFiles> LastOpenFiles { get; set; }
+        private System.Windows.Forms.NotifyIcon Notify { get; set; }
 
         /// <summary>
         /// The current <see cref="HighlightCollection<T>"/> of <see cref="HighlightItem"/>
@@ -151,14 +155,82 @@ namespace OxTail
             {
                 LoadLastOpenFiles();
             }
+
+            SetupTrayIcon();
+
+        }
+
+        private void SetupTrayIcon()
+        {
+            this.Notify = new System.Windows.Forms.NotifyIcon();
+            this.Notify.Icon = new Icon(ResourceHelper.GetStreamFromApplication("OxTail.Images.OxTail.ico", Assembly.GetExecutingAssembly()));
+
+            System.Windows.Forms.ContextMenu ncm = new System.Windows.Forms.ContextMenu();
+
+            System.Windows.Forms.MenuItem menuItem = new System.Windows.Forms.MenuItem(LanguageHelper.GetLocalisedText(Application.Current as IApplication, Constants.DISABLE_SOUND_CONTEXT_MENU));
+            menuItem.Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]);
+            menuItem.Click += new EventHandler(disableSoundsMenuItem_Click);
+            ncm.MenuItems.Add(menuItem);
+
+            menuItem = new System.Windows.Forms.MenuItem(LanguageHelper.GetLocalisedText(Application.Current as IApplication, Constants.MINIMISE_TO_TRAY));
+            menuItem.Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]);
+            menuItem.Click += new EventHandler(minimuseToTrayItem_Click);
+            ncm.MenuItems.Add(menuItem);
+
+            menuItem = new System.Windows.Forms.MenuItem("-");
+            ncm.MenuItems.Add(menuItem);
+
+            menuItem = new System.Windows.Forms.MenuItem(LanguageHelper.GetLocalisedText(Application.Current as IApplication, Constants.EXIT_CONTEXT_MENU));
+            menuItem.Click += new EventHandler(exitItem_Click);
+            ncm.MenuItems.Add(menuItem);
+
+            this.Notify.DoubleClick += new EventHandler(Notify_DoubleClick);
+            this.Notify.ContextMenu = ncm;
+            this.Notify.Visible = true;
+        }
+
+        private void Notify_DoubleClick(object sender, EventArgs e)
+        {
+            switch (this.WindowState)
+            {
+                case WindowState.Maximized:
+                    this.WindowState = System.Windows.WindowState.Minimized;
+                    break;
+                case WindowState.Minimized:
+                    this.WindowState = System.Windows.WindowState.Normal;
+                    break;
+                case WindowState.Normal:
+                    this.WindowState = System.Windows.WindowState.Minimized;
+                    break;
+                default:
+                    break;
+            }
+        }       
+
+        private void minimuseToTrayItem_Click(object sender, EventArgs e)
+        {
+            SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY] = (!bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY])).ToString();
+            ((System.Windows.Forms.MenuItem)sender).Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]);
+        }
+
+        private void disableSoundsMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsHelper.AppSettings[AppSettings.PLAY_SOUND] = (!bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND])).ToString();
+            ((System.Windows.Forms.MenuItem)sender).Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]);
+        }
+
+        private void exitItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            Environment.Exit(0);
         }
 
         private void LoadLastOpenFiles()
         {
             ILastOpenFilesData data = (ILastOpenFilesData)DataService<LastOpenFilesData>.InitialiseDataService();
-            List<LastOpenFiles> files = data.Read();
+            this.LastOpenFiles = data.Read();
 
-            foreach (LastOpenFiles file in files)
+            foreach (LastOpenFiles file in LastOpenFiles)
             {
                 this.OpenFile(file.Filename);
             }
@@ -377,13 +449,12 @@ namespace OxTail
 
             if (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
             {
-                List<LastOpenFiles> files = new List<LastOpenFiles>();
                 foreach (FileWatcherTabItem tab in this.tabControlMain.Items)
                 {
-                    files.Add(new LastOpenFiles(tab.Uid));
+                    this.LastOpenFiles.Add(new LastOpenFiles(tab.Uid));
                 }
 
-                data.Write(files);
+                data.Write(this.LastOpenFiles);
             }
             else
             {
@@ -391,6 +462,7 @@ namespace OxTail
             }
 
             CloseAllOpenWindowsWhenMainWindowClosed();
+            this.Notify.Visible = false;
         }
 
         private void CloseAllOpenWindowsWhenMainWindowClosed()
@@ -421,6 +493,32 @@ namespace OxTail
             {
                 KeyboardHelper.StandardControlKeyCombinationPressed(e.Key, (this as IMainWindowKeyPressMethods));
             }            
+        }
+
+        private void BaseMainWindow_StateChanged(object sender, EventArgs e)
+        {
+            this.ToggleWindowState();
+        }
+
+        private void ToggleWindowState()
+        {
+            if (bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]))
+            {
+                switch (this.WindowState)
+                {
+                    case WindowState.Maximized:
+                        this.ShowInTaskbar = true;
+                        break;
+                    case WindowState.Minimized:
+                        this.ShowInTaskbar = false;
+                        break;
+                    case WindowState.Normal:
+                        this.ShowInTaskbar = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 }

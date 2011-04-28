@@ -23,6 +23,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
+using System.IO;
+using System.Reflection;
 
 namespace OxTailHelpers
 {
@@ -42,6 +44,13 @@ namespace OxTailHelpers
 
             return (string)myresourcedictionary[key];
 
+        }
+
+        public static Stream GetStreamFromApplication(string resourceName, Assembly assembly)
+        {            
+            Stream s = assembly.GetManifestResourceStream(resourceName);
+
+            return s;
         }
     }
 }

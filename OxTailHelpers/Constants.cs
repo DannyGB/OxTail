@@ -88,6 +88,10 @@ namespace OxTailHelpers
         public const string LINE_NUMBER_ERROR = "lineNumberError";
         public const string RESOURCE_KEY_FILE_NOT_SET = "resourceFileKeyNotSet";
         public const string LINES_IN_FILE = "linesInFile";
+        public const string EXIT_CONTEXT_MENU = "exitContextMenu";
+        public const string DISABLE_SOUND_CONTEXT_MENU = "disableSoundContextMenu";
+        public const string MINIMISE_TO_TRAY = "minimiseToTray";
+        public const string FILE_DOES_NOT_EXIST = "fileDoesNotExist";        
 
         #endregion Resource keys
 

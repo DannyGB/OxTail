@@ -83,7 +83,6 @@ namespace OxTail.Controls
 
         void OxTailFileViewer_GotFocus(object sender, RoutedEventArgs e)
         {
-            ShowImage(System.Windows.Visibility.Hidden);
         }
         
         // Create a custom routed event by first registering a RoutedEventID
@@ -100,25 +99,12 @@ namespace OxTail.Controls
         // This method raises the FileChanged event
         void OnFileChanged()
         {
-            ShowImage(System.Windows.Visibility.Visible);
             Dispatcher.Invoke((Action)(() =>
             {
                 RoutedEventArgs newEventArgs = new RoutedEventArgs(RationalFileWatcher.FileChangedEvent);
                 this.RaiseEvent(new RoutedEventArgs(RationalFileWatcher.FileChangedEvent, this));
             }
              ));
-        }
-
-        private void ShowImage(System.Windows.Visibility visibility)
-        {
-            if (this._image == null)
-            {
-                this._image = base.GetTemplateChild(Constants.PART_ICON) as Image;
-            }
-            if (this._image != null)
-            {
-                this._image.Visibility = visibility;
-            }
         }
 
         #region IDisposable Members
