@@ -5,7 +5,9 @@
     xmlns:oxtail="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
     ResizeMode="CanResizeWithGrip"
     Icon="OxTail.ico"
-    Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="BaseWindow_Closing" KeyUp="BaseWindow_KeyUp">
+    Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="BaseWindow_Closing" KeyUp="BaseWindow_KeyUp"
+    StateChanged="BaseMainWindow_StateChanged"                   
+    >
     <DockPanel Name="dockPanelMain" LastChildFill="True">
         <Menu Name="menu1" DockPanel.Dock="Top" >
             <MenuItem  Header="{DynamicResource file}">
@@ -44,5 +46,6 @@
             </MenuItem>
         </Menu>
         <TabControl Name="tabControlMain" SelectionChanged="tabControlMain_SelectionChanged"></TabControl>
-    </DockPanel>
+        
+    </DockPanel>   
 </custom:BaseMainWindow>

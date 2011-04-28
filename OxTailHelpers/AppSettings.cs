@@ -33,6 +33,9 @@ namespace OxTailHelpers
         public const string MAX_OPEN_FILES = "MaxOpenFiles";
         public const string MAX_MRU_FILES = "MaMruFiles";
         public const string REOPEN_FILES = "ReopenFiles";
+        public const string PLAY_SOUND = "PlaySound";
+        public const string PLAY_SOUND_FILE = "PlaySoundFile";
+        public const string MINIMISE_TO_TRAY = "MinimiseToTray";
 
         public EventHandler<EventArgs> AppSettingsChanged;
 
@@ -47,6 +50,9 @@ namespace OxTailHelpers
             base.Add(AppSettings.MAX_OPEN_FILES, Constants.MAX_OPEN_FILES);
             base.Add(AppSettings.MAX_MRU_FILES, Constants.MAX_MRU_LIST);
             base.Add(AppSettings.REOPEN_FILES, Constants.REOPEN_FILES);
+            base.Add(AppSettings.PLAY_SOUND, false.ToString());
+            base.Add(AppSettings.PLAY_SOUND_FILE, string.Empty);
+            base.Add(AppSettings.MINIMISE_TO_TRAY, false.ToString());
         }
 
         public override void Add(string name, string value)

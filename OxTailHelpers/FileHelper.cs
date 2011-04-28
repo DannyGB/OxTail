@@ -56,7 +56,17 @@ namespace OxTail.Helpers
         /// <returns></returns>
         public static string ShowOpenFileDialog()
         {
+            return ShowOpenFileDialog(string.Empty);
+        }
+
+        /// <summary>
+        /// Shows the OpenFileDialog
+        /// </summary>
+        /// <returns></returns>
+        public static string ShowOpenFileDialog(string fileExtensionPattern)
+        {
             OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Filter = fileExtensionPattern;
             bool? retVal = dialog.ShowDialog();
             if (retVal.HasValue && retVal.Value)
             {

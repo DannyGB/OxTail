@@ -183,6 +183,10 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="Images\.svn\all-wcprops" />
+    <None Include="Images\.svn\entries" />
+    <None Include="Images\.svn\prop-base\bell.png.svn-base" />
+    <None Include="Images\.svn\text-base\bell.png.svn-base" />
     <None Include="OxTail.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -236,6 +240,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="OxTail2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\bell.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\OxTail.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\.svn\props\" />
+    <Folder Include="Images\.svn\tmp\prop-base\" />
+    <Folder Include="Images\.svn\tmp\props\" />
+    <Folder Include="Images\.svn\tmp\text-base\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

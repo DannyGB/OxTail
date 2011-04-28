@@ -147,6 +147,7 @@
     <system:String x:Key="parentMustBeMenuItem">Parent must be a MenuItem</system:String>
     <system:String x:Key="fileNoLongerExistsOnDisk">File no longer exists on disk</system:String>
     <system:String x:Key="cantAccessClipboard">Can't access clipboard</system:String>
+    <system:String x:Key="fileDoesNotExist">File does not exist</system:String>
     
     
     <!-- Exceptions -->
@@ -155,10 +156,21 @@
     <system:String x:Key="resourceFileKeyNotSet">ResourceFileKey must be set</system:String>
     
     <!-- Settings -->
-    <system:String x:Key="refreshIntervals">Refresh Interval (secs):</system:String>
-    <system:String x:Key="maxDirOpenFiles">Maximum Files to Open:</system:String>
+    <system:String x:Key="refreshIntervals">Refresh interval (secs):</system:String>
+    <system:String x:Key="maxDirOpenFiles">Maximum files to Open:</system:String>
     <system:String x:Key="maxDirOpenFilesToolTip">When opening a directory from File -> Open menu</system:String>
-    <system:String x:Key="maxMruOpenFiles">Maximum Most Recent Files to Track:</system:String>
-    <system:String x:Key="reopenFiles">Re-open current files next time?</system:String>
+    <system:String x:Key="maxMruOpenFiles">Maximum most recent files to track:</system:String>
+    <system:String x:Key="reopenFiles">Re-open current files next time?</system:String>   
+    <system:String x:Key="playSoundFile">Play sound on highlight match?</system:String>
+    <system:String x:Key="groupBoxWatcher">Watcher</system:String>
+    <system:String x:Key="groupBoxMain">General</system:String>
+    <system:String x:Key="test">Test</system:String>
+    
+    <!-- System tray context menu -->
+    <!-- Don't use underscore accelorators -->
+    <system:String x:Key="exitContextMenu">Exit</system:String>
+    <system:String x:Key="disableSoundContextMenu">Sound?</system:String>
+    <system:String x:Key="minimiseToTray">Minimise To Tray?</system:String>
+           
 
 </ResourceDictionary>
