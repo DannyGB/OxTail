@@ -64,6 +64,7 @@ namespace OxTailHelpers
 #endif
         public const string MAX_OPEN_FILES = "10";
         public const string REFRESH_INTERVAL = "5";
+        public const string REOPEN_FILES = "False";
 
         #endregion Settings Defaults
 

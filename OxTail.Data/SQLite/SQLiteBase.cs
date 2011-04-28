@@ -55,6 +55,7 @@ namespace OxTail.Data.SQLite
                 SQLiteDatabaseHelper.ExecuteNonQuery(Constants.APPSETTINGS_TABLE_DDL, DbConnection, Factory, trans);
                 SQLiteDatabaseHelper.ExecuteNonQuery(Constants.HIGHLIGHTITEMS_TABLE_DDL, DbConnection, Factory, trans);
                 SQLiteDatabaseHelper.ExecuteNonQuery(Constants.SAVEDEXPRESSIONS_TABLE_DDL, DbConnection, Factory, trans);
+                SQLiteDatabaseHelper.ExecuteNonQuery(Constants.LAST_OPEN_FILES_TABLE_DDL, DbConnection, Factory, trans);
 
                 trans.Commit();
             }

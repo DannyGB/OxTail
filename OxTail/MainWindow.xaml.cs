@@ -68,6 +68,7 @@ namespace OxTail
 
         private void MenuExitClick(object sender, RoutedEventArgs e)
         {
+            this.Close();
             Environment.Exit(0);
         }
 
@@ -144,8 +145,23 @@ namespace OxTail
 
             IHighlightItemData hightlightData = (IHighlightItemData)DataService<HighlightData>.InitialiseDataService();
             HighlightItems = hightlightData.Read();
-            //HighlightItems = HighlightItem.LoadHighlights(Settings.Default.HighlightFileLocations);
             HighlightItems.ApplySort(null, ListSortDirection.Descending);
+
+            if (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
+            {
+                LoadLastOpenFiles();
+            }
+        }
+
+        private void LoadLastOpenFiles()
+        {
+            ILastOpenFilesData data = (ILastOpenFilesData)DataService<LastOpenFilesData>.InitialiseDataService();
+            List<LastOpenFiles> files = data.Read();
+
+            foreach (LastOpenFiles file in files)
+            {
+                this.OpenFile(file.Filename);
+            }
         }
 
         private void MenuOpenDirectory_Click(object sender, RoutedEventArgs e)
@@ -357,6 +373,23 @@ namespace OxTail
 
         private void BaseWindow_Closing(object sender, CancelEventArgs e)
         {
+            ILastOpenFilesData data = (ILastOpenFilesData)DataService<LastOpenFilesData>.InitialiseDataService();
+
+            if (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
+            {
+                List<LastOpenFiles> files = new List<LastOpenFiles>();
+                foreach (FileWatcherTabItem tab in this.tabControlMain.Items)
+                {
+                    files.Add(new LastOpenFiles(tab.Uid));
+                }
+
+                data.Write(files);
+            }
+            else
+            {
+                data.Clear();
+            }
+
             CloseAllOpenWindowsWhenMainWindowClosed();
         }
 

@@ -159,5 +159,6 @@
     <system:String x:Key="maxDirOpenFiles">Maximum Files to Open:</system:String>
     <system:String x:Key="maxDirOpenFilesToolTip">When opening a directory from File -> Open menu</system:String>
     <system:String x:Key="maxMruOpenFiles">Maximum Most Recent Files to Track:</system:String>
+    <system:String x:Key="reopenFiles">Re-open current files next time?</system:String>
 
 </ResourceDictionary>

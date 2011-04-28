@@ -68,6 +68,7 @@ namespace OxTail.Controls
             SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY] = (int.Parse(this.comboBoxInterval.Text) * 1000).ToString();
             SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES] = this.sliderMaxOpenFiles.Value.ToString();
             SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES] = this.sliderMaxMruOpenFiles.Value.ToString();
+            SettingsHelper.AppSettings[AppSettings.REOPEN_FILES] = this.checkBoxReopenFiles.IsChecked.ToString();
 
             if (this.SaveClick != null)
             {
@@ -88,6 +89,7 @@ namespace OxTail.Controls
             this.comboBoxInterval.Text = (int.Parse(SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY]) / 1000).ToString();
             this.sliderMaxOpenFiles.Value = (double.Parse(SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES]));
             this.sliderMaxMruOpenFiles.Value = (double.Parse(SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES]));
+            this.checkBoxReopenFiles.IsChecked = (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]));
         }
 
         private void sliderMaxOpenFiles_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
