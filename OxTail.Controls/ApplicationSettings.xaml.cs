@@ -82,6 +82,7 @@ namespace OxTail.Controls
             SettingsHelper.AppSettings[AppSettings.PLAY_SOUND] = this.checkBoxPlaySound.IsChecked.ToString();
             SettingsHelper.AppSettings[AppSettings.PLAY_SOUND_FILE] = this.textBoxSoundFile.Text;
             SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY] = this.checkBoxMinimiseToTray.IsChecked.ToString();
+            SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND] = this.checkBoxPauseOnFound.IsChecked.ToString();
 
             if (this.SaveClick != null)
             {
@@ -117,6 +118,7 @@ namespace OxTail.Controls
             this.checkBoxPlaySound.IsChecked = (bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]));
             this.textBoxSoundFile.Text = SettingsHelper.AppSettings[AppSettings.PLAY_SOUND_FILE];
             this.checkBoxMinimiseToTray.IsChecked = (bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]));
+            this.checkBoxPauseOnFound.IsChecked = (SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND] == null) ? false : (bool.Parse(SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND]));
 
             this.ToggleTextBox(this.checkBoxPlaySound.IsChecked.Value);
         }
@@ -159,6 +161,16 @@ namespace OxTail.Controls
             }
 
             AudioHelper.Play(this.textBoxSoundFile.Text);
+        }
+
+        private void checkBoxPauseOnFound_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void checkBoxPauseOnFound_Unchecked(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

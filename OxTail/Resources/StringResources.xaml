@@ -165,6 +165,7 @@
     <system:String x:Key="groupBoxWatcher">Watcher</system:String>
     <system:String x:Key="groupBoxMain">General</system:String>
     <system:String x:Key="test">Test</system:String>
+    <system:String x:Key="pauseOnFound">Stop tailing on highlight match?</system:String>
     
     <!-- System tray context menu -->
     <!-- Don't use underscore accelorators -->

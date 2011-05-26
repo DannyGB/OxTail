@@ -177,6 +177,12 @@ namespace OxTail.Controls
             set { this._followTail = value; }
         }
 
+        public bool IsStopFollowTail
+        {
+            get;
+            set;
+        }
+
         private ItemCollection Lines
         {
             get { return this.colourfulListView.Items; }
@@ -370,10 +376,15 @@ namespace OxTail.Controls
                 }
 
                 // Only play a sound if we are told to by ReadLines() and the user
-                if (PlaySound && bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]))
+                if (SettingsHelper.AppSettings[AppSettings.PLAY_SOUND] != null && PlaySound && bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]))
                 {
                     AudioHelper.Play(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND_FILE]);
                     SoundPlayed = true;
+                }
+
+                if ((SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND] != null && bool.Parse(SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND])) || this.IsStopFollowTail)
+                {
+                    IsFollowTail = false;
                 }
 
                 break; // use the first one we come across in the list - items at the top are most important
@@ -549,10 +560,10 @@ namespace OxTail.Controls
             InitializeComponent();
 
             // setup the line ending detection combo box
-            this.comboBoxNewlineDetection.ItemsSource = Enum.GetNames(typeof(NewlineDetectionMode));
-            Binding bindingNewlineDetection = new Binding("NewlineDetectionMode");
-            bindingNewlineDetection.Source = this;
-            this.comboBoxNewlineDetection.SetBinding(ComboBox.TextProperty, bindingNewlineDetection);
+            //this.comboBoxNewlineDetection.ItemsSource = Enum.GetNames(typeof(NewlineDetectionMode));
+            //Binding bindingNewlineDetection = new Binding("NewlineDetectionMode");
+            //bindingNewlineDetection.Source = this;
+            //this.comboBoxNewlineDetection.SetBinding(ComboBox.TextProperty, bindingNewlineDetection);
 
             // setup the encoding combo box
             this.comboBoxEncoding.ItemsSource = Encoding.GetEncodings();
@@ -566,6 +577,10 @@ namespace OxTail.Controls
             Binding bindingFollowTail = new Binding("IsFollowTail");
             bindingFollowTail.Source = this;
             this.checkBoxFollowTail.SetBinding(CheckBox.IsCheckedProperty, bindingFollowTail);
+            
+            Binding bindingStopFollowTail = new Binding("IsStopFollowTail");
+            bindingStopFollowTail.Source = this;
+            this.checkBoxStopFollowingTailOnNextHighlight.SetBinding(CheckBox.IsCheckedProperty, bindingStopFollowTail);
 
             this._bw = new BackgroundWorker();
             this._bw.WorkerSupportsCancellation = true;

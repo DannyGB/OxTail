@@ -70,8 +70,8 @@
                 <CheckBox Name="checkBoxFollowTail" ToolTip="{DynamicResource followTail}" Content="{DynamicResource followTail}"/>
             </StatusBarItem>
             <StatusBarItem Grid.Column="3">
-                <ComboBox Name="comboBoxNewlineDetection" Width="70" ToolTip="{DynamicResource lineEnds}" Visibility="Hidden"/>
-            </StatusBarItem>
+                <CheckBox Name="checkBoxStopFollowingTailOnNextHighlight" ToolTip="{DynamicResource pauseOnFound}" Content="{DynamicResource pauseOnFound}"/>
+            </StatusBarItem>            
             <StatusBarItem Grid.Column="4">
                 <ComboBox Name="comboBoxEncoding" Width="100" ToolTip="{DynamicResource encoding}"/>
             </StatusBarItem>
