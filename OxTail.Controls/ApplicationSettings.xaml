@@ -31,6 +31,7 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                     </Grid.RowDefinitions>
                     
@@ -49,12 +50,15 @@
                         <ComboBoxItem Content="240"></ComboBoxItem>
                     </ComboBox>
                     
-                    <WrapPanel Grid.Column="1" Grid.Row="1">
-                        <TextBox Name="textBoxSoundFile" Grid.Row="1" Grid.Column="1" Margin="5" Width="90" />
-                        <Button Name="buttonLookup" Grid.Row="1" Grid.Column="1" Margin="5" Content="..." Click="buttonLookup_Click" />
-                    </WrapPanel>
-                    <CheckBox Name="checkBoxPlaySound" Grid.Row="1" Grid.Column="0" Margin="5,10,5,5" IsThreeState="False" Content="{DynamicResource playSoundFile}" Checked="checkBoxPlaySound_Checked" Unchecked="checkBoxPlaySound_Unchecked" />
+                        <WrapPanel Grid.Column="1" Grid.Row="1">
+                            <TextBox Name="textBoxSoundFile" Grid.Row="1" Grid.Column="1" Margin="5" Width="90" />
+                            <Button Name="buttonLookup" Grid.Row="1" Grid.Column="1" Margin="5" Content="..." Click="buttonLookup_Click" />
+                        </WrapPanel>
+                        <CheckBox Name="checkBoxPlaySound" Grid.Row="1" Grid.Column="0" Margin="5,10,5,5" IsThreeState="False" Content="{DynamicResource playSoundFile}" Checked="checkBoxPlaySound_Checked" Unchecked="checkBoxPlaySound_Unchecked" />
                         <Button Name="buttonTestSound" Grid.Row="1" Grid.Column="2" Margin="5" Content="{DynamicResource test}" Click="buttonTestSound_Click" />
+
+                        <Label Name="labelPauseOnFound" Grid.Row="2" Content="{DynamicResource pauseOnFound}" Grid.Column="0" />
+                        <CheckBox Name="checkBoxPauseOnFound" Grid.Row="2" Grid.Column="1" Margin="5,10,5,5" IsThreeState="False" Content="" Checked="checkBoxPauseOnFound_Checked"  Unchecked="checkBoxPauseOnFound_Unchecked" />
                     </Grid>
             </GroupBox>
 

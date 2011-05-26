@@ -36,6 +36,7 @@ namespace OxTailHelpers
         public const string PLAY_SOUND = "PlaySound";
         public const string PLAY_SOUND_FILE = "PlaySoundFile";
         public const string MINIMISE_TO_TRAY = "MinimiseToTray";
+        public const string PAUSE_ON_FOUND = "PauseOnFound";
 
         public EventHandler<EventArgs> AppSettingsChanged;
 
