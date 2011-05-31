@@ -105,7 +105,6 @@ namespace OxTailHelpers
         public const string SAVED_EXPRESSION_FILE_NAME = "SavedExpression.xml";
         public const string UNAMED = "UNNAMED";
         public const string EXAMPLE_REGEX_DATA_FILENAME = "OxTail.Controls.ExampleRegexData.txt";
-        public const string RECENT_FILE_LIST_NAME = "RecentFileList.xml";
         public const string RECENT_FILES_MENUITEM_HEADER = "recentFilesMenuItemText";
         public const string HIGHLIGHT_ITEM_SORT_HEADER = "Order";        
         public const string ABOUT_PAGE_GPL_TEXT_RTF = "OxTail.Controls.AboutPageGplText.rtf";

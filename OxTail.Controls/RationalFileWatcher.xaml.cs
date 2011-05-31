@@ -140,7 +140,16 @@ namespace OxTail.Controls
 
             set
             {
-                this._patterns = value;
+                if (this.Patterns == null)
+                {
+                    this._patterns = value;
+                    this.Patterns.ListChanged += new ListChangedEventHandler(Patterns_ListChanged);
+                }
+
+                else
+                {
+                    this._patterns = value;
+                }
             }
         }
 
@@ -555,15 +564,12 @@ namespace OxTail.Controls
             }));
         }    
 
+        /// <summary>
+        /// Initializes this instance
+        /// </summary>
         public RationalFileWatcher()
         {
             InitializeComponent();
-
-            // setup the line ending detection combo box
-            //this.comboBoxNewlineDetection.ItemsSource = Enum.GetNames(typeof(NewlineDetectionMode));
-            //Binding bindingNewlineDetection = new Binding("NewlineDetectionMode");
-            //bindingNewlineDetection.Source = this;
-            //this.comboBoxNewlineDetection.SetBinding(ComboBox.TextProperty, bindingNewlineDetection);
 
             // setup the encoding combo box
             this.comboBoxEncoding.ItemsSource = Encoding.GetEncodings();
@@ -589,7 +595,7 @@ namespace OxTail.Controls
 
             this.SelectedItem = new List<HighlightedItem>();
             this.LastReadStream = new MemoryStream();
-            this.CollectionBackBuffer = new List<HighlightedItem>();
+            this.CollectionBackBuffer = new List<HighlightedItem>();            
         }
 
         void _bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -623,7 +629,8 @@ namespace OxTail.Controls
             this._doWorkEventArgs = e;
             while (!this._bw.CancellationPending)
             {
-                this.Tail();
+                _bw_DoWorkRunOnce(sender, e);
+
                 if (!this.CancellationPending())
                 {
                     Thread.Sleep(this.Interval);
@@ -633,12 +640,29 @@ namespace OxTail.Controls
             return;
         }
 
+        private void _bw_DoWorkRunOnce(object sender, DoWorkEventArgs e)
+        {
+            this._doWorkEventArgs = e;
+            if (_doWorkEventArgs.Argument != null)
+            {
+                this.Tail((bool)_doWorkEventArgs.Argument);
+            }
+
+            else
+            {
+                this.Tail();
+            }
+
+            e.Result = "Completed";
+            return;
+        }
+
         /// <summary>
         /// Reads only the latest additional text that has been appended to the file
         /// </summary>
-        private void Tail()
+        private void Tail(bool overrideFileReadyCheck = false)
         {
-            if(this.ReadLines(false) && this.IsFollowTail)
+            if (this.ReadLines(overrideFileReadyCheck) && this.IsFollowTail)
             {
                 this.ScrollToEnd();
             }
@@ -755,6 +779,10 @@ namespace OxTail.Controls
 
         void Patterns_ListChanged(object sender, ListChangedEventArgs e)
         {
+            BackgroundWorker bg = new BackgroundWorker();
+            bg.DoWork += new DoWorkEventHandler(this._bw_DoWorkRunOnce);
+            bg.RunWorkerAsync(true);
+
         }
 
         private void UpdateHighlighting()

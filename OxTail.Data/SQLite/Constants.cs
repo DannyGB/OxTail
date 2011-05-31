@@ -33,12 +33,16 @@ namespace OxTail.Data.SQLite
         public const string HIGHLIGHTITEMS_TABLE_DDL = @"CREATE TABLE IF NOT EXISTS HighlightItems ( ID INTEGER PRIMARY KEY AUTOINCREMENT, Pattern VARCHAR(4000), [Order] INTEGER, ForeColour INTEGER, BackColour INTEGER, BorderColour INTEGER);";
         public const string SAVEDEXPRESSIONS_TABLE_DDL = @"CREATE TABLE IF NOT EXISTS SavedExpressions ( ID INTEGER PRIMARY KEY AUTOINCREMENT, [Name] VARCHAR(4000), Expression VARCHAR(4000));";
         public const string LAST_OPEN_FILES_TABLE_DDL = @"CREATE TABLE IF NOT EXISTS LastOpenFiles ( ID INTEGER PRIMARY KEY AUTOINCREMENT, [Filename] VARCHAR(4000));";
+        public const string MOST_RECENT_FILES_TABLE_DDL = @"CREATE TABLE IF NOT EXISTS MostRecentFiles ( ID INTEGER PRIMARY KEY AUTOINCREMENT, [Filename] VARCHAR(4000));";
        
         public const string APPSETTINGS_SELECT_ALL = "SELECT * FROM AppSettings";
         public const string HIGHTLIGHTITEMS_SELECT_ALL = "SELECT * FROM HighlightItems";
         public const string SAVEDEXPRESSIONS_SELECT_ALL = "SELECT * FROM SavedExpressions";
         public const string LAST_OPEN_FILES_SELECT_ALL = "SELECT * FROM LastOpenFiles";
         public const string LAST_OPEN_FILES_DELETE_ALL = "DELETE FROM LastOpenFiles";
+
+        public const string MOST_RECENT_FILES_SELECT_ALL = "SELECT * FROM MostRecentFiles";
+        public const string MOST_RECENT_FILES_DELETE_ALL = "DELETE FROM MostRecentFiles";
 
         public const string DATABASE_NAME = @"\oxtail.db3";
         public const string DATA_SOURCE = @"Data Source={0}";

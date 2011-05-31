@@ -454,7 +454,10 @@ namespace OxTail
                     this.LastOpenFiles.Add(new LastOpenFiles(tab.Uid));
                 }
 
-                data.Write(this.LastOpenFiles);
+                if (this.LastOpenFiles != null)
+                {
+                    data.Write(this.LastOpenFiles);
+                }
             }
             else
             {

@@ -31,6 +31,7 @@ namespace OxTail.Helpers
     using System.Reflection;
     using System.Xml.Serialization;
     using System.Xml;
+    using OxTailHelpers.Data;
 
     public class FileHelper
     {
@@ -223,31 +224,6 @@ namespace OxTail.Helpers
             }
 
             return fileInfos;
-        }
-
-        /// <summary>
-        /// Saves the most recent file list
-        /// </summary>
-        /// <param name="files">The files</param>
-        /// <param name="saveToFilename">The filename to save to</param>
-        public static void MruSave(List<OxTail.Helpers.File> files, string saveToFilename)
-        {
-            XmlSerializer serializer = new XmlSerializer(typeof(List<OxTail.Helpers.File>), new Type[] { typeof(OxTail.Helpers.File) });
-            FileHelper.SerializeToExecutableDirectory(saveToFilename, serializer, files);
-        }
-
-        /// <summary>
-        /// Loads the most recent file list
-        /// </summary>
-        /// <param name="openFromFilename">The filename to open</param>
-        /// <returns>A <see cref="List<T>"/> of <see cref="OxTail.Helpers.File"/></returns>
-        public static List<OxTail.Helpers.File> MruLoad(string openFromFilename)
-        {
-            List<OxTail.Helpers.File> files = new List<File>();
-            XmlSerializer serializer = new XmlSerializer(typeof(List<OxTail.Helpers.File>), new Type[] { typeof(OxTail.Helpers.File) });
-            files = (List<OxTail.Helpers.File>)FileHelper.DeserializeFromExecutableDirectory(openFromFilename, serializer);
-
-            return files;
         }
     }
 }

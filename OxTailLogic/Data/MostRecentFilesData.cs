@@ -1,4 +1,4 @@
-/*****************************************************************
+﻿/*****************************************************************
 *
 * Copyright 2011 Dan Beavon
 *
@@ -22,19 +22,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OxTailHelpers.Data;
+using OxTail.Data.SQLite;
 
-namespace OxTailHelpers
+namespace OxTailLogic.Data
 {
-    public class LastOpenFiles : BaseFiles
+    public class MostRecentFilesData : IMostRecentFilesData
     {
-        public LastOpenFiles()
-            : base(string.Empty)
+        private IMostRecentFilesData MostRecentFiles { get; set; }
+
+        public MostRecentFilesData()
         {
+            this.MostRecentFiles = new MostRecentFilesDataHelper();
         }
 
-        public LastOpenFiles(string filename)
-            : base(filename)
+        public List<OxTail.Helpers.File> Read()
         {
+            return this.MostRecentFiles.Read();
+        }
+
+        public List<OxTail.Helpers.File> Write(List<OxTail.Helpers.File> files)
+        {
+            return this.MostRecentFiles.Write(files);
+        }
+
+        public void Clear()
+        {
+            this.MostRecentFiles.Clear();
         }
     }
 }

@@ -51,6 +51,8 @@ namespace OxTail.Controls
         /// </summary>
         public event RoutedEventHandler CancelClick;
 
+        private ISavedExpressionsData Data { get; set; }
+
         /// <summary>
         /// Initialises instance
         /// </summary>
@@ -140,8 +142,19 @@ namespace OxTail.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ISavedExpressionsData data = (ISavedExpressionsData)DataService<SavedExpressionData>.InitialiseDataService();
-            this.comboBoxSavedExpressions.DataContext = data.Read();
+            Data = (ISavedExpressionsData)DataService<SavedExpressionData>.InitialiseDataService();
+            ObservableCollection<OxTailHelpers.Expression> exprs = Data.Read();
+
+            if (exprs == null || exprs.Count <= 0)
+            {
+                exprs.Add(new OxTailHelpers.Expression("", "Choose Item"));
+                exprs.Add(new OxTailHelpers.Expression(@"^([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})$", "Email"));
+                exprs.Add(new OxTailHelpers.Expression(@"\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b", "IP Addresses"));
+                exprs.Add(new OxTailHelpers.Expression(@"([a-zA-Z]{1,2}\w{1,2})+(\d{1}[a-zA-Z]{2})+", "Postcodes"));
+                exprs.Add(new OxTailHelpers.Expression(@"([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})", "Email_Anywhere_On_Line"));
+            }
+
+            this.comboBoxSavedExpressions.DataContext = exprs;
             this.FillExampleRegExData();
             this.textBoxExpression.Focus();
         }
@@ -159,9 +172,7 @@ namespace OxTail.Controls
         private void SaveExpressions()
         {
             ObservableCollection<OxTailHelpers.Expression> list = (ObservableCollection<OxTailHelpers.Expression>)this.comboBoxSavedExpressions.DataContext;
-            ISavedExpressionsData data = (ISavedExpressionsData)DataService<SavedExpressionData>.InitialiseDataService();
-         
-            this.comboBoxSavedExpressions.DataContext = data.Write(list);
+            this.comboBoxSavedExpressions.DataContext = Data.Write(list);
         }
 
         private OxTailHelpers.Expression CreateExpression(string text, string content)
