@@ -138,7 +138,9 @@ namespace OxTail.Data.SQLite
                                         // Updates existing rows
                                         if (int.Parse(row[0].ToString()) == item.ID)
                                         {
+                                            row.BeginEdit();
                                             row[1] = item.Filename;
+                                            row.EndEdit();
 
                                             found = true;
                                             break;
