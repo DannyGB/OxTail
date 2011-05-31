@@ -451,7 +451,11 @@ namespace OxTail
             {
                 foreach (FileWatcherTabItem tab in this.tabControlMain.Items)
                 {
-                    this.LastOpenFiles.Add(new LastOpenFiles(tab.Uid));
+                    var exists = from p in this.LastOpenFiles where p.Filename == tab.Uid select p;
+                    if (exists == null || exists.Count<LastOpenFiles>() <= 0)
+                    {
+                        this.LastOpenFiles.Add(new LastOpenFiles(tab.Uid));
+                    }
                 }
 
                 if (this.LastOpenFiles != null)
