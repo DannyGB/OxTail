@@ -18,7 +18,7 @@
 ;General
 
   ;Name and file
-  Name "OxTail Version 1.0 BETA"
+  Name "OxTail Version 2.0"
   OutFile "OxTail.exe"
 
   ;Default installation folder
@@ -69,8 +69,10 @@ Section "Core OxTail Files" SecCoreFiles
   File "..\bin\Release\OxTail.Controls.dll"			  
   File "..\bin\Release\OxTailHelpers.dll"			  
   File "..\bin\Release\OxTailLogic.dll"	  
-  File "..\bin\Release\SavedExpression.xml"			  
-  File "..\bin\Release\highlights.xml"
+  File "..\bin\Release\OxTail.Data.dll"	  
+  File "..\..\ExternalDlls\SQLite.Interop.dll"	  
+  File "..\bin\Release\System.Data.SQLite.dll"	  
+  File "..\..\ExternalDlls\System.Data.SQLite.Linq.dll"	  
   File "..\COPYING.txt"
   File "..\bin\Release\OxTail.exe.config"
 
@@ -110,11 +112,11 @@ SectionEnd
 Section "Uninstall"
 
   Delete "$INSTDIR\OxTail.exe"
-  Delete "$INSTDIR\*.dll"			  
-  Delete "$INSTDIR\*.xml"
+  Delete "$INSTDIR\*.dll"			    
   Delete "$INSTDIR\Uninstall.exe"
   Delete "$INSTDIR\COPYING.txt"
   Delete "$INSTDIR\OxTail.exe.config"
+  Delete "$INSTDIR\oxtail.db3"
   
 
   Delete "$SMPROGRAMS\OxTail\Uninstall.lnk"

@@ -27,6 +27,8 @@ using OxTail.Helpers;
 using OxTailHelpers;
 using System.Windows;
 using OxTailLogic;
+using OxTailHelpers.Data;
+using OxTailLogic.Data;
 
 namespace OxTail.Controls
 {
@@ -37,34 +39,16 @@ namespace OxTail.Controls
         /// </summary>
         public event EventHandler<EventArgs> SubMenuClick;
 
+        private IMostRecentFilesData Data { get; set; }
         private List<OxTail.Helpers.File> Files { get; set; }
-
-        private string _filename = string.Empty;
-        private string Filename 
-        {
-            get
-            {
-                return _filename;
-            }
-
-            set
-            {
-                this._filename = value;
-                this.Load();
-            }
-        }
 
         private void Load()
         {
-            if (!string.IsNullOrEmpty(this.Filename) && System.IO.File.Exists(this.Filename))
-            {
-                this.Files = FileHelper.MruLoad(this.Filename);
-            }
+            this.Files = Data.Read();
 
-            else
+            if (this.Files == null)
             {
                 this.Files = new List<File>();
-                FileHelper.MruSave(this.Files, this.Filename);
             }
         }
 
@@ -73,7 +57,8 @@ namespace OxTail.Controls
         /// </summary>
         public RecentFileList()
         {
-            this.Filename = Constants.RECENT_FILE_LIST_NAME;
+            Data = (IMostRecentFilesData)DataService<MostRecentFilesData>.InitialiseDataService();
+            this.Load();
             this.Header = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.RECENT_FILES_MENUITEM_HEADER);
             this.Loaded += (s, e) => GetParentItem();
         }
@@ -134,7 +119,7 @@ namespace OxTail.Controls
                     Files.RemoveAt(0);
                 }
 
-                FileHelper.MruSave(Files, Filename);
+                WriteMostRecentFilesToDatabase();
             }
 
         }
@@ -152,9 +137,18 @@ namespace OxTail.Controls
                 if (file.Filename == filename)
                 {
                     this.Files.Remove(file);
-                    FileHelper.MruSave(Files, Filename);
+                    WriteMostRecentFilesToDatabase();
+                    
                     break;
                 }
+            }
+        }
+
+        private void WriteMostRecentFilesToDatabase()
+        {
+            if (this.Files != null)
+            {
+                Data.Write(this.Files);
             }
         }
     }

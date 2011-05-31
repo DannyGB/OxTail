@@ -261,7 +261,6 @@ xcopy /Y /E /Q /I "$(TargetDir)OxTail.exe" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(TargetDir)OxTail.Controls.dll" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(TargetDir)OxTailHelpers.dll" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(TargetDir)OxTailLogic.dll" "$(SolutionDir)LatestBuild\"
-xcopy /Y /E /Q /I "$(TargetDir)SavedExpression.xml" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(SolutionDir)\ExternalDlls\*.dll" "$(SolutionDir)LatestBuild\"
 xcopy /Y /E /Q /I "$(TargetDir)OxTail.Data.dll" "$(SolutionDir)LatestBuild\"</PostBuildEvent>
   </PropertyGroup>

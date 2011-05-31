@@ -22,21 +22,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OxTailHelpers;
 
 namespace OxTail.Helpers
 {
     [Serializable]
-    public class File
+    public class File : BaseFiles
     {
-        /// <summary>
-        /// The filename of the file
-        /// </summary>
-        public string Filename { get; set; }
-
-        /// <summary>
-        /// Initialise this instance
-        /// </summary>
+      
         public File()
+            : base()
         { 
         }
 
@@ -45,8 +40,8 @@ namespace OxTail.Helpers
         /// </summary>
         /// <param name="filename">The filename of the file.</param>
         public File(string filename)
+            : base(filename)
         {
-            this.Filename = filename;
         }
     }
 }

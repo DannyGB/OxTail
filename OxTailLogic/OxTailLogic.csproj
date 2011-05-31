@@ -75,6 +75,7 @@
     <Compile Include="Data\DataService.cs" />
     <Compile Include="Data\HighlightData.cs" />
     <Compile Include="Data\LastOpenFilesData.cs" />
+    <Compile Include="Data\MostRecentFilesData.cs" />
     <Compile Include="Data\SavedExpressionData.cs" />
     <Compile Include="FileOpenLogic.cs" />
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />

@@ -52,12 +52,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppSettings.cs" />
+    <Compile Include="BaseFiles.cs" />
     <Compile Include="ClipboardHelper.cs" />
     <Compile Include="Compare\GenericComparer.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Data\IData.cs" />
     <Compile Include="Data\IHighlightItemData.cs" />
     <Compile Include="Data\ILastOpenFilesData.cs" />
+    <Compile Include="Data\IMostRecentFilesData.cs" />
     <Compile Include="Data\ISavedExpressionsData.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="File.cs" />
