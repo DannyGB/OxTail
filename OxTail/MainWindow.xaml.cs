@@ -61,7 +61,8 @@ namespace OxTail
         public MainWindow()
         {
             InitializeComponent();
-            this.OpenWindows = new List<Window>();
+            this.OpenWindows = new List<Window>(0);
+            this.LastOpenFiles = new List<LastOpenFiles>(0);
         }
 
         private void MenuAboutClick(object sender, RoutedEventArgs e)
@@ -445,7 +446,7 @@ namespace OxTail
 
         private void BaseWindow_Closing(object sender, CancelEventArgs e)
         {
-            ILastOpenFilesData data = (ILastOpenFilesData)DataService<LastOpenFilesData>.InitialiseDataService();
+            ILastOpenFilesData data = (ILastOpenFilesData)DataService<LastOpenFilesData>.InitialiseDataService();          
 
             if (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
             {

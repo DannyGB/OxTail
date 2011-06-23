@@ -18,7 +18,7 @@
 ;General
 
   ;Name and file
-  Name "OxTail Version 2.0"
+  Name "OxTail Version 2.1"
   OutFile "OxTail.exe"
 
   ;Default installation folder
