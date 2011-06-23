@@ -148,7 +148,7 @@ namespace OxTail.Controls
         {
             if (this.Files != null)
             {
-                Data.Write(this.Files);
+                this.Files = Data.Write(this.Files);
             }
         }
     }
