@@ -27,13 +27,8 @@ namespace OxTailHelpers
 {
     public class LastOpenFiles : BaseFiles
     {
-        public LastOpenFiles()
-            : base(string.Empty)
-        {
-        }
-
-        public LastOpenFiles(string filename)
-            : base(filename)
+        public LastOpenFiles(int id, string filename)
+            : base(id, filename)
         {
         }
     }

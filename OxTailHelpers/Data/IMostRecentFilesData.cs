@@ -27,8 +27,8 @@ namespace OxTailHelpers.Data
 {
     public interface IMostRecentFilesData : IData
     {
-        List<OxTail.Helpers.File> Read();
-        List<OxTail.Helpers.File> Write(List<OxTail.Helpers.File> files);
+        List<IFile> Read(List<IFile> files);
+        List<IFile> Write(List<IFile> files);
         void Clear();
     }
 }

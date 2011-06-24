@@ -33,9 +33,11 @@ namespace OxTail.Controls
     /// <summary>
     /// An extension of the CloseableTabItem control that views a file.
     /// </summary>
-    public partial class FileWatcherTabItem : TabItem, IDisposable
+    public partial class FileWatcherTabItem : TabItem, IDisposable, ITabItem
     {
         public event EventHandler<EventArgs> FindFinished;
+
+        private readonly IFileWatcher FileWatcher;
 
         private Image _image = null;
         private int LastFindOffset { get; set; }
@@ -44,7 +46,7 @@ namespace OxTail.Controls
         {
             get
             {
-                return this.fileWatcher.SelectedItem;
+                return this.FileWatcher.SelectedItem;
             }
         }
 
@@ -52,11 +54,11 @@ namespace OxTail.Controls
         {
             set
             {
-                this.fileWatcher.FindDetails = value;
+                this.FileWatcher.FindDetails = value;
             }
         }
 
-        public FileWatcherTabItem()
+        private FileWatcherTabItem()
         {
             InitializeComponent();
         }
@@ -64,16 +66,20 @@ namespace OxTail.Controls
         /// Creates an OxTailFileViewer instance and starts viewing the specified filename.
         /// </summary>
         /// <param name="filename">The full file path of the file to view.</param>
-        public FileWatcherTabItem(string filename, HighlightCollection<HighlightItem> patterns)
+        public FileWatcherTabItem(string filename, HighlightCollection<HighlightItem> patterns, IFileWatcher fileWatcher)
             : this()
         {
+            this.FileWatcher = fileWatcher;
+
+            this.gridContent.Children.Add((UIElement)this.FileWatcher);
+
             this.Header = Path.GetFileName(filename);
             this.ToolTip = filename;
             this.Uid = filename;
             this.Visibility = System.Windows.Visibility.Visible;
-            this.fileWatcher.Patterns = patterns;
+            this.FileWatcher.Patterns = patterns;
             this.GotFocus += new RoutedEventHandler(OxTailFileViewer_GotFocus);
-            this.fileWatcher.FindFinished += new EventHandler<EventArgs>(fileWatcher_FindFinished);
+            this.FileWatcher.FindFinished += new EventHandler<EventArgs>(fileWatcher_FindFinished);
         }        
 
         void fileWatcher_FileChanged(object sender, RoutedEventArgs e)
@@ -111,9 +117,9 @@ namespace OxTail.Controls
 
         public void Dispose()
         {
-            if (this.fileWatcher != null)
+            if (this.FileWatcher != null)
             {
-                this.fileWatcher.Dispose();
+                this.FileWatcher.Dispose();
             }
         }
 
@@ -121,12 +127,12 @@ namespace OxTail.Controls
 
         private void CloseableTabItem_Loaded(object sender, RoutedEventArgs e)
         {
-            this.fileWatcher.Start(this.Uid);
+            this.FileWatcher.Start(this.Uid);
         }
 
         public void ResetSearchCriteria()
         {
-            this.fileWatcher.ResetSearchCriteria();
+            this.FileWatcher.ResetSearchCriteria();
         }
 
         private void ThrowFindFinished()

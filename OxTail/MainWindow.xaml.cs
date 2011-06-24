@@ -21,24 +21,20 @@
 namespace OxTail
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Windows;
+    using Ninject;
     using OxTail.Controls;
     using OxTail.Helpers;
     using OxTail.Properties;
-    using System.Collections.Generic;
-    using System.Text;
     using OxTailHelpers;
-    using OxTailLogic;
-    using System.Windows.Controls;
-    using System.Windows.Input;
     using OxTailHelpers.Data;
+    using OxTailLogic;
     using OxTailLogic.Data;    
-    using System.Drawing;
-    using System.Reflection;
-    using Ninject;    
 
     /// <summary>
     /// Interaction logic for Window1.xaml
@@ -48,9 +44,8 @@ namespace OxTail
         private List<IWindow> OpenWindows { get; set; }
         private FileWatcherTabItem FileToSearch { get; set; }
         private bool StopFileSwitchOnSearch { get; set; }
-        private List<LastOpenFiles> LastOpenFiles { get; set; }
+        private List<IFile> LastOpenFiles { get; set; }
         
-
         // Ensure good encapsulation
         private readonly RecentFileList recentFileList;
         private readonly ILastOpenFilesData LastOpenFilesData;
@@ -59,8 +54,11 @@ namespace OxTail
         private readonly IWindowFactory WindowFactory;
         private readonly IFindWindowFactory FindWindowFactory;
         private readonly ISaveExpressionMessageWindowFactory SaveExpressionMessageWindowFactory;
+        private readonly IExpressionBuilderWindowFactory ExpressionBuilderWindowFactory;
         private readonly ISystemTray SystemTray;
         private readonly System.Windows.Forms.NotifyIcon Notify;
+        private readonly IFileFactory FileFactory;
+        private readonly ITabItemFactory TabItemFactory;
 
         private IWindow About;
         private IWindow Highlight;
@@ -77,13 +75,15 @@ namespace OxTail
         // If DI is about removing all "new" operators from your logic to enable a plugin architecture where
         // every component can be changed in one place and that we must rely on abstraction rather than concretions
         // then everything must implement an interface and be passed in on the constructor (even other windows)
-        // This makes sense as a for instance: if you wanted to replace the crappy About window we have here
-        // with a nice spanking one then we change it when we load our Ninject Kernel in App.xaml. Then if we called
-        // that screen from other windows later on in the stack the change is only in one place
+        // Thiscould be useful as for instance: if you wanted to replace the Expression builder then we change it 
+        // when we load our Ninject Kernel in App.xaml (Via IExpressionBuilderWindowFactory). Then if we called
+        // that screen from other windows (such as we do in Find) later on in the stack the change is only in one place
         // I fully intend to remove all "new" operators from this code file as a test to see how plausible it is to do!
+        // I have left += new event handlers and any temporary news like StringBuilder
         public MainWindow(RecentFileList recentFileList, ILastOpenFilesData lastOpenFilesData, IAppSettingsData appSettingsData,
             IHighlightItemData highlightItemData, IWindowFactory windowFactory, IFindWindowFactory findWindowFactory, ISystemTray systemTray, 
-            System.Windows.Forms.NotifyIcon notifyIcon, ISaveExpressionMessageWindowFactory saveExpressionMessageWindowFactory)
+            System.Windows.Forms.NotifyIcon notifyIcon, ISaveExpressionMessageWindowFactory saveExpressionMessageWindowFactory,
+            IExpressionBuilderWindowFactory expressionBuilderWindowFactory, IFileFactory fileFactory, ITabItemFactory tabItemFactory)
         {
             
             this.AppSettingsData = appSettingsData;
@@ -93,15 +93,19 @@ namespace OxTail
             this.FindWindowFactory = findWindowFactory;
             this.HighlightItemData = highlightItemData;
             this.SaveExpressionMessageWindowFactory = saveExpressionMessageWindowFactory;
+            this.ExpressionBuilderWindowFactory = expressionBuilderWindowFactory;
             this.SystemTray = systemTray;
+            this.FileFactory = fileFactory;
+            this.TabItemFactory = tabItemFactory;
 
             InitializeComponent();
             
+            this.recentFileList.SubMenuClick +=new EventHandler<EventArgs>(recentFileList_SubMenuClick);
             this.MenuItemFile.Items.Insert(2, this.recentFileList);
 
             // Null Object pattern (http://en.wikipedia.org/wiki/Null_Object_pattern)
             this.OpenWindows = new List<IWindow>(0);
-            this.LastOpenFiles = new List<LastOpenFiles>(0);
+            this.LastOpenFiles = new List<IFile>(0);
 
             this.Notify = notifyIcon;
             this.Notify.Icon = this.SystemTray.Icon;
@@ -151,7 +155,7 @@ namespace OxTail
 
         private void MenuExpressionBuilderClick(object sender, RoutedEventArgs e)
         {
-            this.ExpressionBuilder = WindowFactory.CreateWindow("ExpressionBuilder");
+            this.ExpressionBuilder = ExpressionBuilderWindowFactory.CreateWindow();
             ExpressionBuilder.ShowDialog();
         }
 
@@ -161,10 +165,10 @@ namespace OxTail
             {
                 if (System.IO.File.Exists(filename))
                 {
-                    OxTail.Controls.FileWatcherTabItem newTab = FindTabByFilename(filename);
+                    ITabItem newTab = FindTabByFilename(filename);
                     if (newTab == null)
                     {
-                        newTab = new OxTail.Controls.FileWatcherTabItem(filename, MainWindow.HighlightItems);
+                        newTab = this.TabItemFactory.CreateTabItem(filename, MainWindow.HighlightItems);
                         newTab.FindFinished += new EventHandler<EventArgs>(MainWindow_FindFinished);
                         tabControlMain.Items.Add(newTab);
                     }
@@ -178,10 +182,10 @@ namespace OxTail
             }
         }
 
-        private OxTail.Controls.FileWatcherTabItem FindTabByFilename(string filename)
+        private ITabItem FindTabByFilename(string filename)
         {
             OxTail.Controls.FileWatcherTabItem foundTab = null;
-            foreach (OxTail.Controls.FileWatcherTabItem tab in tabControlMain.Items.OfType<OxTail.Controls.FileWatcherTabItem>())
+            foreach (OxTail.Controls.FileWatcherTabItem tab in tabControlMain.Items.OfType<ITabItem>())
             {
                 if (tab.Uid == filename)
                 {
@@ -299,7 +303,7 @@ namespace OxTail
 
         private void MenuOpenFilePattern_Click(object sender, RoutedEventArgs e)
         {
-            List<List<FileInfo>> fileInfos = FileOpenLogic.OpenFilePattern((new SaveExpressionMessage() as ISaveExpressionMessage));
+            List<List<FileInfo>> fileInfos = FileOpenLogic.OpenFilePattern(this.SaveExpressionMessageWindowFactory.CreateWindow());
 
             foreach (List<FileInfo> fileList in fileInfos)
             {
@@ -464,9 +468,20 @@ namespace OxTail
                 foreach (FileWatcherTabItem tab in this.tabControlMain.Items)
                 {
                     var exists = from p in this.LastOpenFiles where p.Filename == tab.Uid select p;
-                    if (exists == null || exists.Count<LastOpenFiles>() <= 0)
+                    if (exists == null || exists.Count<IFile>() <= 0)
                     {
-                        this.LastOpenFiles.Add(new LastOpenFiles(tab.Uid));
+                        this.LastOpenFiles.Add(this.FileFactory.CreateFile(0, tab.Uid, "LastOpenedFile"));
+                    }
+                }
+
+                for (int i = this.LastOpenFiles.Count - 1; i >= 0; i--)
+                {
+                    IFile file = this.LastOpenFiles[i];
+
+                    var exists = from ITabItem p in this.tabControlMain.Items where p.Uid == file.Filename select p;
+                    if (exists == null || exists.Count<ITabItem>() <= 0)
+                    {
+                        this.LastOpenFiles.RemoveAt(i);
                     }
                 }
 

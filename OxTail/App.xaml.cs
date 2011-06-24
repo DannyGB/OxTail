@@ -93,8 +93,11 @@ namespace OxTail
             Kernel.Bind<IHighlightItemData>().To<HighlightData>();
             Kernel.Bind<IWindowFactory>().To<WindowFactory>();
             Kernel.Bind<IFindWindowFactory>().To<FindWindowFactory>();
+            Kernel.Bind<IExpressionBuilderWindowFactory>().To<ExpressionBuilderWindowFactory>();
             Kernel.Bind<ISaveExpressionMessageWindowFactory>().To<SaveExpressionMessageWindowFactory>();
             Kernel.Bind<ISystemTray>().To<SystemTray>().WithConstructorArgument("application", this);
+            Kernel.Bind<IFileFactory>().To<FileFactory>();
+            Kernel.Bind<ITabItemFactory>().To<TabItemFactory>();
 
             MainWindow mainWindow = Kernel.Get<MainWindow>();
             mainWindow.Show();
