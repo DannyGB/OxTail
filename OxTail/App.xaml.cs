@@ -27,6 +27,10 @@ using System.Windows;
 using OxTail.Controls;
 using System.Collections.ObjectModel;
 using OxTailHelpers;
+using Ninject;
+using OxTailHelpers.Data;
+using OxTailLogic.Data;
+using OxTailLogic;
 
 namespace OxTail
 {
@@ -35,6 +39,8 @@ namespace OxTail
     /// </summary>
     public partial class App : Application, IApplication
     {
+        private static Ninject.IKernel Kernel { get; set; }
+
         public Collection<ResourceDictionary> LanguageDictionary
         {
             get
@@ -67,6 +73,32 @@ namespace OxTail
             {
                 this.ApplyCultureDictionary(uri);
             }
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            // Ninject magic whereby it automagically creates the MainWindow
+            // using the constructor marked [Inject] and magically passes in
+            // the correct RecentFileList, which is created using the constructor
+            // requireing an IMostRecentFilesData argument which I tell Ninject
+            // is of type MostRecentFilesData below. WOW, that's a lot of
+            // mystery meat code, however it does mean that the persistence
+            // object for the MostRecentFileList is interchangable with a code
+            // change just here
+
+            Kernel = new StandardKernel();
+            Kernel.Bind<IMostRecentFilesData>().To<MostRecentFilesData>();
+            Kernel.Bind<ILastOpenFilesData>().To<LastOpenFilesData>();
+            Kernel.Bind<IAppSettingsData>().To<AppSettingsData>();
+            Kernel.Bind<IHighlightItemData>().To<HighlightData>();
+            Kernel.Bind<IWindowFactory>().To<WindowFactory>();
+            Kernel.Bind<IFindWindowFactory>().To<FindWindowFactory>();
+            Kernel.Bind<ISaveExpressionMessageWindowFactory>().To<SaveExpressionMessageWindowFactory>();
+            Kernel.Bind<ISystemTray>().To<SystemTray>().WithConstructorArgument("application", this);
+
+            MainWindow mainWindow = Kernel.Get<MainWindow>();
+            mainWindow.Show();
+
         }
     }
 }

@@ -69,8 +69,6 @@
     <Compile Include="Find.xaml.cs">
       <DependentUpon>Find.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FindDetails.cs" />
-    <Compile Include="FindEventArgs.cs" />
     <Compile Include="HighlightedItem.cs" />
     <Compile Include="FileWatcherProgressChangedUserState.cs" />
     <Compile Include="FileWatcherTabItem.xaml.cs">

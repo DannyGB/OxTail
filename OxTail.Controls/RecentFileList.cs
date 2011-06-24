@@ -39,7 +39,7 @@ namespace OxTail.Controls
         /// </summary>
         public event EventHandler<EventArgs> SubMenuClick;
 
-        private IMostRecentFilesData Data { get; set; }
+        private readonly IMostRecentFilesData Data;
         private List<OxTail.Helpers.File> Files { get; set; }
 
         private void Load()
@@ -55,9 +55,10 @@ namespace OxTail.Controls
         /// <summary>
         /// Initialise instance
         /// </summary>
-        public RecentFileList()
+        public RecentFileList(IMostRecentFilesData data)
         {
-            Data = (IMostRecentFilesData)DataService<MostRecentFilesData>.InitialiseDataService();
+            Data = data;
+            //Data = (IMostRecentFilesData)DataService<MostRecentFilesData>.InitialiseDataService();
             this.Load();
             this.Header = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.RECENT_FILES_MENUITEM_HEADER);
             this.Loaded += (s, e) => GetParentItem();

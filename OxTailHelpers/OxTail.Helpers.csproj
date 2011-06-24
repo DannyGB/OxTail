@@ -62,8 +62,12 @@
     <Compile Include="Data\IMostRecentFilesData.cs" />
     <Compile Include="Data\ISavedExpressionsData.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="IExpressionBuilderWindow.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FileHelper.cs" />
+    <Compile Include="FindDetails.cs" />
+    <Compile Include="FindEventArgs.cs" />
+    <Compile Include="FindWindowDelegates.cs" />
     <Compile Include="HighlightCollection.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -73,8 +77,10 @@
     <Compile Include="IApplication.cs" />
     <Compile Include="Data\IAppSettingsData.cs" />
     <Compile Include="IColourfulItem.cs" />
+    <Compile Include="IFindWindow.cs" />
     <Compile Include="IMainWindowKeyPressMethods.cs" />
     <Compile Include="ISaveExpressionMessage.cs" />
+    <Compile Include="IWindow.cs" />
     <Compile Include="KeyboardHelper.cs" />
     <Compile Include="LanguageHelper.cs" />
     <Compile Include="LastOpenFiles.cs" />

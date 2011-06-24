@@ -64,6 +64,9 @@
     <AssemblyOriginatorKeyFile>OxTail.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject">
+      <HintPath>..\ExternalDlls\Ninject\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -107,6 +110,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ExpressionBuilderDITest.xaml.cs">
+      <DependentUpon>ExpressionBuilderDITest.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ExpressionBuilderWindowFactory.cs" />
+    <Compile Include="FindWindowFactory.cs" />
+    <Compile Include="IExpressionBuilderWindowFactory.cs" />
+    <Compile Include="IFindWindowFactory.cs" />
+    <Compile Include="ISaveExpressionMessageWindowFactory.cs" />
+    <Compile Include="IWindowFactory.cs" />
+    <Compile Include="SaveExpressionMessageWindowFactory.cs" />
+    <Compile Include="WindowFactory.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -118,6 +132,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ExpressionBuilder.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ExpressionBuilderDITest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

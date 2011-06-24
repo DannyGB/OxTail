@@ -37,44 +37,93 @@ namespace OxTail
     using OxTailHelpers.Data;
     using OxTailLogic.Data;    
     using System.Drawing;
-    using System.Reflection;    
+    using System.Reflection;
+    using Ninject;    
 
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
     public partial class MainWindow : BaseMainWindow, IMainWindowKeyPressMethods
     {
-        private List<Window> OpenWindows { get; set; }
+        private List<IWindow> OpenWindows { get; set; }
         private FileWatcherTabItem FileToSearch { get; set; }
         private bool StopFileSwitchOnSearch { get; set; }
         private List<LastOpenFiles> LastOpenFiles { get; set; }
-        private System.Windows.Forms.NotifyIcon Notify { get; set; }
+        
+
+        // Ensure good encapsulation
+        private readonly RecentFileList recentFileList;
+        private readonly ILastOpenFilesData LastOpenFilesData;
+        private readonly IAppSettingsData AppSettingsData;
+        private readonly IHighlightItemData HighlightItemData;
+        private readonly IWindowFactory WindowFactory;
+        private readonly IFindWindowFactory FindWindowFactory;
+        private readonly ISaveExpressionMessageWindowFactory SaveExpressionMessageWindowFactory;
+        private readonly ISystemTray SystemTray;
+        private readonly System.Windows.Forms.NotifyIcon Notify;
+
+        private IWindow About;
+        private IWindow Highlight;
+        private IWindow ExpressionBuilder;
+        private IWindow ApplicationSettings;
+        private IFindWindow Find;
 
         /// <summary>
         /// The current <see cref="HighlightCollection<T>"/> of <see cref="HighlightItem"/>
         /// </summary>
-        public static HighlightCollection<HighlightItem> HighlightItems { get; set; }
+        public static HighlightCollection<HighlightItem> HighlightItems { get; set; }       
 
-        /// <summary>
-        /// Initialise MainWindow
-        /// </summary>
-        public MainWindow()
+        [Inject]
+        // If DI is about removing all "new" operators from your logic to enable a plugin architecture where
+        // every component can be changed in one place and that we must rely on abstraction rather than concretions
+        // then everything must implement an interface and be passed in on the constructor (even other windows)
+        // This makes sense as a for instance: if you wanted to replace the crappy About window we have here
+        // with a nice spanking one then we change it when we load our Ninject Kernel in App.xaml. Then if we called
+        // that screen from other windows later on in the stack the change is only in one place
+        // I fully intend to remove all "new" operators from this code file as a test to see how plausible it is to do!
+        public MainWindow(RecentFileList recentFileList, ILastOpenFilesData lastOpenFilesData, IAppSettingsData appSettingsData,
+            IHighlightItemData highlightItemData, IWindowFactory windowFactory, IFindWindowFactory findWindowFactory, ISystemTray systemTray, 
+            System.Windows.Forms.NotifyIcon notifyIcon, ISaveExpressionMessageWindowFactory saveExpressionMessageWindowFactory)
         {
+            
+            this.AppSettingsData = appSettingsData;
+            this.LastOpenFilesData = lastOpenFilesData;
+            this.recentFileList = recentFileList;
+            this.WindowFactory = windowFactory;
+            this.FindWindowFactory = findWindowFactory;
+            this.HighlightItemData = highlightItemData;
+            this.SaveExpressionMessageWindowFactory = saveExpressionMessageWindowFactory;
+            this.SystemTray = systemTray;
+
             InitializeComponent();
-            this.OpenWindows = new List<Window>(0);
+            
+            this.MenuItemFile.Items.Insert(2, this.recentFileList);
+
+            // Null Object pattern (http://en.wikipedia.org/wiki/Null_Object_pattern)
+            this.OpenWindows = new List<IWindow>(0);
             this.LastOpenFiles = new List<LastOpenFiles>(0);
+
+            this.Notify = notifyIcon;
+            this.Notify.Icon = this.SystemTray.Icon;
+            this.Notify.DoubleClick += new EventHandler(Notify_DoubleClick);
+            this.Notify.ContextMenu = this.SystemTray.ContextMenu;
+
+            this.Notify.ContextMenu.MenuItems[0].Click += new EventHandler(disableSoundsMenuItem_Click);
+            this.Notify.ContextMenu.MenuItems[1].Click += new EventHandler(minimuseToTrayItem_Click);
+            this.Notify.ContextMenu.MenuItems[3].Click += new EventHandler(exitItem_Click);
+
+            this.Notify.Visible = true;
         }
 
         private void MenuAboutClick(object sender, RoutedEventArgs e)
         {
-            About ab = new About();
-            ab.ShowDialog();
+            this.About = WindowFactory.CreateWindow("About");
+            About.ShowDialog();
         }
 
         private void MenuExitClick(object sender, RoutedEventArgs e)
         {
-            this.Close();
-            Environment.Exit(0);
+            this.Close();            
         }
 
         private void MenuOpen_Click(object sender, RoutedEventArgs e)
@@ -83,7 +132,7 @@ namespace OxTail
         }
 
         public void OpenFile()
-        {
+        {            
             string filename = FileHelper.ShowOpenFileDialog();
 
             OpenFile(filename);
@@ -96,14 +145,14 @@ namespace OxTail
 
         public void OpenHightlightScreen()
         {
-            Highlight hl = new Highlight();
-            hl.ShowDialog();
+            this.Highlight = WindowFactory.CreateWindow("Highlight");
+            this.Highlight.ShowDialog();
         }
 
         private void MenuExpressionBuilderClick(object sender, RoutedEventArgs e)
         {
-            ExpressionBuilder hl = new ExpressionBuilder();
-            hl.ShowDialog();
+            this.ExpressionBuilder = WindowFactory.CreateWindow("ExpressionBuilder");
+            ExpressionBuilder.ShowDialog();
         }
 
         private void OpenFile(string filename)
@@ -145,49 +194,15 @@ namespace OxTail
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            IAppSettingsData data = (IAppSettingsData)DataService<AppSettingsData>.InitialiseDataService();
-            SettingsHelper.AppSettings = data.ReadAppSettings();
+            SettingsHelper.AppSettings = this.AppSettingsData.ReadAppSettings();
 
-            IHighlightItemData hightlightData = (IHighlightItemData)DataService<HighlightData>.InitialiseDataService();
-            HighlightItems = hightlightData.Read();
+            HighlightItems = this.HighlightItemData.Read();
             HighlightItems.ApplySort(null, ListSortDirection.Descending);
 
             if (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
             {
                 LoadLastOpenFiles();
             }
-
-            SetupTrayIcon();
-
-        }
-
-        private void SetupTrayIcon()
-        {
-            this.Notify = new System.Windows.Forms.NotifyIcon();
-            this.Notify.Icon = new Icon(ResourceHelper.GetStreamFromApplication("OxTail.Images.OxTail.ico", Assembly.GetExecutingAssembly()));
-
-            System.Windows.Forms.ContextMenu ncm = new System.Windows.Forms.ContextMenu();
-
-            System.Windows.Forms.MenuItem menuItem = new System.Windows.Forms.MenuItem(LanguageHelper.GetLocalisedText(Application.Current as IApplication, Constants.DISABLE_SOUND_CONTEXT_MENU));
-            menuItem.Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]);
-            menuItem.Click += new EventHandler(disableSoundsMenuItem_Click);
-            ncm.MenuItems.Add(menuItem);
-
-            menuItem = new System.Windows.Forms.MenuItem(LanguageHelper.GetLocalisedText(Application.Current as IApplication, Constants.MINIMISE_TO_TRAY));
-            menuItem.Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]);
-            menuItem.Click += new EventHandler(minimuseToTrayItem_Click);
-            ncm.MenuItems.Add(menuItem);
-
-            menuItem = new System.Windows.Forms.MenuItem("-");
-            ncm.MenuItems.Add(menuItem);
-
-            menuItem = new System.Windows.Forms.MenuItem(LanguageHelper.GetLocalisedText(Application.Current as IApplication, Constants.EXIT_CONTEXT_MENU));
-            menuItem.Click += new EventHandler(exitItem_Click);
-            ncm.MenuItems.Add(menuItem);
-
-            this.Notify.DoubleClick += new EventHandler(Notify_DoubleClick);
-            this.Notify.ContextMenu = ncm;
-            this.Notify.Visible = true;
         }
 
         private void Notify_DoubleClick(object sender, EventArgs e)
@@ -228,8 +243,7 @@ namespace OxTail
 
         private void LoadLastOpenFiles()
         {
-            ILastOpenFilesData data = (ILastOpenFilesData)DataService<LastOpenFilesData>.InitialiseDataService();
-            this.LastOpenFiles = data.Read();
+            this.LastOpenFiles = LastOpenFilesData.Read();
 
             foreach (LastOpenFiles file in LastOpenFiles)
             {
@@ -254,7 +268,7 @@ namespace OxTail
 
         private void MenuOpenLastWrittenPatterns_Click(object sender, RoutedEventArgs e)
         {
-            ISaveExpressionMessage msg = new SaveExpressionMessage();
+            ISaveExpressionMessage msg = this.SaveExpressionMessageWindowFactory.CreateWindow();
             msg.Label = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.MULTIPLE_FILE_TEXT_PATTERN);
             msg.Message = Constants.DEFAULT_MULTIPLE_FILE_OPEN_PATTERN;
 
@@ -322,15 +336,14 @@ namespace OxTail
 
         private void MenuSettings_Click(object sender, RoutedEventArgs e)
         {            
-            ApplicationSettings settings = new ApplicationSettings();
-            settings.SaveClick += (s, ev) => SaveApplicationSettings(settings);
-            settings.ShowDialog();
+            ApplicationSettings = this.WindowFactory.CreateWindow("ApplicationSettings");
+            ApplicationSettings.SaveClick += (s, ev) => SaveApplicationSettings(ApplicationSettings);
+            ApplicationSettings.ShowDialog();
         }
 
-        private void SaveApplicationSettings(ApplicationSettings settings)
+        private void SaveApplicationSettings(IWindow settings)
         {
-            IAppSettingsData data = (IAppSettingsData)DataService<AppSettingsData>.InitialiseDataService();
-            data.WriteAppSettings(SettingsHelper.AppSettings);
+            this.AppSettingsData.WriteAppSettings(SettingsHelper.AppSettings);
             settings.Close();
         }
 
@@ -365,28 +378,28 @@ namespace OxTail
 
         public void OpenFindScreen()
         {
-            foreach (Window w in this.OpenWindows)
+            foreach (IWindow w in this.OpenWindows)
             {
-                if (w is Find)
+                if (w is IFindWindow)
                 {
                     w.Activate();
                     return;
                 }
             }
 
-            Find find = new Find();
-            find.FindCriteria += new Controls.Find.FindText(find_FindCriteria);
-            find.Closed += new EventHandler(find_Closed);
-            this.OpenWindows.Add(find);
+            this.Find = FindWindowFactory.CreateWindow();
+            this.Find.FindCriteria += new FindText(find_FindCriteria);
+            this.Find.Closed += new RoutedEventHandler(find_Closed);
+            this.OpenWindows.Add(this.Find);
 
-            find.Show();
+            this.Find.Show();
         }
 
         void find_Closed(object sender, EventArgs e)
         {
-            if (this.OpenWindows.Contains((sender as Window)))
+            if (this.OpenWindows.Contains((sender as IWindow)))
             {
-                this.OpenWindows.Remove((sender as Window));
+                this.OpenWindows.Remove((sender as IWindow));
 
                 if (tabControlMain.Items.Count > 0)
                 {
@@ -446,8 +459,6 @@ namespace OxTail
 
         private void BaseWindow_Closing(object sender, CancelEventArgs e)
         {
-            ILastOpenFilesData data = (ILastOpenFilesData)DataService<LastOpenFilesData>.InitialiseDataService();          
-
             if (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
             {
                 foreach (FileWatcherTabItem tab in this.tabControlMain.Items)
@@ -461,12 +472,12 @@ namespace OxTail
 
                 if (this.LastOpenFiles != null)
                 {
-                    data.Write(this.LastOpenFiles);
+                    this.LastOpenFilesData.Write(this.LastOpenFiles);
                 }
             }
             else
             {
-                data.Clear();
+                LastOpenFilesData.Clear();
             }
 
             CloseAllOpenWindowsWhenMainWindowClosed();
@@ -477,7 +488,7 @@ namespace OxTail
         {
             for (int i = this.OpenWindows.Count - 1; i >= 0; i--)
             {
-                Window w = this.OpenWindows[i];
+                IWindow w = this.OpenWindows[i];
                 w.Close();
             }
         }
@@ -527,6 +538,11 @@ namespace OxTail
                         break;
                 }
             }
+        }
+
+        private void BaseMainWindow_Closed(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
         }
     }
 }
