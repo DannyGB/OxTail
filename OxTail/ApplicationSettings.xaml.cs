@@ -42,11 +42,6 @@ namespace OxTail
     public partial class ApplicationSettings : BaseWindow
     {
         /// <summary>
-        /// Save button clicked
-        /// </summary>
-        public event RoutedEventHandler SaveClick;
-
-        /// <summary>
         /// Initialize this instance
         /// </summary>
         public ApplicationSettings()
@@ -56,10 +51,7 @@ namespace OxTail
 
         private void ApplicationSettings_SaveClick(object sender, RoutedEventArgs e)
         {
-            if (this.SaveClick != null)
-            {
-                this.SaveClick(sender, e);
-            }            
+            base.ThrowSaveClick(sender, e);        
         }
 
         private void ApplicationSettings_CancelClick(object sender, RoutedEventArgs e)

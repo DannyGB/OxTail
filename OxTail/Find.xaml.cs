@@ -31,24 +31,27 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using OxTail.Controls;
+using OxTailHelpers;
 
 namespace OxTail
 {
     /// <summary>
     /// Interaction logic for Find.xaml
     /// </summary>
-    public partial class Find : BaseWindow
+    public partial class Find : BaseWindow, IFindWindow
     {
-        public event OxTail.Controls.Find.FindText FindCriteria;
+        private readonly IExpressionBuilderWindowFactory WindowFactory;
 
-        public Find()
+        public Find(IExpressionBuilderWindowFactory windowFactory)
         {
+            this.WindowFactory = windowFactory;
+
             InitializeComponent();
         }
 
         private void find_ExpressionBuilderButtonClick(object sender, EventArgs e)
         {
-            ExpressionBuilder builder = new ExpressionBuilder();
+            IExpressionBuilderWindow builder = this.WindowFactory.CreateWindow();
             builder.ShowDialog();
 
             if (builder.DialogResult.HasValue && builder.DialogResult.Value)
@@ -64,5 +67,7 @@ namespace OxTail
                 FindCriteria(this, e);
             }
         }
+        
+        public event FindText FindCriteria;
     }
 }

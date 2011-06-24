@@ -45,7 +45,7 @@ namespace OxTailHelpers
         }
 
         /// <summary>
-        /// Loads the Assembly from disk whos name is matches the assemblyNameForCulture 
+        /// Loads the Assembly from disk whos name matches the assemblyNameForCulture 
         /// parameter Name. A also loads the contained loose XAML Culture Resource 
         /// Dictionary into the  current Applications Merged Dictionaries.
         /// </summary>

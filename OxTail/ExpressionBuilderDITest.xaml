@@ -1,0 +1,9 @@
+﻿<custom:BaseWindow x:Class="OxTail.ExpressionBuilderDITest"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
+        Title="ExpressionBuilderDITest" Height="300" Width="300">
+    <Grid>
+        <TextBlock Name="label1" Text="This is the DI test Expression builder screen, which should be called from the menu on main screen and from Find screen but we only need to change the creation in App.xaml" TextWrapping="Wrap" />
+    </Grid>
+</custom:BaseWindow>

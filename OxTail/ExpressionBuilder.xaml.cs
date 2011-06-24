@@ -33,11 +33,12 @@ namespace OxTail
     using System.Windows.Media.Imaging;
     using System.Windows.Shapes;
     using OxTail.Controls;
+    using OxTailHelpers;
 
     /// <summary>
     /// Interaction logic for ExpressionBuilder.xaml
     /// </summary>
-    public partial class ExpressionBuilder : BaseWindow
+    public partial class ExpressionBuilder : BaseWindow, IExpressionBuilderWindow
     {
         public OxTailHelpers.Expression Expression { get; set; }
 

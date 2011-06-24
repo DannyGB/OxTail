@@ -6,11 +6,11 @@
     ResizeMode="CanResizeWithGrip"
     Icon="OxTail.ico"
     Title="OxTail" Height="400" Width="600" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="BaseWindow_Closing" KeyUp="BaseWindow_KeyUp"
-    StateChanged="BaseMainWindow_StateChanged"                   
+    StateChanged="BaseMainWindow_StateChanged" Closed="BaseMainWindow_Closed"                  
     >
     <DockPanel Name="dockPanelMain" LastChildFill="True">
         <Menu Name="menu1" DockPanel.Dock="Top" >
-            <MenuItem  Header="{DynamicResource file}">
+            <MenuItem Name="MenuItemFile" Header="{DynamicResource file}">
                 <MenuItem Name="MenuOpen" Header="{DynamicResource open}">
                     <MenuItem Name="MenuOpenFile" Header="{DynamicResource file}" Click="MenuOpen_Click" />
                     <MenuItem Name="MenuOpenFilePattern" Header="{DynamicResource filePattern}" Click="MenuOpenFilePattern_Click" />
@@ -19,7 +19,7 @@
                     <MenuItem Name="MenuOpenLastWrittenPatterns" Header="{DynamicResource openLastWrittenPatterns}" Click="MenuOpenLastWrittenPatterns_Click" />
                 </MenuItem>                
                 <Separator></Separator>
-                <oxtail:RecentFileList x:Name="recentFileList" SubMenuClick="recentFileList_SubMenuClick" />
+                <!-- <oxtail:RecentFileList x:Name="recentFileList" SubMenuClick="recentFileList_SubMenuClick" /> -->
                 <Separator></Separator>
                 <MenuItem Name="MenuItemClose" Header="{DynamicResource close}" Click="MenuItemClose_Click" />
                 <MenuItem Name="MenuItemCloseAll" Header="{DynamicResource closeAll}" Click="MenuItemCloseAll_Click" />
