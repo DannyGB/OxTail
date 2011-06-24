@@ -31,9 +31,16 @@ namespace OxTail.Data.SQLite
 {
     public class MostRecentFilesDataHelper : SQLiteBase, IMostRecentFilesData
     {
-        public List<OxTail.Helpers.File> Read()
+        private readonly IFileFactory FileFactory;
+
+        public MostRecentFilesDataHelper(IFileFactory fileFactory)
         {
-            List<OxTail.Helpers.File> items = new List<OxTail.Helpers.File>();
+            this.FileFactory = fileFactory;
+        }
+
+        public List<IFile> Read(List<IFile> files)
+        {
+            files.Clear();
 
             DbConnection.Open();
 
@@ -58,13 +65,8 @@ namespace OxTail.Data.SQLite
 
                                 foreach (DataRow row in tbl.Rows)
                                 {
-                                    OxTail.Helpers.File item = new OxTail.Helpers.File()
-                                    {
-                                        ID = int.Parse(row[0].ToString()),
-                                        Filename = row[1].ToString(),
-                                    };
-
-                                    items.Add(item);
+                                    IFile item = this.FileFactory.CreateFile(int.Parse(row[0].ToString()), row[1].ToString(), "MostRecentFile");
+                                    files.Add(item);
                                 }
                             }
                         }
@@ -74,10 +76,10 @@ namespace OxTail.Data.SQLite
 
             DbConnection.Close();
 
-            return items;
+            return files;
         }
 
-        public List<OxTail.Helpers.File> Write(List<OxTail.Helpers.File> files)
+        public List<IFile> Write(List<IFile> files)
         {
             int retval = 0;
 
@@ -108,7 +110,7 @@ namespace OxTail.Data.SQLite
                                 foreach (DataRow row in existingRows)
                                 {
                                     found = false;
-                                    foreach (OxTail.Helpers.File item in files)
+                                    foreach (IFile item in files)
                                     {
                                         if (item.ID > 0 && item.ID == int.Parse(row[0].ToString()))
                                         {
@@ -123,7 +125,7 @@ namespace OxTail.Data.SQLite
                                     }
                                 }
 
-                                foreach (OxTail.Helpers.File item in files)
+                                foreach (IFile item in files)
                                 {
                                     found = false;
 
@@ -131,8 +133,8 @@ namespace OxTail.Data.SQLite
                                     {
                                         if (row.RowState == DataRowState.Deleted)
                                         {
-                                            found = true;
-                                            break;
+                                            //found = true;
+                                            continue;
                                         }
 
                                         // Updates existing rows
@@ -176,7 +178,7 @@ namespace OxTail.Data.SQLite
                 }
             }
 
-            return this.Read();
+            return this.Read(files);
         }
 
         public void Clear()

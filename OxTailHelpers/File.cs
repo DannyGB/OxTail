@@ -30,17 +30,12 @@ namespace OxTail.Helpers
     public class File : BaseFiles
     {
       
-        public File()
-            : base()
-        { 
-        }
-
         /// <summary>
         /// Initialises this instances
         /// </summary>
         /// <param name="filename">The filename of the file.</param>
-        public File(string filename)
-            : base(filename)
+        public File(int id, string filename)
+            : base(id, filename)
         {
         }
     }

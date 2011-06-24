@@ -27,8 +27,8 @@ namespace OxTailHelpers.Data
 {
     public interface ILastOpenFilesData : IData
     {
-        List<LastOpenFiles> Read();
-        List<LastOpenFiles> Write(List<LastOpenFiles> files);
+        List<IFile> Read();
+        List<IFile> Write(List<IFile> files);
         void Clear();
     }
 }

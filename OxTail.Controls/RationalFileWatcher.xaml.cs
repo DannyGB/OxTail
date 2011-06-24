@@ -42,7 +42,7 @@ namespace OxTail.Controls
     /// <summary>
     /// Interaction logic for RationalFileWatcher.xaml
     /// </summary>
-    public partial class RationalFileWatcher : UserControl, IDisposable
+    public partial class RationalFileWatcher : UserControl, IDisposable, IFileWatcher
     {
         #region events & delegates
 
@@ -858,11 +858,11 @@ namespace OxTail.Controls
             }
         }
 
-        internal void ResetSearchCriteria()
+        public void ResetSearchCriteria()
         {
             this.SearchText = string.Empty;
         }
 
-        #endregion methods
+        #endregion methods       
     }
 }

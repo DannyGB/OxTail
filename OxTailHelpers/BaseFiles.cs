@@ -25,19 +25,31 @@ using System.Text;
 
 namespace OxTailHelpers
 {
-    public class BaseFiles
+    public class BaseFiles : IFile
     {
-        public int ID { get; set; }
-        public string Filename { get; set; }
+        private readonly int id;
+        private readonly string filename;
 
-        public BaseFiles()
-            : this(string.Empty)
+        public int ID 
         {
+            get
+            {
+                return id;
+            }
         }
 
-        public BaseFiles(string filename)
+        public string Filename 
         {
-            this.Filename = filename;
+            get
+            {
+                return filename;
+            }
+        }
+
+        public BaseFiles(int id, string filename)
+        {
+            this.id = id;
+            this.filename = filename;
         }
     }
 }

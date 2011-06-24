@@ -24,24 +24,28 @@ using System.Linq;
 using System.Text;
 using OxTailHelpers.Data;
 using OxTail.Data.SQLite;
+using OxTailHelpers;
 
 namespace OxTailLogic.Data
 {
+    /// <summary>
+    /// Facade hiding the database implementation
+    /// </summary>
     public class MostRecentFilesData : IMostRecentFilesData
     {
         private IMostRecentFilesData MostRecentFiles { get; set; }
 
-        public MostRecentFilesData()
+        public MostRecentFilesData(IFileFactory fileFactory, List<IFile> files)
         {
-            this.MostRecentFiles = new MostRecentFilesDataHelper();
+            this.MostRecentFiles = new MostRecentFilesDataHelper(fileFactory);
         }
 
-        public List<OxTail.Helpers.File> Read()
+        public List<IFile> Read(List<IFile> files)
         {
-            return this.MostRecentFiles.Read();
+            return this.MostRecentFiles.Read(files);
         }
 
-        public List<OxTail.Helpers.File> Write(List<OxTail.Helpers.File> files)
+        public List<IFile> Write(List<IFile> files)
         {
             return this.MostRecentFiles.Write(files);
         }

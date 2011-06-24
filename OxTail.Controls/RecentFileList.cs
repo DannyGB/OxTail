@@ -40,25 +40,22 @@ namespace OxTail.Controls
         public event EventHandler<EventArgs> SubMenuClick;
 
         private readonly IMostRecentFilesData Data;
-        private List<OxTail.Helpers.File> Files { get; set; }
+        private readonly IFileFactory FileFactory;
+
+        private List<IFile> Files { get; set; }
 
         private void Load()
         {
-            this.Files = Data.Read();
-
-            if (this.Files == null)
-            {
-                this.Files = new List<File>();
-            }
+            this.Files = Data.Read(new List<IFile>(0));
         }
 
         /// <summary>
         /// Initialise instance
         /// </summary>
-        public RecentFileList(IMostRecentFilesData data)
+        public RecentFileList(IMostRecentFilesData data, IFileFactory fileFactory)
         {
-            Data = data;
-            //Data = (IMostRecentFilesData)DataService<MostRecentFilesData>.InitialiseDataService();
+            this.FileFactory = fileFactory;
+            this.Data = data;
             this.Load();
             this.Header = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.RECENT_FILES_MENUITEM_HEADER);
             this.Loaded += (s, e) => GetParentItem();
@@ -102,7 +99,7 @@ namespace OxTail.Controls
         {
             bool found = false;
 
-            foreach(OxTail.Helpers.File file in Files)
+            foreach(IFile file in Files)
             {
                 if (file.Filename == filename)
                 {
@@ -113,16 +110,15 @@ namespace OxTail.Controls
 
             if (!found)
             {
-                Files.Add(new Helpers.File(filename));
+                Files.Add(this.FileFactory.CreateFile(0, filename, "MostRecentFile"));
 
                 if (Files.Count > int.Parse(SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES]))
                 {
-                    Files.RemoveAt(0);
+                    Files.RemoveAt(0);                    
                 }
 
                 WriteMostRecentFilesToDatabase();
             }
-
         }
 
         /// <summary>
@@ -133,7 +129,7 @@ namespace OxTail.Controls
         {
             for (int i = Files.Count-1; i >= 0; i--)
             {
-                OxTail.Helpers.File file = Files[i];
+                IFile file = Files[i];
 
                 if (file.Filename == filename)
                 {

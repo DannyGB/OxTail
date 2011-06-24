@@ -9,13 +9,13 @@ namespace OxTail
 {
     public class ExpressionBuilderWindowFactory : IExpressionBuilderWindowFactory
     {
-        private static IKernel Kernel;
+        private IKernel Kernel;
 
         public IExpressionBuilderWindow CreateWindow()
         {
             Kernel = new StandardKernel();
-            Kernel.Bind<IExpressionBuilderWindow>().To<ExpressionBuilderDITest>().Named("ExpressionBuilder");
-            //Kernel.Bind<IExpressionBuilderWindow>().To<ExpressionBuilder>().Named("ExpressionBuilder");
+            //Kernel.Bind<IExpressionBuilderWindow>().To<ExpressionBuilderDITest>().Named("ExpressionBuilder");
+            Kernel.Bind<IExpressionBuilderWindow>().To<ExpressionBuilder>().Named("ExpressionBuilder");
 
             return Kernel.Get<IExpressionBuilderWindow>("ExpressionBuilder");
         }

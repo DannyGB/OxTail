@@ -15,8 +15,7 @@ namespace OxTail
         {
             Kernel = new StandardKernel();
             Kernel.Bind<IWindow>().To<About>().Named("About");
-            Kernel.Bind<IWindow>().To<Highlight>().Named("Highlight");
-            Kernel.Bind<IWindow>().To<ExpressionBuilderDITest>().Named("ExpressionBuilder");
+            Kernel.Bind<IWindow>().To<Highlight>().Named("Highlight");            
             Kernel.Bind<IWindow>().To<ApplicationSettings>().Named("ApplicationSettings");
 
             return Kernel.Get<IWindow>(window);

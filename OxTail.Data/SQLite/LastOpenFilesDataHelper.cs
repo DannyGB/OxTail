@@ -31,9 +31,18 @@ namespace OxTail.Data.SQLite
 {
     public class LastOpenFilesDataHelper : SQLiteBase, ILastOpenFilesData
     {
-        public List<LastOpenFiles> Read()
+        private readonly List<IFile> Files;
+        private readonly IFileFactory FileFactory;
+
+        public LastOpenFilesDataHelper(List<IFile> files, IFileFactory fileFactory)
         {
-            List<LastOpenFiles> items = new List<LastOpenFiles>();
+            this.Files = files;            
+            this.FileFactory = fileFactory;
+        }
+
+        public List<IFile> Read()
+        {
+            this.Files.Clear();
 
             DbConnection.Open();
 
@@ -58,13 +67,8 @@ namespace OxTail.Data.SQLite
 
                                 foreach (DataRow row in tbl.Rows)
                                 {
-                                    LastOpenFiles item = new LastOpenFiles()
-                                    {
-                                        ID = int.Parse(row[0].ToString()),
-                                        Filename = row[1].ToString(),
-                                    };
-
-                                    items.Add(item);
+                                    IFile item = this.FileFactory.CreateFile(int.Parse(row[0].ToString()),row[1].ToString(), "LastOpenedFile" );
+                                    Files.Add(item);
                                 }
                             }
                         }
@@ -74,14 +78,17 @@ namespace OxTail.Data.SQLite
 
             DbConnection.Close();
 
-            return items;
+            return Files;
         }
 
-        public List<LastOpenFiles> Write(List<LastOpenFiles> files)
+        public List<IFile> Write(List<IFile> files)
         {
             int retval = 0;
 
-            DbConnection.Open();
+            if (DbConnection.State != ConnectionState.Open)
+            {
+                DbConnection.Open();
+            }
 
             using (DbTransaction trans = DbConnection.BeginTransaction(System.Data.IsolationLevel.Serializable))
             {
@@ -108,7 +115,7 @@ namespace OxTail.Data.SQLite
                                 foreach (DataRow row in existingRows)
                                 {
                                     found = false;
-                                    foreach (LastOpenFiles item in files)
+                                    foreach (IFile item in files)
                                     {
                                         if (item.ID > 0 && item.ID == int.Parse(row[0].ToString()))
                                         {
@@ -123,7 +130,7 @@ namespace OxTail.Data.SQLite
                                     }
                                 }
 
-                                foreach (LastOpenFiles item in files)
+                                foreach (IFile item in files)
                                 {
                                     found = false;
 
@@ -132,7 +139,7 @@ namespace OxTail.Data.SQLite
                                         if (row.RowState == DataRowState.Deleted)
                                         {
                                             found = true;
-                                            break;
+                                            continue;
                                         }
 
                                         // Updates existing rows
