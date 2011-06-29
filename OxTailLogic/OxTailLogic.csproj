@@ -90,6 +90,7 @@
     <Compile Include="Data\MostRecentFilesData.cs" />
     <Compile Include="Data\SavedExpressionData.cs" />
     <Compile Include="FileOpenLogic.cs" />
+    <Compile Include="ISettingsHelper.cs" />
     <Compile Include="ISystemTray.cs" />
     <Compile Include="PatternMatching\IStringPatternMatching.cs" />
     <Compile Include="PatternMatching\PatternToMatchWasNullException.cs" />

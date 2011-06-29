@@ -23,37 +23,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OxTailHelpers;
+using OxTailLogic.Data;
+using OxTailHelpers.Data;
 
 namespace OxTailLogic
 {
-    public class SettingsHelper
+    public class SettingsHelper : ISettingsHelper
     {
-        private static object padlock = new object();
-        private static AppSettings appSettings;
-        public static AppSettings AppSettings 
-        {
-            get
-            {
-                CheckAppSettingsInit();
-                return appSettings;
-            }
+        private readonly AppSettings appSettings;
+        private readonly IAppSettingsData AppSettingsData;
 
-            set
+        public SettingsHelper(IAppSettingsData appSettingsData)
+        {
+            this.AppSettingsData = appSettingsData;
+            this.appSettings = appSettingsData.ReadAppSettings();
+
+            if (this.appSettings.Count <= 0)
             {
-                lock (padlock)
-                {
-                    CheckAppSettingsInit();
-                    appSettings = value;
-                }
+                // Setup default appSettings.
+                this.appSettings.Initialize();
             }
         }
 
-        private static void CheckAppSettingsInit()
+        public AppSettings AppSettings
         {
-            if (appSettings == null)
+            get
             {
-                appSettings = new AppSettings();
+                return appSettings;
             }
+        }
+
+
+        public void WriteSettings()
+        {
+            AppSettingsData.WriteAppSettings(this.AppSettings);
         }
     }
 }

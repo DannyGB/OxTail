@@ -28,16 +28,14 @@ namespace OxTail.Controls
     using System.Threading;
     using System.Windows;
     using System.Windows.Controls;
+    using System.Windows.Controls.Primitives;
     using System.Windows.Data;
     using System.Windows.Documents;
     using System.Windows.Threading;
     using OxTailHelpers;
-    using OxTailLogic.PatternMatching;
-    using System.Windows.Media;
-    using System.Windows.Controls.Primitives;
     using OxTailLogic;
-    using System.Media;
     using OxTailLogic.Audio;
+    using OxTailLogic.PatternMatching;
 
     /// <summary>
     /// Interaction logic for RationalFileWatcher.xaml
@@ -54,6 +52,8 @@ namespace OxTail.Controls
         private delegate void Update(string text);
         private delegate int ReturnInt();
         private delegate object ReturnObject();
+
+        private readonly ISettingsHelper SettingsHelper;
 
         /// <summary>
         /// Create a custom routed event by first registering a RoutedEventID
@@ -562,14 +562,16 @@ namespace OxTail.Controls
                     this.colourfulListView.Items.Add(item);
                 }
             }));
-        }    
+        }        
 
         /// <summary>
         /// Initializes this instance
         /// </summary>
-        public RationalFileWatcher()
+        public RationalFileWatcher(ISettingsHelper settingsHelper)
         {
             InitializeComponent();
+
+            this.SettingsHelper = settingsHelper;
 
             // setup the encoding combo box
             this.comboBoxEncoding.ItemsSource = Encoding.GetEncodings();

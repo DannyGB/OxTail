@@ -44,10 +44,16 @@ namespace OxTail
         /// <summary>
         /// Initialize this instance
         /// </summary>
-        public ApplicationSettings()
+        public ApplicationSettings(ISettingsHelper settingsHelper)
         {
             InitializeComponent();
+
+            OxTail.Controls.ApplicationSettings ApplicationSettings = new OxTail.Controls.ApplicationSettings(settingsHelper);
+            ApplicationSettings.SaveClick += new RoutedEventHandler(ApplicationSettings_SaveClick);
+            ApplicationSettings.CancelClick +=new RoutedEventHandler(ApplicationSettings_CancelClick);
+            this.Grid.Children.Add(ApplicationSettings);
         }
+
 
         private void ApplicationSettings_SaveClick(object sender, RoutedEventArgs e)
         {

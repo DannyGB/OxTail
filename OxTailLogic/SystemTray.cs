@@ -14,17 +14,17 @@ namespace OxTailLogic
         private readonly Icon icon;
         private readonly ContextMenu contextMenu;
 
-        public SystemTray(IApplication application)
+        public SystemTray(IApplication application, ISettingsHelper settingsHelper)
         {
             this.icon = new Icon(ResourceHelper.GetStreamFromApplication("OxTailLogic.Images.OxTail.ico", Assembly.GetExecutingAssembly()));
             this.contextMenu = new ContextMenu();
 
             System.Windows.Forms.MenuItem menuItem = new System.Windows.Forms.MenuItem(LanguageHelper.GetLocalisedText(application, Constants.DISABLE_SOUND_CONTEXT_MENU));
-            menuItem.Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]);
+            menuItem.Checked = bool.Parse(settingsHelper.AppSettings[AppSettings.PLAY_SOUND]);
             contextMenu.MenuItems.Add(menuItem);
 
             menuItem = new System.Windows.Forms.MenuItem(LanguageHelper.GetLocalisedText(application, Constants.MINIMISE_TO_TRAY));
-            menuItem.Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]);
+            menuItem.Checked = bool.Parse(settingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]);
             contextMenu.MenuItems.Add(menuItem);
 
             menuItem = new System.Windows.Forms.MenuItem("-");

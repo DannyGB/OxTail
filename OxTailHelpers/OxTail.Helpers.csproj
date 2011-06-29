@@ -78,6 +78,7 @@
     <Compile Include="Data\ISavedExpressionsData.cs" />
     <Compile Include="Expression.cs" />
     <Compile Include="FileFactory.cs" />
+    <Compile Include="IAppSettings.cs" />
     <Compile Include="IExpressionBuilderWindow.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FileHelper.cs" />
