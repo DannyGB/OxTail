@@ -6,8 +6,7 @@ using OxTailHelpers;
 
 namespace OxTail
 {
-    public interface ISaveExpressionMessageWindowFactory
+    public interface IHighlightWindow : IWindow
     {
-        ISaveExpressionMessage CreateWindow();
     }
 }

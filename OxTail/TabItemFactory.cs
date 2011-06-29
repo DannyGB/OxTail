@@ -5,6 +5,9 @@ using System.Text;
 using Ninject;
 using OxTail.Controls;
 using OxTailHelpers;
+using Ninject.Activation;
+using Ninject.Parameters;
+using OxTailLogic;
 
 namespace OxTail
 {
@@ -17,14 +20,22 @@ namespace OxTail
             Kernel = kernel;
         }
 
-        public Controls.ITabItem CreateTabItem(string filename, HighlightCollection<HighlightItem> hightlightCollection)
+        public Controls.ITabItem CreateTabItem(string filename, IHighlightsHelper hightlightsHelper)
         {
-            Kernel.Bind<ITabItem>()
-                .To<FileWatcherTabItem>()
-                .WithConstructorArgument("filename", filename)
-                .WithConstructorArgument("patterns", hightlightCollection);            
+            IRequest req = Kernel.CreateRequest(typeof(ITabItem), null, new IParameter[] { new Parameter("filename", filename, false), new Parameter("hightlightsHelper", hightlightsHelper, false) }, false, false);
 
-            return Kernel.Get<ITabItem>();
+            if (!Kernel.CanResolve(req))
+            {
+                Kernel.Bind<ITabItem>()
+                    .To<FileWatcherTabItem>()
+                    .WithConstructorArgument("filename", filename)
+                    .WithConstructorArgument("hightlightsHelper", hightlightsHelper);
+            }
+
+            ITabItem tab = Kernel.Get<ITabItem>();
+            Kernel.Unbind<ITabItem>();
+
+            return tab;
         }
     }
 }

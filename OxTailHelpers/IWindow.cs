@@ -11,9 +11,13 @@ namespace OxTailHelpers
         event RoutedEventHandler SaveClick;
         event RoutedEventHandler Closed;
 
+        System.Windows.WindowStartupLocation WindowStartupLocation { get; set; }
+        bool? DialogResult { get; set; }
+
         void Show();
         bool? ShowDialog();
         void Close();
         bool Activate();
+        
     }
 }

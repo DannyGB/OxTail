@@ -133,9 +133,11 @@
     </Compile>
     <Compile Include="ExpressionBuilderWindowFactory.cs" />
     <Compile Include="FindWindowFactory.cs" />
+    <Compile Include="HighlightWindowFactory.cs" />
     <Compile Include="IExpressionBuilderWindowFactory.cs" />
     <Compile Include="IFindWindowFactory.cs" />
-    <Compile Include="ISaveExpressionMessageWindowFactory.cs" />
+    <Compile Include="IHighlightWindow.cs" />
+    <Compile Include="IHighlightWindowFactory.cs" />
     <Compile Include="ITabItemFactory.cs" />
     <Compile Include="IWindowFactory.cs" />
     <Compile Include="SaveExpressionMessageWindowFactory.cs" />

@@ -28,7 +28,7 @@ namespace OxTailHelpers.Data
 {
     public interface IAppSettingsData : IData
     {
-        AppSettings ReadAppSettings();
-        int WriteAppSettings(AppSettings settings);
+        IAppSettings ReadAppSettings(IAppSettings settings);
+        int WriteAppSettings(IAppSettings settings);
     }
 }

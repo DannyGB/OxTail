@@ -25,11 +25,9 @@ using System.Text;
 
 namespace OxTailHelpers
 {
-    public interface ISaveExpressionMessage
+    public interface ISaveExpressionMessage : IWindow
     {
         string Label { get; set; }
-        string Message { get; set; }
-        System.Windows.WindowStartupLocation WindowStartupLocation { get; set; }
-        bool? ShowDialog();
+        string Message { get; set; }        
     }
 }

@@ -4,7 +4,7 @@
         xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"              
         Title="{DynamicResource expressionBuilderWindowTitle}" Height="462" Width="616"
         xmlns:oxtail="clr-namespace:OxTail.Controls;assembly=OxTail.Controls" WindowStartupLocation="CenterScreen">
-    <Grid>
-        <oxtail:RegularExpressionBuilder x:Name="regularExpressionBuilder" OkClick="RegularExpressionBuilder_OkClick" CancelClick="RegularExpressionBuilder_CancelClick"></oxtail:RegularExpressionBuilder>
+    <Grid Name="grid">
+        <!-- <oxtail:RegularExpressionBuilder x:Name="regularExpressionBuilder" OkClick="RegularExpressionBuilder_OkClick" CancelClick="RegularExpressionBuilder_CancelClick"></oxtail:RegularExpressionBuilder> -->
     </Grid>
 </custom:BaseWindow>

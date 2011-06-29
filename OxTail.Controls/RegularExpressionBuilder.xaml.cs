@@ -20,26 +20,23 @@
 
 namespace OxTail.Controls
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.IO;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Xml.Serialization;
-    using OxTail.Helpers;
-    using OxTailLogic.PatternMatching;
+    using System.Reflection;
     using System.Text;
     using System.Text.RegularExpressions;
-    using System;
-    using System.Reflection;
+    using System.Windows;
+    using System.Windows.Controls;
+    using OxTail.Helpers;
     using OxTailHelpers;
-    using OxTailLogic;
     using OxTailHelpers.Data;
-    using OxTailLogic.Data;
+    using OxTailLogic.PatternMatching;
 
     /// <summary>
     /// Interaction logic for RegularExpressionBuilder.xaml
     /// </summary>
-    public partial class RegularExpressionBuilder : UserControl
+    public partial class RegularExpressionBuilder : UserControl, IRegularExpressionBuilder
     {
         /// <summary>
         /// Ok button clicked
@@ -51,26 +48,34 @@ namespace OxTail.Controls
         /// </summary>
         public event RoutedEventHandler CancelClick;
 
-        private ISavedExpressionsData Data { get; set; }
+        private readonly ISavedExpressionsData Data;
+        private readonly IExpressionFactory ExpressionFactory;
+        private readonly ISaveExpressionMessageWindowFactory SaveExpressionMessageWindowFactory;
+        private readonly IStringPatternMatching StringPatternMatching;
 
         /// <summary>
         /// Initialises instance
         /// </summary>
-        public RegularExpressionBuilder()
-        {
+        public RegularExpressionBuilder(ISavedExpressionsData data, IExpressionFactory expressionFactory, 
+            ISaveExpressionMessageWindowFactory saveExpressionMessageWindowFactory, IStringPatternMatching stringPatternMatching)
+        {            
             InitializeComponent();
+            this.Data = data;
+            ExpressionFactory = expressionFactory;
+            this.SaveExpressionMessageWindowFactory = saveExpressionMessageWindowFactory;
+            this.StringPatternMatching = stringPatternMatching;
         }
 
         /// <summary>
         /// The entered regular expression
         /// </summary>
-        public OxTailHelpers.Expression Expression
+        public IExpression Expression
         {
             get
             {
                 if (this.textBoxExpression.Expression == null)
                 {
-                    return new OxTailHelpers.Expression(this.textBoxExpression.Text, Constants.UNAMED);
+                    return ExpressionFactory.CreateFile(0, this.textBoxExpression.Text, Constants.UNAMED);
                 }
                 else
                 {
@@ -101,11 +106,11 @@ namespace OxTail.Controls
 
             if (e.AddedItems.Count <= 0)
             {
-                this.textBoxExpression.Expression = new OxTailHelpers.Expression();
+                this.textBoxExpression.Expression = ExpressionFactory.CreateFile(0, string.Empty, string.Empty);
             }
-            else if (((OxTailHelpers.Expression)e.AddedItems[0]).Name != LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.CHOOSE_ITEM))
+            else if (((IExpression)e.AddedItems[0]).Name != LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.CHOOSE_ITEM))
             {
-                this.textBoxExpression.Expression = ((OxTailHelpers.Expression)e.AddedItems[0]);
+                this.textBoxExpression.Expression = ((IExpression)e.AddedItems[0]);
             }
         }
 
@@ -127,14 +132,14 @@ namespace OxTail.Controls
 
         private void buttonSaveExpression_Click(object sender, RoutedEventArgs e)
         {
-            SaveExpressionMessage msg = new SaveExpressionMessage();
-            msg.labelMessage.Content = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.ENTER_EXPRESSION_NAME);
+            ISaveExpressionMessage msg = this.SaveExpressionMessageWindowFactory.CreateWindow();
+            msg.Label = LanguageHelper.GetLocalisedText((Application.Current as IApplication), Constants.ENTER_EXPRESSION_NAME);
             msg.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             msg.ShowDialog();
 
             if (msg.DialogResult.HasValue && msg.DialogResult.Value)
             {
-                ((ObservableCollection<OxTailHelpers.Expression>)this.comboBoxSavedExpressions.DataContext).Add(CreateExpression(this.textBoxExpression.Text, msg.Message));
+                ((ObservableCollection<IExpression>)this.comboBoxSavedExpressions.DataContext).Add(CreateExpression(this.textBoxExpression.Text, msg.Message));
             }
 
             this.SaveExpressions();
@@ -142,16 +147,15 @@ namespace OxTail.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            Data = (ISavedExpressionsData)DataService<SavedExpressionData>.InitialiseDataService();
-            ObservableCollection<OxTailHelpers.Expression> exprs = Data.Read();
+            ObservableCollection<IExpression> exprs = Data.Read(new ObservableCollection<IExpression>());
 
             if (exprs == null || exprs.Count <= 0)
             {
-                exprs.Add(new OxTailHelpers.Expression("", "Choose Item"));
-                exprs.Add(new OxTailHelpers.Expression(@"^([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})$", "Email"));
-                exprs.Add(new OxTailHelpers.Expression(@"\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b", "IP Addresses"));
-                exprs.Add(new OxTailHelpers.Expression(@"([a-zA-Z]{1,2}\w{1,2})+(\d{1}[a-zA-Z]{2})+", "Postcodes"));
-                exprs.Add(new OxTailHelpers.Expression(@"([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})", "Email_Anywhere_On_Line"));
+                exprs.Add(this.ExpressionFactory.CreateFile(0, "", "Choose Item"));
+                exprs.Add(this.ExpressionFactory.CreateFile(0, @"^([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})$", "Email"));
+                exprs.Add(this.ExpressionFactory.CreateFile(0, @"\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b", "IP Addresses"));
+                exprs.Add(this.ExpressionFactory.CreateFile(0, @"([a-zA-Z]{1,2}\w{1,2})+(\d{1}[a-zA-Z]{2})+", "Postcodes"));
+                exprs.Add(this.ExpressionFactory.CreateFile(0, @"([a-zA-Z0-9_\-\.]+)@(([a-zA-Z0-9\-]+\.)+)([a-zA-Z]{2,4})", "Email_Anywhere_On_Line"));
             }
 
             this.comboBoxSavedExpressions.DataContext = exprs;
@@ -171,13 +175,13 @@ namespace OxTail.Controls
 
         private void SaveExpressions()
         {
-            ObservableCollection<OxTailHelpers.Expression> list = (ObservableCollection<OxTailHelpers.Expression>)this.comboBoxSavedExpressions.DataContext;
+            ObservableCollection<IExpression> list = (ObservableCollection<IExpression>)this.comboBoxSavedExpressions.DataContext;
             this.comboBoxSavedExpressions.DataContext = Data.Write(list);
         }
 
-        private OxTailHelpers.Expression CreateExpression(string text, string content)
+        private IExpression CreateExpression(string text, string content)
         {
-            OxTailHelpers.Expression item = new OxTailHelpers.Expression(text, content);           
+            IExpression item = this.ExpressionFactory.CreateFile(0, text, content);           
             return item;
         }
 
@@ -207,10 +211,10 @@ namespace OxTail.Controls
 
         private void buttonDeleteExpression_Click(object sender, RoutedEventArgs e)
         {
-            OxTailHelpers.Expression expr = (OxTailHelpers.Expression)this.comboBoxSavedExpressions.SelectedItem;
+            IExpression expr = (OxTailHelpers.Expression)this.comboBoxSavedExpressions.SelectedItem;
             if (expr.Name != "Choose Item:")
             {
-                ((ObservableCollection<OxTailHelpers.Expression>)this.comboBoxSavedExpressions.DataContext).Remove(expr);
+                ((ObservableCollection<IExpression>)this.comboBoxSavedExpressions.DataContext).Remove(expr);
             }
             
             this.SaveExpressions();
@@ -227,9 +231,7 @@ namespace OxTail.Controls
         private void buttonFindMatches_Click(object sender, RoutedEventArgs e)
         {
             this.textBoxFoundMatches.Text = string.Empty;
-
-            IStringPatternMatching patternMatching = StringPatternMatching.CreatePatternMatching();
-            MatchCollection coll = patternMatching.MatchPattern(this.textBoxTextInput.Text, new StringBuilder(this.textBoxExpression.Text));
+            MatchCollection coll = this.StringPatternMatching.MatchPattern(this.textBoxTextInput.Text, new StringBuilder(this.textBoxExpression.Text));
 
             foreach (Match m in coll)
             {

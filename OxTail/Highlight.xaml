@@ -2,8 +2,8 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"        
         xmlns:custom="clr-namespace:OxTail.Controls;assembly=OxTail.Controls"
-        Title="{DynamicResource highlightingWindowTitle}" Height="363" Width="438" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded" Closing="Window_Closing">
-    <Grid>
-        <custom:Highlighting x:Name="hightlighting" OpenExpressionBuilder="hightlighting_OpenExpressionBuilder"></custom:Highlighting>
+        Title="{DynamicResource highlightingWindowTitle}" Height="363" Width="438" WindowStyle="ThreeDBorderWindow" WindowStartupLocation="CenterScreen">
+    <Grid Name="grid">
+        <!-- <custom:Highlighting x:Name="hightlighting" OpenExpressionBuilder="hightlighting_OpenExpressionBuilder"></custom:Highlighting> -->
     </Grid>
 </custom:BaseWindow>

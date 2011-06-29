@@ -33,17 +33,17 @@ namespace OxTailLogic.Data
     {
         private SavedExpressionsDataHelper SavedExpressionsDataHelper { get; set; }
 
-        public SavedExpressionData()
+        public SavedExpressionData(IExpressionFactory expressionFactory)
         {
-            this.SavedExpressionsDataHelper = new SavedExpressionsDataHelper();
+            this.SavedExpressionsDataHelper = new SavedExpressionsDataHelper(expressionFactory);
         }
 
-        public ObservableCollection<Expression> Read()
+        public ObservableCollection<IExpression> Read(ObservableCollection<IExpression> items)
         {
-            return SavedExpressionsDataHelper.Read();
+            return SavedExpressionsDataHelper.Read(items);
         }
 
-        public ObservableCollection<Expression> Write(ObservableCollection<Expression> items)
+        public ObservableCollection<IExpression> Write(ObservableCollection<IExpression> items)
         {
             return SavedExpressionsDataHelper.Write(items);
         }

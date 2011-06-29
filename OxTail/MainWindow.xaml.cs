@@ -59,6 +59,8 @@ namespace OxTail
         private readonly IFileFactory FileFactory;
         private readonly ITabItemFactory TabItemFactory;
         private readonly ISettingsHelper SettingsHelper;
+        private readonly IHighlightWindowFactory HighlightWindowFactory;
+        private readonly IHighlightsHelper HighlightHelper;
 
         private IWindow About;
         private IWindow Highlight;
@@ -66,12 +68,6 @@ namespace OxTail
         private IWindow ApplicationSettings;
         private IFindWindow Find;
 
-        /// <summary>
-        /// The current <see cref="HighlightCollection<T>"/> of <see cref="HighlightItem"/>
-        /// </summary>
-        public static HighlightCollection<HighlightItem> HighlightItems { get; set; }       
-
-        [Inject]
         // If DI is about removing all "new" operators from your logic to enable a plugin architecture where
         // every component can be changed in one place and that we must rely on abstraction rather than concretions
         // then everything must implement an interface and be passed in on the constructor (even other windows)
@@ -83,7 +79,8 @@ namespace OxTail
         public MainWindow(RecentFileList recentFileList, ILastOpenFilesData lastOpenFilesData,
             IHighlightItemData highlightItemData, IWindowFactory windowFactory, IFindWindowFactory findWindowFactory, ISystemTray systemTray, 
             System.Windows.Forms.NotifyIcon notifyIcon, ISaveExpressionMessageWindowFactory saveExpressionMessageWindowFactory,
-            IExpressionBuilderWindowFactory expressionBuilderWindowFactory, IFileFactory fileFactory, ITabItemFactory tabItemFactory, ISettingsHelper settingsHelper)
+            IExpressionBuilderWindowFactory expressionBuilderWindowFactory, IFileFactory fileFactory, ITabItemFactory tabItemFactory, ISettingsHelper settingsHelper,
+            IHighlightWindowFactory highlightWindowFactory, IHighlightsHelper highlightsHelper)
         {
             this.SettingsHelper = settingsHelper;            
             this.LastOpenFilesData = lastOpenFilesData;
@@ -96,6 +93,9 @@ namespace OxTail
             this.SystemTray = systemTray;
             this.FileFactory = fileFactory;
             this.TabItemFactory = tabItemFactory;
+            this.HighlightWindowFactory = highlightWindowFactory;
+            this.HighlightHelper = highlightsHelper;
+            //HighlightItems = highlightsHelper.Patterns;
 
             InitializeComponent();
             
@@ -148,7 +148,7 @@ namespace OxTail
 
         public void OpenHightlightScreen()
         {
-            this.Highlight = WindowFactory.CreateWindow("Highlight");
+            this.Highlight = this.HighlightWindowFactory.CreateWindow();
             this.Highlight.ShowDialog();
         }
 
@@ -167,7 +167,7 @@ namespace OxTail
                     ITabItem newTab = FindTabByFilename(filename);
                     if (newTab == null)
                     {
-                        newTab = this.TabItemFactory.CreateTabItem(filename, MainWindow.HighlightItems);
+                        newTab = this.TabItemFactory.CreateTabItem(filename, this.HighlightHelper);
                         newTab.FindFinished += new EventHandler<EventArgs>(MainWindow_FindFinished);
                         tabControlMain.Items.Add(newTab);
                     }
@@ -197,9 +197,6 @@ namespace OxTail
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {            
-            HighlightItems = this.HighlightItemData.Read();
-            HighlightItems.ApplySort(null, ListSortDirection.Descending);
-
             if (bool.Parse(this.SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
             {
                 LoadLastOpenFiles();

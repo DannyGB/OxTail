@@ -77,8 +77,10 @@
     <Compile Include="Data\IMostRecentFilesData.cs" />
     <Compile Include="Data\ISavedExpressionsData.cs" />
     <Compile Include="Expression.cs" />
+    <Compile Include="ExpressionFactory.cs" />
     <Compile Include="FileFactory.cs" />
     <Compile Include="IAppSettings.cs" />
+    <Compile Include="IExpression.cs" />
     <Compile Include="IExpressionBuilderWindow.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FileHelper.cs" />
@@ -94,10 +96,12 @@
     <Compile Include="IApplication.cs" />
     <Compile Include="Data\IAppSettingsData.cs" />
     <Compile Include="IColourfulItem.cs" />
+    <Compile Include="IExpressionFactory.cs" />
     <Compile Include="IFile.cs" />
     <Compile Include="IFileFactory.cs" />
     <Compile Include="IFindWindow.cs" />
     <Compile Include="IMainWindowKeyPressMethods.cs" />
+    <Compile Include="IRegularExpressionBuilder.cs" />
     <Compile Include="ISaveExpressionMessage.cs" />
     <Compile Include="IWindow.cs" />
     <Compile Include="KeyboardHelper.cs" />

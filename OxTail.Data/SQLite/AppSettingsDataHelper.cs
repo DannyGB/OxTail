@@ -39,9 +39,9 @@ namespace OxTail.Data.SQLite
         {            
         }
 
-        public AppSettings ReadAppSettings()
+        public IAppSettings ReadAppSettings(IAppSettings settings)
         {
-            AppSettings appSettings = new AppSettings();
+            IAppSettings appSettings = settings;
 
             DbConnection.Open();
 
@@ -79,7 +79,7 @@ namespace OxTail.Data.SQLite
             return appSettings;
         }
         
-        public int WriteAppSettings(AppSettings settings)
+        public int WriteAppSettings(IAppSettings settings)
         {
             int retval = 0;
 

@@ -6,13 +6,10 @@ using OxTailHelpers;
 
 namespace OxTailLogic
 {
-    public interface ISettingsHelper
+    public interface IHighlightsHelper
     {
-        IAppSettings AppSettings
-        {
-            get;
-        }
+        HighlightCollection<HighlightItem> Patterns { get; }
 
-        void WriteSettings();
+        HighlightCollection<HighlightItem> Write();
     }
 }
