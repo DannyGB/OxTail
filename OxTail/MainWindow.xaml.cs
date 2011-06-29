@@ -49,7 +49,6 @@ namespace OxTail
         // Ensure good encapsulation
         private readonly RecentFileList recentFileList;
         private readonly ILastOpenFilesData LastOpenFilesData;
-        private readonly IAppSettingsData AppSettingsData;
         private readonly IHighlightItemData HighlightItemData;
         private readonly IWindowFactory WindowFactory;
         private readonly IFindWindowFactory FindWindowFactory;
@@ -59,6 +58,7 @@ namespace OxTail
         private readonly System.Windows.Forms.NotifyIcon Notify;
         private readonly IFileFactory FileFactory;
         private readonly ITabItemFactory TabItemFactory;
+        private readonly ISettingsHelper SettingsHelper;
 
         private IWindow About;
         private IWindow Highlight;
@@ -80,13 +80,12 @@ namespace OxTail
         // that screen from other windows (such as we do in Find) later on in the stack the change is only in one place
         // I fully intend to remove all "new" operators from this code file as a test to see how plausible it is to do!
         // I have left += new event handlers and any temporary news like StringBuilder
-        public MainWindow(RecentFileList recentFileList, ILastOpenFilesData lastOpenFilesData, IAppSettingsData appSettingsData,
+        public MainWindow(RecentFileList recentFileList, ILastOpenFilesData lastOpenFilesData,
             IHighlightItemData highlightItemData, IWindowFactory windowFactory, IFindWindowFactory findWindowFactory, ISystemTray systemTray, 
             System.Windows.Forms.NotifyIcon notifyIcon, ISaveExpressionMessageWindowFactory saveExpressionMessageWindowFactory,
-            IExpressionBuilderWindowFactory expressionBuilderWindowFactory, IFileFactory fileFactory, ITabItemFactory tabItemFactory)
+            IExpressionBuilderWindowFactory expressionBuilderWindowFactory, IFileFactory fileFactory, ITabItemFactory tabItemFactory, ISettingsHelper settingsHelper)
         {
-            
-            this.AppSettingsData = appSettingsData;
+            this.SettingsHelper = settingsHelper;            
             this.LastOpenFilesData = lastOpenFilesData;
             this.recentFileList = recentFileList;
             this.WindowFactory = windowFactory;
@@ -197,13 +196,11 @@ namespace OxTail
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            SettingsHelper.AppSettings = this.AppSettingsData.ReadAppSettings();
-
+        {            
             HighlightItems = this.HighlightItemData.Read();
             HighlightItems.ApplySort(null, ListSortDirection.Descending);
 
-            if (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
+            if (bool.Parse(this.SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
             {
                 LoadLastOpenFiles();
             }
@@ -229,14 +226,14 @@ namespace OxTail
 
         private void minimuseToTrayItem_Click(object sender, EventArgs e)
         {
-            SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY] = (!bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY])).ToString();
-            ((System.Windows.Forms.MenuItem)sender).Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]);
+            this.SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY] = (!bool.Parse(this.SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY])).ToString();
+            ((System.Windows.Forms.MenuItem)sender).Checked = bool.Parse(this.SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]);
         }
 
         private void disableSoundsMenuItem_Click(object sender, EventArgs e)
         {
-            SettingsHelper.AppSettings[AppSettings.PLAY_SOUND] = (!bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND])).ToString();
-            ((System.Windows.Forms.MenuItem)sender).Checked = bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]);
+            this.SettingsHelper.AppSettings[AppSettings.PLAY_SOUND] = (!bool.Parse(this.SettingsHelper.AppSettings[AppSettings.PLAY_SOUND])).ToString();
+            ((System.Windows.Forms.MenuItem)sender).Checked = bool.Parse(this.SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]);
         }
 
         private void exitItem_Click(object sender, EventArgs e)
@@ -267,7 +264,7 @@ namespace OxTail
 
         private List<FileInfo> OpenDirectory(bool showFileLimitMessage)
         {
-            return FileOpenLogic.OpenDirectory(showFileLimitMessage, (Application.Current as IApplication), int.Parse(SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES]));
+            return FileOpenLogic.OpenDirectory(showFileLimitMessage, (Application.Current as IApplication), int.Parse(this.SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES]));
         }
 
         private void MenuOpenLastWrittenPatterns_Click(object sender, RoutedEventArgs e)
@@ -347,7 +344,7 @@ namespace OxTail
 
         private void SaveApplicationSettings(IWindow settings)
         {
-            this.AppSettingsData.WriteAppSettings(SettingsHelper.AppSettings);
+            this.SettingsHelper.WriteSettings();
             settings.Close();
         }
 
@@ -463,7 +460,7 @@ namespace OxTail
 
         private void BaseWindow_Closing(object sender, CancelEventArgs e)
         {
-            if (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
+            if (bool.Parse(this.SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]))
             {
                 foreach (FileWatcherTabItem tab in this.tabControlMain.Items)
                 {
@@ -536,7 +533,7 @@ namespace OxTail
 
         private void ToggleWindowState()
         {
-            if (bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]))
+            if (bool.Parse(this.SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]))
             {
                 switch (this.WindowState)
                 {

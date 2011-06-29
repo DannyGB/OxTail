@@ -10,17 +10,19 @@ namespace OxTail
 {
     public class TabItemFactory : ITabItemFactory
     {
-        private IKernel Kernel;
+        private Ninject.IKernel Kernel;
+
+        public TabItemFactory(IKernel kernel)
+        {
+            Kernel = kernel;
+        }
 
         public Controls.ITabItem CreateTabItem(string filename, HighlightCollection<HighlightItem> hightlightCollection)
         {
-            Kernel = new StandardKernel();
             Kernel.Bind<ITabItem>()
                 .To<FileWatcherTabItem>()
                 .WithConstructorArgument("filename", filename)
-                .WithConstructorArgument("patterns", hightlightCollection);
-
-            Kernel.Bind<IFileWatcher>().To<RationalFileWatcher>();
+                .WithConstructorArgument("patterns", hightlightCollection);            
 
             return Kernel.Get<ITabItem>();
         }

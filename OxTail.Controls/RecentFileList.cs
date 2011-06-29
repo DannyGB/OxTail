@@ -41,6 +41,7 @@ namespace OxTail.Controls
 
         private readonly IMostRecentFilesData Data;
         private readonly IFileFactory FileFactory;
+        private readonly ISettingsHelper SettingsHelper;
 
         private List<IFile> Files { get; set; }
 
@@ -52,8 +53,9 @@ namespace OxTail.Controls
         /// <summary>
         /// Initialise instance
         /// </summary>
-        public RecentFileList(IMostRecentFilesData data, IFileFactory fileFactory)
+        public RecentFileList(IMostRecentFilesData data, IFileFactory fileFactory, ISettingsHelper settingsHelper)
         {
+            this.SettingsHelper = settingsHelper;
             this.FileFactory = fileFactory;
             this.Data = data;
             this.Load();

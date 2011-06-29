@@ -59,12 +59,15 @@ namespace OxTail.Controls
         /// </summary>
         public event RoutedEventHandler CancelClick;
 
+        private readonly ISettingsHelper SettingsHelper;
+
         /// <summary>
         /// Initialize this instance
         /// </summary>
-        public ApplicationSettings()
+        public ApplicationSettings(ISettingsHelper settingsHelper)
         {
             InitializeComponent();
+            this.SettingsHelper = settingsHelper;
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
@@ -75,14 +78,14 @@ namespace OxTail.Controls
                 return;
             }
 
-            SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY] = (int.Parse(this.comboBoxInterval.Text) * 1000).ToString();
-            SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES] = this.sliderMaxOpenFiles.Value.ToString();
-            SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES] = this.sliderMaxMruOpenFiles.Value.ToString();
-            SettingsHelper.AppSettings[AppSettings.REOPEN_FILES] = this.checkBoxReopenFiles.IsChecked.ToString();
-            SettingsHelper.AppSettings[AppSettings.PLAY_SOUND] = this.checkBoxPlaySound.IsChecked.ToString();
-            SettingsHelper.AppSettings[AppSettings.PLAY_SOUND_FILE] = this.textBoxSoundFile.Text;
-            SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY] = this.checkBoxMinimiseToTray.IsChecked.ToString();
-            SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND] = this.checkBoxPauseOnFound.IsChecked.ToString();
+            this.SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY] = (int.Parse(this.comboBoxInterval.Text) * 1000).ToString();
+            this.SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES] = this.sliderMaxOpenFiles.Value.ToString();
+            this.SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES] = this.sliderMaxMruOpenFiles.Value.ToString();
+            this.SettingsHelper.AppSettings[AppSettings.REOPEN_FILES] = this.checkBoxReopenFiles.IsChecked.ToString();
+            this.SettingsHelper.AppSettings[AppSettings.PLAY_SOUND] = this.checkBoxPlaySound.IsChecked.ToString();
+            this.SettingsHelper.AppSettings[AppSettings.PLAY_SOUND_FILE] = this.textBoxSoundFile.Text;
+            this.SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY] = this.checkBoxMinimiseToTray.IsChecked.ToString();
+            this.SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND] = this.checkBoxPauseOnFound.IsChecked.ToString();
 
             if (this.SaveClick != null)
             {
@@ -111,14 +114,14 @@ namespace OxTail.Controls
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            this.comboBoxInterval.Text = (int.Parse(SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY]) / 1000).ToString();
-            this.sliderMaxOpenFiles.Value = (double.Parse(SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES]));
-            this.sliderMaxMruOpenFiles.Value = (double.Parse(SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES]));
-            this.checkBoxReopenFiles.IsChecked = (bool.Parse(SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]));
-            this.checkBoxPlaySound.IsChecked = (bool.Parse(SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]));
-            this.textBoxSoundFile.Text = SettingsHelper.AppSettings[AppSettings.PLAY_SOUND_FILE];
-            this.checkBoxMinimiseToTray.IsChecked = (bool.Parse(SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]));
-            this.checkBoxPauseOnFound.IsChecked = (SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND] == null) ? false : (bool.Parse(SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND]));
+            this.comboBoxInterval.Text = (int.Parse(this.SettingsHelper.AppSettings[AppSettings.REFRESH_INTERVAL_KEY]) / 1000).ToString();
+            this.sliderMaxOpenFiles.Value = (double.Parse(this.SettingsHelper.AppSettings[AppSettings.MAX_OPEN_FILES]));
+            this.sliderMaxMruOpenFiles.Value = (double.Parse(this.SettingsHelper.AppSettings[AppSettings.MAX_MRU_FILES]));
+            this.checkBoxReopenFiles.IsChecked = (bool.Parse(this.SettingsHelper.AppSettings[AppSettings.REOPEN_FILES]));
+            this.checkBoxPlaySound.IsChecked = (bool.Parse(this.SettingsHelper.AppSettings[AppSettings.PLAY_SOUND]));
+            this.textBoxSoundFile.Text = this.SettingsHelper.AppSettings[AppSettings.PLAY_SOUND_FILE];
+            this.checkBoxMinimiseToTray.IsChecked = (bool.Parse(this.SettingsHelper.AppSettings[AppSettings.MINIMISE_TO_TRAY]));
+            this.checkBoxPauseOnFound.IsChecked = (this.SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND] == null) ? false : (bool.Parse(this.SettingsHelper.AppSettings[AppSettings.PAUSE_ON_FOUND]));
 
             this.ToggleTextBox(this.checkBoxPlaySound.IsChecked.Value);
         }

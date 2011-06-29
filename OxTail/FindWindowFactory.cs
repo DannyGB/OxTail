@@ -9,14 +9,15 @@ namespace OxTail
 {
     public class FindWindowFactory : IFindWindowFactory
     {
-        private Ninject.IKernel Kernel { get; set; }
+        private readonly Ninject.IKernel Kernel;
+
+        public FindWindowFactory(IKernel kernel)
+        {
+            Kernel = kernel;
+        }
 
         public IFindWindow CreateWindow()
         {
-            Kernel = new StandardKernel();
-            Kernel.Bind<IFindWindow>().To<Find>().Named("Find");
-            Kernel.Bind<IExpressionBuilderWindowFactory>().To<ExpressionBuilderWindowFactory>();
-
             return Kernel.Get<IFindWindow>("Find");
         }
     }

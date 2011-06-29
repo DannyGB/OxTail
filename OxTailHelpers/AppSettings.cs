@@ -27,7 +27,7 @@ using System.Collections.Specialized;
 
 namespace OxTailHelpers
 {
-    public class AppSettings : NameValueCollection
+    public class AppSettings : NameValueCollection, IAppSettings
     {
         public const string REFRESH_INTERVAL_KEY = "RefreshInterval";
         public const string MAX_OPEN_FILES = "MaxOpenFiles";
@@ -42,10 +42,9 @@ namespace OxTailHelpers
 
         public AppSettings()
         {
-            this.Initialize();
         }
 
-        private void Initialize()
+        public void Initialize()
         {
             base.Add(AppSettings.REFRESH_INTERVAL_KEY, Constants.REFRESH_INTERVAL);
             base.Add(AppSettings.MAX_OPEN_FILES, Constants.MAX_OPEN_FILES);
@@ -79,6 +78,11 @@ namespace OxTailHelpers
         public override void Clear()
         {
             throw new Exception("Can't clear the app setting collection");
+        }
+
+        public override System.Collections.IEnumerator GetEnumerator()
+        {
+            return base.GetEnumerator();
         }
     }
 }

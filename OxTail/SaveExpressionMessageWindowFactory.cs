@@ -10,13 +10,15 @@ namespace OxTail
 {
     public class SaveExpressionMessageWindowFactory : ISaveExpressionMessageWindowFactory
     {
-        public IKernel Kernel;
+        private readonly Ninject.IKernel Kernel;
+
+        public SaveExpressionMessageWindowFactory(IKernel kernel)
+        {
+            Kernel = kernel;
+        }
 
         public OxTailHelpers.ISaveExpressionMessage CreateWindow()
         {
-            Kernel = new StandardKernel();
-            Kernel.Bind<ISaveExpressionMessage>().To<SaveExpressionMessage>();
-
             return Kernel.Get<ISaveExpressionMessage>();
         }
     }

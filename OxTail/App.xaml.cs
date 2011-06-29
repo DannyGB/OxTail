@@ -87,18 +87,30 @@ namespace OxTail
             // change just here
 
             Kernel = new StandardKernel();
+            Kernel.Bind<IWindow>().To<About>().Named("About");
+            Kernel.Bind<IWindow>().To<Highlight>().Named("Highlight");
+            Kernel.Bind<IWindow>().To<ApplicationSettings>().Named("ApplicationSettings");
+            Kernel.Bind<IFindWindow>().To<Find>().Named("Find");
+            Kernel.Bind<IExpressionBuilderWindow>().To<ExpressionBuilder>().Named("ExpressionBuilder");
+
             Kernel.Bind<IMostRecentFilesData>().To<MostRecentFilesData>();
             Kernel.Bind<ILastOpenFilesData>().To<LastOpenFilesData>();
             Kernel.Bind<IAppSettingsData>().To<AppSettingsData>();
             Kernel.Bind<IHighlightItemData>().To<HighlightData>();
-            Kernel.Bind<IWindowFactory>().To<WindowFactory>();
-            Kernel.Bind<IFindWindowFactory>().To<FindWindowFactory>();
-            Kernel.Bind<IExpressionBuilderWindowFactory>().To<ExpressionBuilderWindowFactory>();
-            Kernel.Bind<ISaveExpressionMessageWindowFactory>().To<SaveExpressionMessageWindowFactory>();
-            Kernel.Bind<ISystemTray>().To<SystemTray>().WithConstructorArgument("application", this);
-            Kernel.Bind<IFileFactory>().To<FileFactory>();
-            Kernel.Bind<ITabItemFactory>().To<TabItemFactory>();
+            
+            Kernel.Bind<IWindowFactory>().To<WindowFactory>().InSingletonScope();
+            Kernel.Bind<IFindWindowFactory>().To<FindWindowFactory>().InSingletonScope();
+            Kernel.Bind<IExpressionBuilderWindowFactory>().To<ExpressionBuilderWindowFactory>().InSingletonScope();
+            Kernel.Bind<ISaveExpressionMessageWindowFactory>().To<SaveExpressionMessageWindowFactory>().InSingletonScope();
+            Kernel.Bind<IFileFactory>().To<FileFactory>().InSingletonScope();
+            Kernel.Bind<ITabItemFactory>().To<TabItemFactory>().InSingletonScope();
 
+            Kernel.Bind<ISystemTray>().To<SystemTray>().WithConstructorArgument("application", this);
+            Kernel.Bind<ISettingsHelper>().To<SettingsHelper>().InSingletonScope().WithConstructorArgument("appSettingsData", Kernel.Get<IAppSettingsData>());
+            Kernel.Bind<IFileWatcher>().To<RationalFileWatcher>();
+            Kernel.Bind<ISaveExpressionMessage>().To<SaveExpressionMessage>();
+            
+            
             MainWindow mainWindow = Kernel.Get<MainWindow>();
             mainWindow.Show();
 
