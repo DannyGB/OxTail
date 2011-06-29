@@ -28,7 +28,7 @@ namespace OxTailHelpers.Data
 {
     public interface ISavedExpressionsData : IData
     {
-        ObservableCollection<Expression> Read();
-        ObservableCollection<Expression> Write(ObservableCollection<Expression> items);
+        ObservableCollection<IExpression> Read(ObservableCollection<IExpression> items);
+        ObservableCollection<IExpression> Write(ObservableCollection<IExpression> items);
     }
 }

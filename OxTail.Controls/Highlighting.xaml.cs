@@ -29,6 +29,7 @@ namespace OxTail.Controls
     using System.Xml;
     using System;
     using OxTailHelpers;
+    using OxTailLogic;
 
     /// <summary>
     /// Interaction logic for Highlighting.xaml
@@ -36,12 +37,15 @@ namespace OxTail.Controls
     public partial class Highlighting : UserControl
     {
         public event RoutedEventHandler OpenExpressionBuilder;
-        public HighlightCollection<HighlightItem> Patterns { get; set; }
+        public HighlightCollection<HighlightItem> Patterns { get; private set; }
+        private readonly IHighlightsHelper HighlightHelper;
 
-        public Highlighting()
+        public Highlighting(IHighlightsHelper highlightHelper)
         {
             InitializeComponent();
 
+            this.HighlightHelper = highlightHelper;
+            this.Patterns = highlightHelper.Patterns;
             this.buttonColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
             this.buttonBackColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Background).Color;            
         }
@@ -116,6 +120,7 @@ namespace OxTail.Controls
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
+            this.HighlightHelper.Write();
         }
 
         /// <summary>

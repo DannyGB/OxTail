@@ -5,8 +5,10 @@ using System.Text;
 
 namespace OxTailHelpers
 {
-    public interface IAppSettings : IDictionary<string, string>
+    public interface IExpression
     {
-        void Initialize();
+        int ID { get; }
+        string Text { get; }
+        string Name { get; }
     }
 }

@@ -18,17 +18,17 @@ namespace OxTail
     /// <summary>
     /// Interaction logic for ExpressionBuilderDITest.xaml
     /// </summary>
-    public partial class ExpressionBuilderDITest : BaseWindow, IExpressionBuilderWindow
-    {
-        public ExpressionBuilderDITest()
-        {
-            InitializeComponent();
-        }
+    //public partial class ExpressionBuilderDITest : BaseWindow, IExpressionBuilderWindow
+    //{
+    //    public ExpressionBuilderDITest()
+    //    {
+    //        InitializeComponent();
+    //    }
 
 
-        public OxTailHelpers.Expression Expression
-        {
-            get { return new OxTailHelpers.Expression(); }
-        }
-    }
+    //    public IExpression Expression
+    //    {
+    //        get { return new IExpression(); }
+    //    }
+    //}
 }

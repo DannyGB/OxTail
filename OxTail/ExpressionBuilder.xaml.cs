@@ -20,18 +20,7 @@
 
 namespace OxTail
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Documents;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using System.Windows.Media.Imaging;
-    using System.Windows.Shapes;
     using OxTail.Controls;
     using OxTailHelpers;
 
@@ -40,11 +29,18 @@ namespace OxTail
     /// </summary>
     public partial class ExpressionBuilder : BaseWindow, IExpressionBuilderWindow
     {
-        public OxTailHelpers.Expression Expression { get; set; }
+        public IExpression Expression { get; set; }
 
-        public ExpressionBuilder()
+        public readonly IRegularExpressionBuilder regularExpressionBuilder;
+
+        public ExpressionBuilder(IRegularExpressionBuilder builder)
         {
             InitializeComponent();
+
+            regularExpressionBuilder = builder;
+            regularExpressionBuilder.OkClick += new RoutedEventHandler(RegularExpressionBuilder_OkClick);
+            regularExpressionBuilder.CancelClick +=new RoutedEventHandler(RegularExpressionBuilder_CancelClick);
+            this.grid.Children.Add((UIElement)regularExpressionBuilder);
         }
 
         private void RegularExpressionBuilder_OkClick(object sender, RoutedEventArgs e)

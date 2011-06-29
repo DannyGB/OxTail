@@ -29,6 +29,7 @@ namespace OxTail.Controls
     using System.ComponentModel;
     using System.Collections.Generic;
     using OxTailHelpers;
+    using OxTailLogic;
 
     /// <summary>
     /// An extension of the CloseableTabItem control that views a file.
@@ -38,6 +39,7 @@ namespace OxTail.Controls
         public event EventHandler<EventArgs> FindFinished;
 
         private readonly IFileWatcher FileWatcher;
+        private readonly IHighlightsHelper HighlightsHelper;
 
         private Image _image = null;
         private int LastFindOffset { get; set; }
@@ -66,7 +68,7 @@ namespace OxTail.Controls
         /// Creates an OxTailFileViewer instance and starts viewing the specified filename.
         /// </summary>
         /// <param name="filename">The full file path of the file to view.</param>
-        public FileWatcherTabItem(string filename, HighlightCollection<HighlightItem> patterns, IFileWatcher fileWatcher)
+        public FileWatcherTabItem(string filename, IHighlightsHelper hightlightsHelper, IFileWatcher fileWatcher)
             : this()
         {
             this.FileWatcher = fileWatcher;
@@ -77,7 +79,8 @@ namespace OxTail.Controls
             this.ToolTip = filename;
             this.Uid = filename;
             this.Visibility = System.Windows.Visibility.Visible;
-            this.FileWatcher.Patterns = patterns;
+            this.HighlightsHelper = hightlightsHelper;
+            this.FileWatcher.Patterns = this.HighlightsHelper.Patterns;
             this.GotFocus += new RoutedEventHandler(OxTailFileViewer_GotFocus);
             this.FileWatcher.FindFinished += new EventHandler<EventArgs>(fileWatcher_FindFinished);
         }        

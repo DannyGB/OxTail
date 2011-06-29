@@ -37,12 +37,12 @@ namespace OxTailLogic.Data
             this.AppSettingsDataHelper = new AppSettingsDataHelper();
         }
 
-        public AppSettings ReadAppSettings()
+        public IAppSettings ReadAppSettings(IAppSettings settings)
         {
-            return this.AppSettingsDataHelper.ReadAppSettings();
+            return this.AppSettingsDataHelper.ReadAppSettings(settings);
         }
 
-        public int WriteAppSettings(AppSettings settings)
+        public int WriteAppSettings(IAppSettings settings)
         {
             return this.AppSettingsDataHelper.WriteAppSettings(settings);
         }

@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="IFileWatcher.cs" />
     <Compile Include="IntegerTextBox.cs" />
+    <Compile Include="ISaveExpressionMessageWindowFactory.cs" />
     <Compile Include="ITabItem.cs" />
     <Compile Include="NewlineDetectionMode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

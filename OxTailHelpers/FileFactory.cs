@@ -28,7 +28,10 @@ namespace OxTailHelpers
                 Kernel.Bind<IFile>().To<File>().Named("MostRecentFile").WithConstructorArgument("id", id).WithConstructorArgument("filename", filename);
             }
 
-            return Kernel.Get<IFile>(fileType);
+            IFile file = Kernel.Get<IFile>(fileType);
+            Kernel.Unbind<IFile>();
+
+            return file;
         }
     }
 }

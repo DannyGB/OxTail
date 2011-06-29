@@ -5,8 +5,8 @@ using System.Text;
 
 namespace OxTailHelpers
 {
-    public interface IAppSettings : IDictionary<string, string>
+    public interface IExpressionFactory
     {
-        void Initialize();
+        IExpression CreateFile(int id, string text, string name);
     }
 }

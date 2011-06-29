@@ -32,9 +32,17 @@ namespace OxTail.Data.SQLite
 {
     public class SavedExpressionsDataHelper : SQLiteBase, ISavedExpressionsData
     {
-        public System.Collections.ObjectModel.ObservableCollection<OxTailHelpers.Expression> Read()
+        private readonly IExpressionFactory ExpressionFactory;
+
+        public SavedExpressionsDataHelper(IExpressionFactory expressionFactory)
         {
-            ObservableCollection<Expression> expressions = new ObservableCollection<Expression>();
+            this.ExpressionFactory = expressionFactory;
+        }
+
+        public System.Collections.ObjectModel.ObservableCollection<IExpression> Read(ObservableCollection<IExpression> exprs)
+        {
+            exprs.Clear();
+            ObservableCollection<IExpression> expressions = exprs;
 
             DbConnection.Open();
 
@@ -59,13 +67,7 @@ namespace OxTail.Data.SQLite
 
                                 foreach (DataRow row in tbl.Rows)
                                 {
-                                    Expression expr = new Expression()
-                                    {
-                                        ID = int.Parse(row[0].ToString()),
-                                        Name = row[1].ToString(),
-                                        Text = row[2].ToString()
-                                    };
-
+                                    IExpression expr = this.ExpressionFactory.CreateFile(int.Parse(row[0].ToString()), row[2].ToString(), row[1].ToString());
                                     expressions.Add(expr);
                                 }
                             }
@@ -79,7 +81,7 @@ namespace OxTail.Data.SQLite
             return expressions;
         }
 
-        public ObservableCollection<Expression> Write(ObservableCollection<Expression> items)
+        public ObservableCollection<IExpression> Write(ObservableCollection<IExpression> items)
         {
             int retval = 0;
 
@@ -110,7 +112,7 @@ namespace OxTail.Data.SQLite
                                 foreach (DataRow row in existingRows)
                                 {
                                     found = false;
-                                    foreach (Expression item in items)
+                                    foreach (IExpression item in items)
                                     {
                                         if (item.ID > 0 && item.ID == int.Parse(row[0].ToString()))
                                         {
@@ -125,7 +127,7 @@ namespace OxTail.Data.SQLite
                                     }
                                 }
 
-                                foreach (Expression item in items)
+                                foreach (IExpression item in items)
                                 {
                                     found = false;
 
@@ -178,7 +180,7 @@ namespace OxTail.Data.SQLite
                 }
             }
 
-            return this.Read();
+            return this.Read(items);
         }
     }
 }

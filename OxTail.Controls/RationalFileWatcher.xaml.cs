@@ -784,7 +784,6 @@ namespace OxTail.Controls
             BackgroundWorker bg = new BackgroundWorker();
             bg.DoWork += new DoWorkEventHandler(this._bw_DoWorkRunOnce);
             bg.RunWorkerAsync(true);
-
         }
 
         private void UpdateHighlighting()

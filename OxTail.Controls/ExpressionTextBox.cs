@@ -23,14 +23,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Controls;
+using OxTailHelpers;
 
 namespace OxTail.Controls
 {
     public class ExpressionTextBox : TextBox
     {
-        private OxTailHelpers.Expression _expression;
+        private IExpression _expression;
 
-        public OxTailHelpers.Expression Expression 
+        public IExpression Expression 
         {
             get
             {

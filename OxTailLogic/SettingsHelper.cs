@@ -30,22 +30,23 @@ namespace OxTailLogic
 {
     public class SettingsHelper : ISettingsHelper
     {
-        private readonly AppSettings appSettings;
+        private readonly IAppSettings appSettings;
         private readonly IAppSettingsData AppSettingsData;
 
-        public SettingsHelper(IAppSettingsData appSettingsData)
+        public SettingsHelper(IAppSettingsData appSettingsData, IAppSettings settings)
         {
             this.AppSettingsData = appSettingsData;
-            this.appSettings = appSettingsData.ReadAppSettings();
+            this.appSettings = AppSettingsData.ReadAppSettings(settings);
 
             if (this.appSettings.Count <= 0)
             {
                 // Setup default appSettings.
-                this.appSettings.Initialize();
+                this.AppSettings.Initialize();
+                this.WriteSettings();
             }
         }
 
-        public AppSettings AppSettings
+        public IAppSettings AppSettings
         {
             get
             {

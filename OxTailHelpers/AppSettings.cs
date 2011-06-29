@@ -27,7 +27,7 @@ using System.Collections.Specialized;
 
 namespace OxTailHelpers
 {
-    public class AppSettings : NameValueCollection, IAppSettings
+    public class AppSettings : Dictionary<string, string>, IAppSettings
     {
         public const string REFRESH_INTERVAL_KEY = "RefreshInterval";
         public const string MAX_OPEN_FILES = "MaxOpenFiles";
@@ -44,6 +44,9 @@ namespace OxTailHelpers
         {
         }
 
+        /// <summary>
+        /// Initialize the collection with default values if non are stored in the db
+        /// </summary>
         public void Initialize()
         {
             base.Add(AppSettings.REFRESH_INTERVAL_KEY, Constants.REFRESH_INTERVAL);
@@ -53,36 +56,7 @@ namespace OxTailHelpers
             base.Add(AppSettings.PLAY_SOUND, false.ToString());
             base.Add(AppSettings.PLAY_SOUND_FILE, string.Empty);
             base.Add(AppSettings.MINIMISE_TO_TRAY, false.ToString());
-        }
-
-        public override void Add(string name, string value)
-        {
-            throw new Exception("Can't add an app setting to this collection");
-        }
-
-        public override void Set(string name, string value)
-        {
-            base.Set(name, value);
-
-            if (this.AppSettingsChanged != null)
-            {
-                this.AppSettingsChanged(this[name], new EventArgs());
-            }
-        }
-
-        public override void Remove(string name)
-        {
-            throw new Exception("Can't remove an app setting from this collection");
-        }
-
-        public override void Clear()
-        {
-            throw new Exception("Can't clear the app setting collection");
-        }
-
-        public override System.Collections.IEnumerator GetEnumerator()
-        {
-            return base.GetEnumerator();
-        }
+            base.Add(AppSettings.PAUSE_ON_FOUND, false.ToString());
+        }        
     }
 }
