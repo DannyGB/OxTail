@@ -95,7 +95,6 @@ namespace OxTail
             this.TabItemFactory = tabItemFactory;
             this.HighlightWindowFactory = highlightWindowFactory;
             this.HighlightHelper = highlightsHelper;
-            //HighlightItems = highlightsHelper.Patterns;
 
             InitializeComponent();
             

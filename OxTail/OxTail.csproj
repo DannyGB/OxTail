@@ -128,21 +128,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Modules\DataModule.cs" />
+    <Compile Include="ExpressionBuilder.xaml.cs">
+      <DependentUpon>ExpressionBuilder.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ExpressionBuilderDITest.xaml.cs">
       <DependentUpon>ExpressionBuilderDITest.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ExpressionBuilderWindowFactory.cs" />
-    <Compile Include="FindWindowFactory.cs" />
-    <Compile Include="HighlightWindowFactory.cs" />
-    <Compile Include="IExpressionBuilderWindowFactory.cs" />
-    <Compile Include="IFindWindowFactory.cs" />
+    <Compile Include="Factories\ExpressionBuilderWindowFactory.cs" />
+    <Compile Include="Factories\ExpressionFactory.cs" />
+    <Compile Include="Modules\FactoryModule.cs" />
+    <Compile Include="Factories\FileFactory.cs" />
+    <Compile Include="Factories\FindWindowFactory.cs" />
+    <Compile Include="Factories\HighlightWindowFactory.cs" />
+    <Compile Include="Factories\IExpressionBuilderWindowFactory.cs" />
+    <Compile Include="Factories\IFindWindowFactory.cs" />
     <Compile Include="IHighlightWindow.cs" />
-    <Compile Include="IHighlightWindowFactory.cs" />
-    <Compile Include="ITabItemFactory.cs" />
-    <Compile Include="IWindowFactory.cs" />
-    <Compile Include="SaveExpressionMessageWindowFactory.cs" />
-    <Compile Include="TabItemFactory.cs" />
-    <Compile Include="WindowFactory.cs" />
+    <Compile Include="Factories\IHighlightWindowFactory.cs" />
+    <Compile Include="Factories\ITabItemFactory.cs" />
+    <Compile Include="Factories\IWindowFactory.cs" />
+    <Compile Include="Factories\SaveExpressionMessageWindowFactory.cs" />
+    <Compile Include="Factories\TabItemFactory.cs" />
+    <Compile Include="Factories\WindowFactory.cs" />
+    <Compile Include="Modules\ApplicationModule.cs" />
+    <Compile Include="Modules\MasterModule.cs" />
+    <Compile Include="Modules\WindowModule.cs" />
     <Page Include="About.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -154,8 +164,8 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ExpressionBuilder.xaml">
-      <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ExpressionBuilderDITest.xaml">
       <SubType>Designer</SubType>
@@ -181,9 +191,6 @@
     </Compile>
     <Compile Include="ApplicationSettings.xaml.cs">
       <DependentUpon>ApplicationSettings.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ExpressionBuilder.xaml.cs">
-      <DependentUpon>ExpressionBuilder.xaml</DependentUpon>
     </Compile>
     <Compile Include="Find.xaml.cs">
       <DependentUpon>Find.xaml</DependentUpon>

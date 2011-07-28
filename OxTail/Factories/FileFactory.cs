@@ -6,8 +6,9 @@ using Ninject;
 using OxTail.Helpers;
 using Ninject.Activation;
 using Ninject.Parameters;
+using OxTailHelpers;
 
-namespace OxTailHelpers
+namespace OxTail
 {
     public class FileFactory : IFileFactory
     {

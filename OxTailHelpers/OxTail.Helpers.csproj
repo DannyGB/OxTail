@@ -49,9 +49,6 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ninject">
-      <HintPath>..\ExternalDlls\x86\Ninject\Ninject.dll</HintPath>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -77,8 +74,6 @@
     <Compile Include="Data\IMostRecentFilesData.cs" />
     <Compile Include="Data\ISavedExpressionsData.cs" />
     <Compile Include="Expression.cs" />
-    <Compile Include="ExpressionFactory.cs" />
-    <Compile Include="FileFactory.cs" />
     <Compile Include="IAppSettings.cs" />
     <Compile Include="IExpression.cs" />
     <Compile Include="IExpressionBuilderWindow.cs" />
