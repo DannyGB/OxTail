@@ -32,6 +32,9 @@ using OxTailHelpers.Data;
 using OxTailLogic.Data;
 using OxTailLogic;
 using OxTailLogic.PatternMatching;
+using Ninject.Modules;
+using OxTail.Modules;
+using System.Reflection;
 
 namespace OxTail
 {
@@ -78,50 +81,13 @@ namespace OxTail
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            // Ninject magic whereby it automagically creates the MainWindow
-            // using the constructor it knows the most parameters for and magically passes in
-            // the correct RecentFileList, which is created using the constructor
-            // requireing an IMostRecentFilesData argument which I tell Ninject
-            // is of type MostRecentFilesData below. WOW, that's a lot of
-            // mystery meat code, however it does mean that the persistence
-            // object for the MostRecentFileList is interchangable with a code
-            // change just here
-
-            // I believe a lot of this work can be done using Kernel.Load but at the moment I want "some" control over whats going on
-            // so I can see it in action
             Kernel = new StandardKernel();
-            Kernel.Bind<IWindow>().To<About>().Named("About");            
-            Kernel.Bind<IWindow>().To<ApplicationSettings>().Named("ApplicationSettings");
-            Kernel.Bind<IFindWindow>().To<Find>().Named("Find");
-            Kernel.Bind<IExpressionBuilderWindow>().To<ExpressionBuilder>().Named("ExpressionBuilder");
 
-            Kernel.Bind<IMostRecentFilesData>().To<MostRecentFilesData>();
-            Kernel.Bind<ILastOpenFilesData>().To<LastOpenFilesData>();
-            Kernel.Bind<IAppSettingsData>().To<AppSettingsData>();
-            Kernel.Bind<IHighlightItemData>().To<HighlightData>();
-            Kernel.Bind<ISavedExpressionsData>().To<SavedExpressionData>();
-            
-            Kernel.Bind<IRegularExpressionBuilder>().To<RegularExpressionBuilder>();
-            Kernel.Bind<IExpressionFactory>().To<ExpressionFactory>();
-            Kernel.Bind<IWindowFactory>().To<WindowFactory>().InSingletonScope();
-            Kernel.Bind<IFindWindowFactory>().To<FindWindowFactory>().InSingletonScope();
-            Kernel.Bind<IHighlightWindowFactory>().To<HighlightWindowFactory>().InSingletonScope();
-            Kernel.Bind<IExpressionBuilderWindowFactory>().To<ExpressionBuilderWindowFactory>().InSingletonScope();
-            Kernel.Bind<ISaveExpressionMessageWindowFactory>().To<SaveExpressionMessageWindowFactory>().InSingletonScope();
-            Kernel.Bind<IFileFactory>().To<FileFactory>().InSingletonScope();
-            Kernel.Bind<ITabItemFactory>().To<TabItemFactory>().InSingletonScope();
-
-            Kernel.Bind<IAppSettings>().To<AppSettings>();
-            Kernel.Bind<ISystemTray>().To<SystemTray>().WithConstructorArgument("application", this);
-            Kernel.Bind<ISettingsHelper>().To<SettingsHelper>().InSingletonScope().WithConstructorArgument("appSettingsData", Kernel.Get<IAppSettingsData>());
-            Kernel.Bind<IHighlightsHelper>().To<HighlightsHelper>().InSingletonScope().WithConstructorArgument("highlightData", Kernel.Get<IHighlightItemData>());
-            Kernel.Bind<IFileWatcher>().To<RationalFileWatcher>();
-            Kernel.Bind<ISaveExpressionMessage>().To<SaveExpressionMessage>();
-            Kernel.Bind<IStringPatternMatching>().To<StringPatternMatching>();
-
-            Kernel.Bind<Highlighting>().ToSelf().WithConstructorArgument("highlightData", Kernel.Get<ISettingsHelper>());
-            
-            
+            // Split the kernel loading into seperate modules that contain logically related content
+            // There is some overlapping dependencies at the moment that I'd like to refactor.
+            // And should you Ninject your Ninject modules?
+            Kernel.Load(new INinjectModule[] { new MasterModule(this) });
+                        
             MainWindow mainWindow = Kernel.Get<MainWindow>();
             mainWindow.Show();
 

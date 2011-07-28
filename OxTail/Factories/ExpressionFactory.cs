@@ -5,8 +5,9 @@ using System.Text;
 using Ninject;
 using Ninject.Activation;
 using Ninject.Parameters;
+using OxTailHelpers;
 
-namespace OxTailHelpers
+namespace OxTail
 {
     public class ExpressionFactory : IExpressionFactory
     {
