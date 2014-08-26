@@ -36,14 +36,15 @@ namespace OxTail.Controls
     /// </summary>
     public partial class Highlighting : UserControl
     {
-        public event RoutedEventHandler OpenExpressionBuilder;
+        protected readonly IExpressionBuilderWindow ExpressionBuilder;
         public HighlightCollection<HighlightItem> Patterns { get; private set; }
         private readonly IHighlightsHelper HighlightHelper;
 
-        public Highlighting(IHighlightsHelper highlightHelper)
+        public Highlighting(IHighlightsHelper highlightHelper, IExpressionBuilderWindow expressionBuilder)
         {
             InitializeComponent();
 
+            ExpressionBuilder = expressionBuilder;
             this.HighlightHelper = highlightHelper;
             this.Patterns = highlightHelper.Patterns;
             this.buttonColour.SelectedColour = ((SolidColorBrush)this.textBoxPattern.Foreground).Color;
@@ -61,12 +62,17 @@ namespace OxTail.Controls
             }
         }
 
+        protected void AddNewHighlightItem(string text, Color foreColour, Color backColour)
+        {
+            HighlightItem item = new HighlightItem(text, foreColour, backColour);
+            item.Order = Patterns.Add(item);
+
+            this.Sort(Constants.HIGHLIGHT_ITEM_SORT_HEADER, ListSortDirection.Descending);
+        }
+
         private void buttonAdd_Click(object sender, RoutedEventArgs e)
         {
-            HighlightItem item = new HighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.buttonBackColour.SelectedColour);
-            item.Order = Patterns.Add(item);
-            
-            this.Sort(Constants.HIGHLIGHT_ITEM_SORT_HEADER, ListSortDirection.Descending);
+            AddNewHighlightItem(this.textBoxPattern.Text, this.buttonColour.SelectedColour, this.buttonBackColour.SelectedColour);
         }
 
         private void buttonColour_Click(object sender, RoutedEventArgs e)
@@ -162,12 +168,15 @@ namespace OxTail.Controls
 
         private void buttonExpressionBuilder_Click(object sender, RoutedEventArgs e)
         {
-            if (OpenExpressionBuilder != null)
+            if (ExpressionBuilder != null)
             {
-                this.OpenExpressionBuilder(this, e);
+                if (ExpressionBuilder.ShowDialog() == true)
+                {
+                    this.textBoxPattern.Text = ExpressionBuilder.Expression.Text;
+                }
             }
         }
-      
+
         private void Sort(string sortBy, ListSortDirection direction)
         {
             ICollectionView dataView =

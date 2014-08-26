@@ -36,6 +36,7 @@ namespace OxTail.Controls
     using OxTailLogic;
     using OxTailLogic.Audio;
     using OxTailLogic.PatternMatching;
+    using System.IO.MemoryMappedFiles;
 
     /// <summary>
     /// Interaction logic for RationalFileWatcher.xaml
@@ -252,25 +253,42 @@ namespace OxTail.Controls
             return false;
         }
 
-        private StreamReader OpenFile()
+        /// <summary>
+        /// Creates a Stream from a Memory Mapped file, the benefit of using a memory mapped file is that when working with large files the file is accessed where it is rather than copying the entire contents into the memory area of the running process which can soon add up when viewing multiple large data files.
+        /// </summary>
+        /// <param name="filename">The name of the file to open</param>
+        /// <param name="fileMode">The mode to use when opening the file</param>
+        /// <returns></returns>
+        protected virtual Stream OpenFile(string filename, FileMode fileMode)
         {
-            try
+            var opened = false;
+            var maxAttempts = 2;
+            var attempt = 1;
+            while (!opened && attempt < maxAttempts)
             {
-                return new StreamReader(new FileStream(this._filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize), this._tailEncoding, true, this._chunkSize);
-            }
-            catch (Exception)
-            {
-                Thread.SpinWait(1000);
-
                 try
                 {
-                    return new StreamReader(new FileStream(this._filename, FileMode.Open, FileAccess.Read, FileShare.ReadWrite, this._chunkSize), this._tailEncoding, true, this._chunkSize);
+                    return MemoryMappedFile.CreateFromFile(filename, fileMode).CreateViewStream();
                 }
-                catch (Exception)
+                catch (FileNotFoundException ex)
                 {
-                    return null;
+                    throw ex;
+                }
+                catch
+                {
+                    if (attempt < maxAttempts)
+                    {
+                        Thread.SpinWait(1000);
+                    }
                 }
             }
+
+            return null;
+        }
+
+        private Stream OpenFile()
+        {
+            return OpenFile(this._filename, FileMode.Open);
         }
 
         /// <summary>
@@ -423,13 +441,16 @@ namespace OxTail.Controls
             }
         }
 
+
+
         private bool ReadLines(bool overrideFileReadyCheck)
         {
             lock (this)
             {
                 if (overrideFileReadyCheck || this.IsFileReadyForReread())
                 {
-                    using (StreamReader streamReader = this.OpenFile())
+                    //using (StreamReader streamReader = this.OpenFile())
+                    using (StreamReader streamReader = new StreamReader(this.OpenFile()))
                     {
                         // If there is no stream, or it's empty reset the collection and return
                         if (streamReader == null || streamReader.BaseStream.Length == 0)
@@ -447,12 +468,12 @@ namespace OxTail.Controls
                         int location = 0;
                         int positionInList = 0;
                         bool skipSameContent = false;
-                        int lastUsedIndex = 0;                        
+                        int lastUsedIndex = 0;
                         this.SoundPlayed = false;
                         this.PlaySound = true;
 
                         while (streamReader.Peek() > -1)
-                        {                            
+                        {
                             string oldLine = oldReader.ReadLine();
                             string line = streamReader.ReadLine();
 
@@ -476,7 +497,7 @@ namespace OxTail.Controls
 
                                     // the oldline is not null and is either different from the new line or empty so add it to the collection
                                     // at the current location
-                                    else if ((oldLine != null) && (!line.Equals(oldLine) || oldLine == string.Empty) )
+                                    else if ((oldLine != null) && (!line.Equals(oldLine) || oldLine == string.Empty))
                                     {
                                         positionInList = location;
                                     }
@@ -523,10 +544,10 @@ namespace OxTail.Controls
                         {
                             lastUsedIndex = location;
                         }
-                        
+
                         // Remove any lines that have been deleted from the end of the file
                         int max = this.CollectionBackBuffer.Count - 1;
-                        
+
                         if (lastUsedIndex != max)
                         {
                             for (int j = max; j > lastUsedIndex; j--)

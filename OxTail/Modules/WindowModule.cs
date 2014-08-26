@@ -18,7 +18,8 @@ namespace OxTail.Modules
             Bind<IWindow>().To<ApplicationSettings>().Named("ApplicationSettings");
             Bind<IFindWindow>().To<Find>().Named("Find");
             Bind<IExpressionBuilderWindow>().To<ExpressionBuilder>().Named("ExpressionBuilder");
-            Bind<ISaveExpressionMessage>().To<SaveExpressionMessage>();            
+            Bind<ISaveExpressionMessage>().To<SaveExpressionMessage>();
+            Bind<IHighlightWindow>().To<Highlight>().Named("Highlight");
         }        
     }
 }

@@ -18,11 +18,7 @@ namespace OxTail
 
         public IWindow CreateWindow()
         {
-            Kernel.Bind<IHighlightWindow>().To<Highlight>().Named("Highlight");
-            IHighlightWindow window = Kernel.Get<IHighlightWindow>("Highlight");
-            Kernel.Unbind<IHighlightWindow>();
-
-            return window;
+            return Kernel.Get<IHighlightWindow>("Highlight", new Ninject.Parameters.ConstructorArgument("expressionBuilder", Kernel.Get<IExpressionBuilderWindow>()));
         }
     }
 }
